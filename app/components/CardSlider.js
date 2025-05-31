@@ -8,40 +8,46 @@ gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
-    title: "Online Website With AI Agent",
+    title: "Verified Hostel Listings",
     description:
-      "Establish an intelligent digital presence that automatically engages visitors, answers questions, and enhances user experience 24/7.",
-    icon: "🌐",
+      "Find your perfect student home with our curated list of verified hostels. Each listing is checked for safety, comfort, and student-friendly amenities, ensuring peace of mind.",
+    icon: "✅",
+    image: "/1.png",
   },
   {
-    title: "Build Digital Business",
+    title: "Trips & Local Support",
     description:
-      "Expand and scale your operations with cutting-edge digital solutions that streamline processes, increase reach, and drive growth.",
-    icon: "📈",
+      "Explore your new city with ease! We organize exciting student trips and provide comprehensive local support to help you settle in, discover hidden gems, and make lifelong friends.",
+    icon: "🧳",
+    image: "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJhdmVsJTIwZ3JvdXB8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=80",
   },
   {
-    title: "Patient Conversation",
+    title: "Direct Owner Contact ",
     description:
-      "Enable seamless and empathetic communication between patients and healthcare providers through smart, automated systems.",
-    icon: "🔐",
+      "Connect directly with hostel owners. No brokers, no hidden fees. Enjoy transparent communication, quick query resolution, and a hassle-free booking experience.",
+    icon: "📞",
+    image: "/call.jpg",
   },
   {
-    title: "Boost Revenue",
+    title: "No-Cost EMI",
     description:
-      "Maximize your earnings potential with optimized conversion strategies, targeted marketing, and intelligent service offerings.",
-    icon: "📉",
+      "Manage your finances smartly. Pay your hostel fees and other essential expenses in easy, interest-free monthly installments. Focus on your studies, not financial stress.",
+    icon: "💸",
+    image: "https://images.unsplash.com/photo-1561414927-6d86591d0c4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bW9uZXklMjBwYXltZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=80",
   },
   {
-    title: "Lead Generation Support",
+    title: "Free Stationery Delivery ",
     description:
-      "Convert more visitors into qualified leads and loyal clients with personalized engagement tools and automated follow-up systems.",
-    icon: "👥",
+      "Get all your essential study supplies—notebooks, pens, and more—delivered right to your doorstep, absolutely free. Never run out of what you need to succeed.",
+    icon: "📦",
+    image: "/stationary.jpg",
   },
   {
-    title: "24/7 Support for Patient",
+    title: "Exclusive Internships",
     description:
-      "Deliver round-the-clock assistance to patients, ensuring they receive timely support, guidance, and care whenever they need it.",
-    icon: "🔒",
+      "Kickstart your career with access to exclusive internship opportunities curated for students on our platform. Gain valuable industry experience and build your professional network.",
+    icon: "🎯",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW50ZXJuc2hpcHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=400&q=80",
   },
 ];
 
@@ -49,18 +55,23 @@ export default function CardSlider() {
   const containerRef = useRef(null);
   const cardsRef = useRef([]);
   useEffect(() => {
+    // Ensure containerRef.current exists before using it for GSAP context
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top-=100 top",
-          end: () => "+=" + window.innerHeight * (features.length + 1), // <-- ADD extra scroll
+          end: () => "+=" + window.innerHeight * (features.length + 1),
           scrub: 0.5,
           pin: true,
         },
       });
 
       cardsRef.current.forEach((card, index) => {
+        if (!card) return; // Guard against null elements if any
+
         // Move the card fully up
         timeline.to(card, {
           yPercent: -105,
@@ -70,14 +81,19 @@ export default function CardSlider() {
 
         // Scale out previous card when next card is halfway
         if (index > 0) {
-          timeline.to(cardsRef.current[index - 1], {
-            transformOrigin: "center center",
-            ease: "power2.out",
-            duration: .8,
-          }, index - 0.25);
+          const prevCard = cardsRef.current[index - 1];
+          if (prevCard) { // Check if prevCard exists
+            timeline.to(prevCard, {
+              // No scale animation was in the original code for this specific tween
+              // opacity: 0, // Example: if you want to fade out
+              transformOrigin: "center center",
+              ease: "power2.out",
+              duration: .8,
+            }, index - 0.25);
+          }
         }
       });
-    }, containerRef);
+    }, containerRef.current); // Pass the DOM element to context
 
     return () => ctx.revert();
   }, []);
@@ -88,29 +104,25 @@ export default function CardSlider() {
       {/* Static Background Card */}
       <div className="absolute w-full h-[80%] my-auto  min-h-[400px] bg-white rounded-3xl shadow-2xl  flex flex-col items-center justify-center text-center gap-6 z-0">
         <div className="bg-[#5E4AE3] p-4 rounded-full">
-          <svg
+         <svg
             stroke="currentColor"
             fill="currentColor"
             strokeWidth="0"
-            viewBox="0 0 24 24"
+            viewBox="0 0 16 14"
             className="w-12 h-12 text-white"
             height="1em"
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M21.928 11.607c-.202-.488-.635-.605-.928-.633V8c0-1.103-.897-2-2-2h-6V4.61c.305-.274.5-.668.5-1.11a1.5 1.5 0 0 0-3 0c0 .442.195.836.5 1.11V6H5c-1.103 0-2 .897-2 2v2.997l-.082.006A1 1 0 0 0 1.99 12v2a1 1 0 0 0 1 1H3v5c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5a1 1 0 0 0 1-1v-1.938a1.006 1.006 0 0 0-.072-.455zM5 20V8h14l.001 3.996L19 12v2l.001.005.001 5.995H5z" />
-            <ellipse cx="8.5" cy="12" rx="1.5" ry="2" />
-            <ellipse cx="15.5" cy="12" rx="1.5" ry="2" />
-            <path d="M8 16h8v2H8z" />
+            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
           </svg>
-
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold">Get Your Patient Ready Website Now</h1>
+        <h1 className="text-3xl md:text-5xl font-bold">Why Students love Provider</h1>
         <p className="text-gray-600 max-w-xl">
           Use power AI to transform your online presence and automate patient interactions
         </p>
         <button className="bg-[#5E4AE3] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#4c3cc7] transition">
-          Join the Waiting List
+          Explore Benefits in App
         </button>
       </div>
 
@@ -118,7 +130,11 @@ export default function CardSlider() {
       {features.map((feature, index) => (
         <div
           key={index}
-          ref={(el) => (cardsRef.current[index] = el)}
+          ref={(el) => {
+            if (cardsRef.current) { // ensure cardsRef.current is not null
+                 cardsRef.current[index] = el;
+            }
+          }}
           className="absolute w-[90%] h-[90%] bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden"
           style={{
             top: "100%",
@@ -141,16 +157,22 @@ export default function CardSlider() {
             </button>
           </div>
 
-          {/* Right Image Preview Section */}
-          <div className="hidden md:flex flex-col gap-4 mt-10 md:mt-0 relative z-10">
-            <div className="bg-white rounded-xl p-4 shadow-lg w-72">
-              <img
-                src="https://www.sciencepharma.com/wp-content/uploads/2024/09/forms_drugs_baner_rf-scaled.jpg"
-                alt="Feature Preview"
-                className="rounded-lg"
-              />
-            </div>
-          </div>
+         {/* Right Image Preview Section */}
+<div className="hidden md:flex flex-col gap-4 mt-10 md:mt-0 relative z-10">
+  <div className="bg-white rounded-xl p-4 shadow-lg w-72 h-48 overflow-hidden"> {/* Added overflow-hidden to clip the image if it exceeds rounded corners */}
+    <img
+      src={feature.image}
+      alt={`Preview for ${feature.title}`} 
+      className="w-full h-full object-cover" 
+      onError={(e) => {
+        // Optional: Add an error handler to see if the image fails to load
+        console.error("Failed to load image:", feature.image, e);
+        // e.target.style.display = 'none'; // Optionally hide broken image icon
+        // e.target.src = '/placeholder-image.png'; // Optionally show a placeholder
+      }}
+    />
+  </div>
+</div>
         </div>
       ))}
     </div>
