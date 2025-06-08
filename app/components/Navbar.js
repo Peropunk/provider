@@ -103,7 +103,6 @@ const Navbar = () => {
           <li className={navLinkClasses}>College</li>
           <li className={navLinkClasses}>Blogs</li>
           <li className={navLinkClasses}>About Us</li>
-          <li className={navLinkClasses}>Contact Us</li>
         </ul>
       </div>
 

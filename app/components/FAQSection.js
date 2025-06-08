@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const faqData = [
   {
@@ -44,35 +45,50 @@ const faqData = [
 
 const FAQItem = ({ faq, isOpen, toggleFAQ }) => {
   return (
-    <div className="border-b border-slate-200 dark:border-slate-700 py-4">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md transition-all duration-300 mb-4 overflow-hidden border border-gray-100"
+    >
       <button
         onClick={toggleFAQ}
-        className="flex justify-between items-center w-full text-left focus:outline-none"
+        className="flex justify-between items-center w-full text-left p-6 focus:outline-none hover:bg-gray-50/50 transition-colors duration-200"
         aria-expanded={isOpen}
         aria-controls={`faq-answer-${faq.id}`}
       >
-        <h3 className="text-lg font-medium text-slate-800 dark:text-slate-100">
+        <h3 className="text-lg font-semibold text-gray-800">
           {faq.question}
         </h3>
-        <span>
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
           {isOpen ? (
-            <FaChevronUp className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <FaChevronUp className="w-5 h-5 text-blue-600" />
           ) : (
-            <FaChevronDown className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+            <FaChevronDown className="w-5 h-5 text-gray-400" />
           )}
-        </span>
+        </motion.span>
       </button>
-      <div
-        id={`faq-answer-${faq.id}`}
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-screen opacity-100 mt-3' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <p className="text-slate-600 dark:text-slate-300 pt-2">
-          {faq.answer}
-        </p>
-      </div>
-    </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-6">
+              <p className="text-gray-600 leading-relaxed">
+                {faq.answer}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
@@ -89,12 +105,54 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="py-16 bg-slate-50 dark:bg-slate-900 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-3xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-slate-800 dark:text-white mb-12">
-          Frequently Asked Questions
-        </h2>
-        <div className="space-y-2">
+    <section className="relative py-20 overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30">
+      {/* Enhanced Background Texture */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+              </pattern>
+              <linearGradient id="gridGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="currentColor" stopOpacity="0.1"/>
+                <stop offset="100%" stopColor="currentColor" stopOpacity="0.3"/>
+              </linearGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
+
+        {/* Animated Gradient Orbs */}
+        <div className="absolute top-20 left-10 w-40 h-40 bg-blue-100/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-100/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+        
+        {/* Dots Pattern */}
+        <div className="absolute inset-0 opacity-[0.02]">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1" fill="currentColor"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#dots)" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-gray-900">
+            Frequently Asked <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Questions</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Find answers to common questions about our services and booking process
+          </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto">
           {faqData.map((faq) => (
             <FAQItem
               key={faq.id}

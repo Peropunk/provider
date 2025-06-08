@@ -21,67 +21,86 @@ const appScreenshots = [
 
 const AppPromotionSection = () => {
   return (
-    <section className="bg-gradient-to-br from-slate-900 to-[#0D0F2B] py-16 md:py-24 text-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 md:py-24 text-gray-900 overflow-hidden">
+      {/* Textured Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50">
+        <div className="absolute inset-0 opacity-[0.03]">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
+        {/* Decorative Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+          <div className="absolute top-20 left-10 w-40 h-40 bg-blue-200/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-200/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-200/20 rounded-full blur-3xl"></div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-3">
-            Why Use the <span className="text-purple-400">Provider App</span>?
+          <h2 className="text-4xl sm:text-5xl font-black mb-3 tracking-tight">
+            Why Use the <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Provider App</span>?
           </h2>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
           {/* Left Side: App Screenshots Carousel */}
           <div className="w-full md:w-1/2 lg:w-[45%] relative group">
-            {/* Optional: Decorative background element for the carousel */}
-            <div className="absolute -inset-2 md:-inset-4 bg-purple-600/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+            {/* Enhanced decorative background for the carousel */}
+            <div className="absolute -inset-4 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 rounded-3xl blur-xl opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
             
-            <div className="relative p-2 bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-2xl shadow-2xl">
+            <div className="relative p-2 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-2xl shadow-2xl">
               <Swiper
                 modules={[Autoplay, Pagination, EffectCoverflow]}
-                effect={'coverflow'} // Enable Coverflow effect
+                effect={'coverflow'}
                 grabCursor={true}
                 centeredSlides={true}
-                slidesPerView={'auto'} // Important for coverflow
+                slidesPerView={'auto'}
                 loop={true}
                 coverflowEffect={{
-                  rotate: 30,       // Slide rotate in degrees
-                  stretch: 0,       // Stretch space between slides (in px)
-                  depth: 100,       // Depth offset in px (slides translate in Z axis)
-                  modifier: 1,      // Effect multiplier
-                  slideShadows: true, // Enables slides shadows
+                  rotate: 30,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 1,
+                  slideShadows: true,
                 }}
                 autoplay={{
-                  delay: 3500,
+                  delay: 1500,
                   disableOnInteraction: false,
                 }}
                 pagination={{
                   clickable: true,
                   dynamicBullets: true,
                 }}
-                className="mySwiper w-full h-auto rounded-xl" // Add h-auto or specific height
+                className="mySwiper w-full h-auto rounded-xl"
                 style={{
                   // @ts-ignore
-                  "--swiper-pagination-color": "#A78BFA", // purple-400
-                  "--swiper-pagination-bullet-inactive-color": "#6B7280", // gray-500
+                  "--swiper-pagination-color": "#2563EB",
+                  "--swiper-pagination-bullet-inactive-color": "#94A3B8",
                   "--swiper-pagination-bullet-inactive-opacity": "0.7",
                   "--swiper-pagination-bullet-size": "10px",
                   "--swiper-pagination-bullet-horizontal-gap": "6px"
                 }}
               >
                 {appScreenshots.map((screen) => (
-                  // Inside your AppPromotionSection component, in the SwiperSlide:
-<SwiperSlide key={screen.id} className="!w-[60%] sm:!w-[50%] md:!w-[270px] aspect-[384/758]">
-  <div className="relative w-full h-full bg-slate-700 rounded-lg md:rounded-xl overflow-hidden shadow-lg border-2 border-slate-600">
-    <Image
-      src={screen.src}
-      alt={screen.alt}
-      layout="fill"
-      objectFit="contain" // CHANGED FROM "cover" to "contain"
-      className="rounded-lg md:rounded-xl"
-      priority={screen.id === 1}
-    />
-  </div>
-</SwiperSlide>
+                  <SwiperSlide key={screen.id} className="!w-[60%] sm:!w-[50%] md:!w-[270px] aspect-[384/758]">
+                    <div className="relative w-full h-full bg-white rounded-lg md:rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                      <Image
+                        src={screen.src}
+                        alt={screen.alt}
+                        layout="fill"
+                        objectFit="contain"
+                        className="rounded-lg md:rounded-xl"
+                        priority={screen.id === 1}
+                      />
+                    </div>
+                  </SwiperSlide>
                 ))}
               </Swiper>
             </div>
@@ -89,27 +108,28 @@ const AppPromotionSection = () => {
 
           {/* Right Side: Text Content & CTA */}
           <div className="w-full md:w-1/2 lg:w-[55%] text-center md:text-left">
-            <h3 className="text-3xl lg:text-4xl font-semibold mb-4 leading-tight">
-              Your All-in-One <br className="hidden sm:block" />Student Super App
+            <h3 className="text-4xl lg:text-5xl font-black mb-6 leading-tight tracking-tight">
+              Your All-in-One <br className="hidden sm:block" />
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Student Super App</span>
             </h3>
-            <p className="text-lg text-slate-300 mb-3">
-              Discover verified <span className="font-medium text-purple-300">Hostels</span>,
-              exclusive <span className="font-medium text-purple-300">Internships</span>,
-              curated <span className="font-medium text-purple-300">Courses</span>,
-              and free <span className="font-medium text-purple-300">Stationery</span> delivery.
+            <p className="text-xl text-gray-700 mb-4 font-medium">
+              Discover verified <span className="font-bold text-blue-600">Hostels</span>,
+              exclusive <span className="font-bold text-blue-600">Internships</span>,
+              curated <span className="font-bold text-blue-600">Courses</span>,
+              and free <span className="font-bold text-blue-600">Stationery</span> delivery.
             </p>
-            <p className="text-lg text-slate-300 mb-8">
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               Experience seamless booking, dedicated local support, and a community built for you.
             </p>
             <a
-              href="#download-app" // Replace with actual app store links later
-              className="inline-flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-lg text-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+              href="#download-app"
+              className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              <span role="img" aria-label="download icon" className="mr-2 text-xl"></span>
+              <span role="img" aria-label="download icon" className="mr-2 text-xl">📱</span>
               Download Now
             </a>
-            <p className="text-sm text-slate-400 mt-4">
-              Available on iOS & Android.
+            <p className="text-sm text-gray-500 mt-4 font-medium">
+              Available on iOS & Android
             </p>
           </div>
         </div>

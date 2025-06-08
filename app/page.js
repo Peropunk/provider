@@ -23,9 +23,8 @@ export default function Home() {
     <AppPromotionSection/>
     <CardSlider/>
     <AchievementsSection/>
-    <Solutions/>
-    <TrustBadgesSection/>
-    <StudentTestimonial/>
+    {/* <Solutions/> */}
+    <StudentTestimonial/><TrustBadgesSection/>
     {/* <ComparisonTableSection/> */}
     <MeetOurMentors/>
     <FAQSection/>

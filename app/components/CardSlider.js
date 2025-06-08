@@ -102,9 +102,15 @@ export default function CardSlider() {
   return (
     <div ref={containerRef} className="relative w-full h-[65vh] overflow-hidden my-10 flex flex-col items-center justify-center py-10">
       {/* Static Background Card */}
-      <div className="absolute w-full h-[80%] my-auto  min-h-[400px] bg-white rounded-3xl shadow-2xl  flex flex-col items-center justify-center text-center gap-6 z-0">
-        <div className="bg-[#5E4AE3] p-4 rounded-full">
-         <svg
+      <div className="absolute w-full h-[80%] my-auto min-h-[400px] bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 rounded-3xl shadow-2xl flex flex-col items-center justify-center text-center gap-6 z-0">
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-40 h-40 bg-blue-200/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-200/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-full shadow-lg">
+          <svg
             stroke="currentColor"
             fill="currentColor"
             strokeWidth="0"
@@ -117,11 +123,13 @@ export default function CardSlider() {
             <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
           </svg>
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold">Why Students love Provider</h1>
-        <p className="text-gray-600 max-w-xl">
-          Use power AI to transform your online presence and automate patient interactions
+        <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+          Why Students <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Love Provider</span>
+        </h1>
+        <p className="text-gray-600 max-w-xl text-lg">
+          Discover a world of opportunities with our comprehensive student platform
         </p>
-        <button className="bg-[#5E4AE3] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#4c3cc7] transition">
+        <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           Explore Benefits in App
         </button>
       </div>
@@ -131,48 +139,48 @@ export default function CardSlider() {
         <div
           key={index}
           ref={(el) => {
-            if (cardsRef.current) { // ensure cardsRef.current is not null
-                 cardsRef.current[index] = el;
+            if (cardsRef.current) {
+              cardsRef.current[index] = el;
             }
           }}
-          className="absolute w-[90%] h-[90%] bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden"
+          className="absolute w-[90%] h-[90%] bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden"
           style={{
             top: "100%",
             zIndex: index + 1,
           }}
         >
           {/* Background Overlay */}
-          <div className="absolute inset-0 bg-gray-300 opacity-60 z-0 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 z-0 rounded-3xl"></div>
 
           {/* Left Text Section */}
           <div className="max-w-xl relative z-10">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-              {feature.icon} {feature.title}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-700 mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-3xl">{feature.icon}</span>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+                {feature.title}
+              </h1>
+            </div>
+            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
               {feature.description}
             </p>
-            <button className="bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition">
+            <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
               Learn More
             </button>
           </div>
 
-         {/* Right Image Preview Section */}
-<div className="hidden md:flex flex-col gap-4 mt-10 md:mt-0 relative z-10">
-  <div className="bg-white rounded-xl p-4 shadow-lg w-72 h-48 overflow-hidden"> {/* Added overflow-hidden to clip the image if it exceeds rounded corners */}
-    <img
-      src={feature.image}
-      alt={`Preview for ${feature.title}`} 
-      className="w-full h-full object-cover" 
-      onError={(e) => {
-        // Optional: Add an error handler to see if the image fails to load
-        console.error("Failed to load image:", feature.image, e);
-        // e.target.style.display = 'none'; // Optionally hide broken image icon
-        // e.target.src = '/placeholder-image.png'; // Optionally show a placeholder
-      }}
-    />
-  </div>
-</div>
+          {/* Right Image Preview Section */}
+          <div className="hidden md:flex flex-col gap-4 mt-10 md:mt-0 relative z-10">
+            <div className="bg-white rounded-2xl p-4 shadow-xl w-80 h-56 overflow-hidden transform hover:scale-105 transition-transform duration-300">
+              <img
+                src={feature.image}
+                alt={`Preview for ${feature.title}`}
+                className="w-full h-full object-cover rounded-xl"
+                onError={(e) => {
+                  console.error("Failed to load image:", feature.image, e);
+                }}
+              />
+            </div>
+          </div>
         </div>
       ))}
     </div>

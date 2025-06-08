@@ -1,5 +1,9 @@
+'use client';
+
 import Image from 'next/image';
 import { FaUserCircle } from 'react-icons/fa'; // Placeholder icon
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 
 // Sample Mentor Data
 // In a real application, this would likely come from a CMS or API
@@ -30,29 +34,29 @@ const mentorsData = [
 
 const MentorCard = ({ mentor }) => {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 md:p-8 text-center hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-      <div className="relative w-32 h-32 md:w-36 md:h-36 mx-auto mb-6 rounded-full overflow-hidden border-4 border-purple-200 dark:border-purple-700 shadow-md">
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-md p-8 text-center transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100">
+      <div className="relative w-32 h-32 md:w-36 md:h-36 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-blue-50 group-hover:ring-blue-100 transition-all duration-300">
         {mentor.imageUrl ? (
           <Image
             src={mentor.imageUrl}
             alt={`Photo of ${mentor.name}`}
             layout="fill"
             objectFit="cover"
-            className="rounded-full" // Ensure image itself is rounded if parent is
+            className="rounded-full transform group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 rounded-full">
-            <FaUserCircle className="w-20 h-20 text-slate-400 dark:text-slate-500" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full">
+            <FaUserCircle className="w-20 h-20 text-blue-400" />
           </div>
         )}
       </div>
-      <h3 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white mb-1">
+      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors duration-300">
         {mentor.name}
       </h3>
-      <p className="text-purple-600 dark:text-purple-400 font-medium text-sm md:text-base mb-3">
+      <p className="text-blue-600 font-medium text-sm md:text-base mb-3">
         {mentor.role}
       </p>
-      <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed">
+      <p className="text-gray-600 text-sm leading-relaxed">
         {mentor.bio}
       </p>
       {/* Optional: LinkedIn Icon/Link
@@ -73,21 +77,69 @@ const MentorCard = ({ mentor }) => {
 };
 
 const MeetOurMentors = () => {
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const cardsRef = useRef([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate heading
+      gsap.from(headingRef.current.children, {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 80%",
+        }
+      });
+
+      // Animate cards
+      gsap.from(cardsRef.current, {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-16 md:py-20 bg-slate-50 dark:bg-slate-900 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-800 dark:text-white">
-            Guided by Industry Experts
+    <section ref={sectionRef} className="relative py-20 overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30">
+      {/* Subtle Decorative Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-40 h-40 bg-blue-100/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-100/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div ref={headingRef} className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-gray-900">
+            Guided by <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Industry Experts</span>
           </h2>
-          <p className="mt-3 md:mt-4 text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-light">
             Our team of seasoned professionals and visionary leaders are dedicated to empowering your journey.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
-          {mentorsData.map((mentor) => (
-            <MentorCard key={mentor.id} mentor={mentor} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+          {mentorsData.map((mentor, index) => (
+            <div
+              key={mentor.id}
+              ref={el => cardsRef.current[index] = el}
+            >
+              <MentorCard mentor={mentor} />
+            </div>
           ))}
         </div>
       </div>

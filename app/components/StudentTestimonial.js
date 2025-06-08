@@ -62,13 +62,13 @@ const testimonialsData = [
 const StarRating = ({ rating }) => {
   const totalStars = 5;
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-0.5">
       {[...Array(totalStars)].map((_, index) => {
         const starNumber = index + 1;
         return starNumber <= rating ? (
-          <FaStar key={index} className="text-yellow-400" />
+          <FaStar key={index} className="text-amber-400 w-4 h-4" />
         ) : (
-          <FaRegStar key={index} className="text-yellow-400" />
+          <FaRegStar key={index} className="text-amber-400 w-4 h-4" />
         );
       })}
     </div>
@@ -76,29 +76,31 @@ const StarRating = ({ rating }) => {
 };
 
 const TestimonialCard = ({ testimonial }) => (
-  <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full">
-    <div className="flex items-center mb-4">
+  <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full border border-gray-100">
+    <div className="flex items-center mb-6">
       {testimonial.photoUrl ? (
         <Image
           src={testimonial.photoUrl}
           alt={testimonial.name}
-          width={56}
-          height={56}
-          className="rounded-full mr-4 object-cover"
+          width={64}
+          height={64}
+          className="rounded-full mr-4 object-cover ring-2 ring-blue-50"
           onError={(e) => { e.target.style.display = 'none'; /* Hide if image fails */ }}
         />
       ) : (
-        <FaUserCircle className="w-14 h-14 text-slate-400 dark:text-slate-500 mr-4" />
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center mr-4">
+          <FaUserCircle className="w-10 h-10 text-blue-400" />
+        </div>
       )}
       <div>
-        <h4 className="font-semibold text-lg text-slate-800 dark:text-white">{testimonial.name}</h4>
-        <p className="text-sm text-slate-600 dark:text-slate-400">{testimonial.location}</p>
+        <h4 className="font-bold text-lg text-gray-900 tracking-tight">{testimonial.name}</h4>
+        <p className="text-sm text-gray-600 font-medium">{testimonial.location}</p>
       </div>
     </div>
-    <div className="mb-3">
+    <div className="mb-4">
       <StarRating rating={testimonial.rating} />
     </div>
-    <p className="text-slate-700 dark:text-slate-300 flex-grow italic">
+    <p className="text-gray-700 flex-grow text-lg leading-relaxed font-light">
       "{testimonial.text}"
     </p>
   </div>
@@ -122,68 +124,60 @@ const StudentTestimonials = () => {
 
 
   return (
-    <section className="py-16 bg-slate-50 dark:bg-slate-900 px-4 sm:px-6 lg:px-8">
-      <style jsx global>{`
-        :root {
-          --swiper-navigation-color-light: #334155; /* slate-700 */
-          --swiper-pagination-color-light: #6366F1; /* indigo-500 */
-          --swiper-navigation-color-dark: #cbd5e1;  /* slate-300 */
-          --swiper-pagination-color-dark: #A78BFA; /* purple-400 */
-        }
-        .swiper-button-next,
-        .swiper-button-prev {
-          color: var(--swiper-navigation-color-light);
-        }
-        .swiper-pagination-bullet-active {
-          background-color: var(--swiper-pagination-color-light);
-        }
-        .dark .swiper-button-next,
-        .dark .swiper-button-prev {
-          color: var(--swiper-navigation-color-dark);
-        }
-        .dark .swiper-pagination-bullet-active {
-          background-color: var(--swiper-pagination-color-dark);
-        }
-      `}</style>
-      <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-slate-800 dark:text-white mb-12">
-          What Students Say About Provider
-        </h2>
+    <section className="relative py-20 overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30">
+      {/* Subtle Decorative Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-40 h-40 bg-blue-100/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-100/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-gray-900">
+            What Students Say About <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Provider</span>
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-light">
+            Join thousands of satisfied students who found their perfect accommodation with us
+          </p>
+        </div>
 
         <div className="md:flex md:gap-8 items-stretch"> {/* items-stretch to make columns of equal perceived height */}
           {/* Video Testimonial (Left Column on MD+) */}
           {videoTestimonial && (
             <div className="md:w-2/5 mb-8 md:mb-0 flex"> {/* Added flex for h-full on child */}
-              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl w-full flex flex-col">
-                <div className="aspect-w-16 aspect-h-9 mb-4">
+              <div className="bg-white p-8 rounded-2xl shadow-sm w-full flex flex-col border border-gray-100">
+                <div className="aspect-w-16 aspect-h-9 mb-6 rounded-xl overflow-hidden">
                   <iframe
                     src={`https://www.youtube.com/embed/8Q9o2Tp3epQ?si=kXw-9GsMjOlWJ8ql?rel=0`}
                     title={`${videoTestimonial.name}'s Testimonial Video`}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
-                    className="rounded-lg w-full h-full"
+                    className="rounded-xl w-full h-full"
                   ></iframe>
                 </div>
-                <div className="flex items-center mb-2">
+                <div className="flex items-center mb-4">
                   {videoTestimonial.photoUrl ? (
                     <Image
                       src={videoTestimonial.photoUrl}
                       alt={videoTestimonial.name}
-                      width={48}
-                      height={48}
-                      className="rounded-full mr-3 object-cover"
+                      width={56}
+                      height={56}
+                      className="rounded-full mr-4 object-cover ring-2 ring-blue-50"
                     />
                   ) : (
-                    <FaUserCircle className="w-12 h-12 text-slate-400 dark:text-slate-500 mr-3" />
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center mr-4">
+                      <FaUserCircle className="w-8 h-8 text-blue-400" />
+                    </div>
                   )}
                   <div>
-                    <h4 className="font-semibold text-lg text-slate-800 dark:text-white">{videoTestimonial.name}</h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{videoTestimonial.location}</p>
+                    <h4 className="font-bold text-lg text-gray-900 tracking-tight">{videoTestimonial.name}</h4>
+                    <p className="text-sm text-gray-600 font-medium">{videoTestimonial.location}</p>
                   </div>
                 </div>
                 <StarRating rating={videoTestimonial.rating} />
-                <p className="text-slate-700 dark:text-slate-300 mt-3 italic flex-grow">
+                <p className="text-gray-700 mt-4 text-lg leading-relaxed font-light flex-grow">
                   "{videoTestimonial.text}"
                 </p>
               </div>
@@ -226,6 +220,33 @@ const StudentTestimonials = () => {
           )}
         </div>
       </div>
+
+      <style jsx global>{`
+        :root {
+          --swiper-navigation-color: #4F46E5;
+          --swiper-pagination-color: #4F46E5;
+        }
+        .swiper-button-next,
+        .swiper-button-prev {
+          color: var(--swiper-navigation-color);
+          background: white;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+          font-size: 18px;
+        }
+        .swiper-pagination-bullet {
+          background: #E5E7EB;
+          opacity: 1;
+        }
+        .swiper-pagination-bullet-active {
+          background: var(--swiper-pagination-color);
+        }
+      `}</style>
     </section>
   );
 };
