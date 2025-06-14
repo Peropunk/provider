@@ -18,19 +18,6 @@ export const metadata = {
   description: "Provider helps students find verified hostels, PGs, and flats with ease. Explore local listings and amenities tailored for college life.",
   alternates: {
     canonical: 'https://providerapp.in/'
-  },
-  other: {
-    'application/ld+json': JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Provider",
-      "url": "https://providerapp.in",
-      "sameAs": [
-        "https://www.instagram.com/providerapp.in",
-        "https://www.linkedin.com/company/providerapp"
-      ],
-      "logo": "https://providerapp.in/logo.png"
-    })
   }
 };
 

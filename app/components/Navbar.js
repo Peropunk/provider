@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Link from 'next/link';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const menuRef = useRef(null);
   const navRef = useRef(null);
+  const gsapContext = useRef(null);
 
   const curveDepth = 15; // Pixels for the depth of the curve at the sides
   // Path for a curved bottom edge
@@ -16,7 +18,8 @@ const Navbar = () => {
   // Initial Navbar Animation
   useEffect(() => {
     if (!navRef.current) return;
-    const ctx = gsap.context(() => {
+    
+    gsapContext.current = gsap.context(() => {
       gsap.from(navRef.current, {
         // Ensure it animates from completely above, considering potential full height
         y: `-${navRef.current.getBoundingClientRect().height + curveDepth}px`,
@@ -24,30 +27,39 @@ const Navbar = () => {
         duration: 1,
         ease: 'power3.out',
       });
-    }, navRef);
-    return () => ctx.revert();
+    });
+
+    return () => {
+      if (gsapContext.current) {
+        gsapContext.current.revert();
+      }
+    };
   }, [curveDepth]); // Recalculate if curveDepth changes
 
   // Mobile Menu Animation
   useEffect(() => {
     if (!menuRef.current) return;
-    if (isOpen) {
-      gsap.to(menuRef.current, {
-        height: 'auto',
-        opacity: 1,
-        duration: 0.4,
-        ease: 'power2.out',
-        onStart: () => { if (menuRef.current) menuRef.current.style.display = 'block'; },
-      });
-    } else {
-      gsap.to(menuRef.current, {
-        height: 0,
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power2.inOut',
-        onComplete: () => { if (menuRef.current) menuRef.current.style.display = 'none'; },
-      });
-    }
+
+    const menuAnimation = gsap.to(menuRef.current, {
+      height: isOpen ? 'auto' : 0,
+      opacity: isOpen ? 1 : 0,
+      duration: 0.4,
+      ease: 'power2.out',
+      onStart: () => {
+        if (isOpen && menuRef.current) {
+          menuRef.current.style.display = 'block';
+        }
+      },
+      onComplete: () => {
+        if (!isOpen && menuRef.current) {
+          menuRef.current.style.display = 'none';
+        }
+      }
+    });
+
+    return () => {
+      menuAnimation.kill();
+    };
   }, [isOpen]);
 
   // Scroll Listener for Sticky Navbar Styling
@@ -68,6 +80,9 @@ const Navbar = () => {
   const shadowNormal = 'drop-shadow(0 4px 6px rgba(0,0,0,0.07))';
   const shadowScrolled = 'drop-shadow(0 10px 15px rgba(0,0,0,0.07))';
 
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
 
   return (
     <nav
@@ -90,42 +105,47 @@ const Navbar = () => {
       `}
     >
       {/* Logo */}
-      <div>
-        {/* Adjusted padding-bottom for logo if curve is deep, or rely on nav's overall padding */}
-        <img className="h-12 sm:h-14 transition-all duration-300" src="/provider_logo.png" alt="GGWLogo" />
-      </div>
+      <Link href="/" onClick={handleLinkClick}>
+        <div>
+          <img className="h-12 sm:h-14 transition-all duration-300" src="/provider_logo.png" alt="Provider Logo" />
+        </div>
+      </Link>
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center">
         <ul className="flex gap-6 lg:gap-8 text-sm font-medium text-gray-700">
-          <li className={navLinkClasses}>Home</li>
-          <li className={navLinkClasses}>Hostels</li>
-          <li className={navLinkClasses}>College</li>
-          <li className={navLinkClasses}>Blogs</li>
-          <li className={navLinkClasses}>About Us</li>
+          <li><Link href="/" className={navLinkClasses}>Home</Link></li>
+          <li><Link href="/hostels" className={navLinkClasses}>Hostels</Link></li>
+          <li><Link href="/college" className={navLinkClasses}>College</Link></li>
+          <li><Link href="/blogs" className={navLinkClasses}>Blogs</Link></li>
+          <li><Link href="/about-us" className={navLinkClasses}>About Us</Link></li>
         </ul>
       </div>
 
       {/* Buttons */}
       <div className="hidden md:flex items-center gap-4">
-    <a
-      href="https://play.google.com/store/apps/details?id=provider.in&hl=en_IN" 
-      
-      target="_blank"
-      rel="noopener noreferrer" // Important for security when using target="_blank"
-    >
-      <button
-        className="px-5 py-2.5 text-sm font-semibold bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-        style={{ filter: 'drop-shadow(0 2px 3px rgba(107,33,168,0.3))' }} // Subtle shadow for the button itself
-      >
-        Download App
-      </button>
-    </a>
-  </div>
+        <a
+          href="https://play.google.com/store/apps/details?id=provider.in&hl=en_IN" 
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button
+            className="px-5 py-2.5 text-sm font-semibold bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+            style={{ filter: 'drop-shadow(0 2px 3px rgba(107,33,168,0.3))' }}
+          >
+            Download App
+          </button>
+        </a>
+      </div>
 
       {/* Hamburger for Mobile */}
       <div className="md:hidden flex items-center">
-        <button onClick={toggleMenu} aria-label="Toggle menu" aria-expanded={isOpen} className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <button 
+          onClick={toggleMenu} 
+          aria-label="Toggle menu" 
+          aria-expanded={isOpen} 
+          className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-7 w-7 text-gray-700 hover:text-purple-600 transition-colors"
@@ -147,21 +167,24 @@ const Navbar = () => {
         ref={menuRef}
         style={{ display: 'none', height: 0, opacity: 0 }}
         className="absolute top-full left-0 w-full bg-white md:hidden shadow-xl border-t border-gray-200 rounded-b-xl"
-        // Optional: If you want the mobile menu to also have rounded corners at the bottom:
-        // className="... rounded-b-xl" (if it's the last element visually)
       >
         <ul className="flex flex-col items-center gap-5 py-8 text-base font-medium text-gray-700">
-          <li className={navLinkClasses} onClick={() => setIsOpen(false)}>Home</li>
-          <li className={navLinkClasses} onClick={() => setIsOpen(false)}>Hostels</li>
-          <li className={navLinkClasses} onClick={() => setIsOpen(false)}>College</li>
-          <li className={navLinkClasses} onClick={() => setIsOpen(false)}>Blogs</li>
-          <li className={navLinkClasses} onClick={() => setIsOpen(false)}>About Us</li>
-          <li className={navLinkClasses} onClick={() => setIsOpen(false)}>Contact Us</li>
+          <li><Link href="/" className={navLinkClasses} onClick={handleLinkClick}>Home</Link></li>
+          <li><Link href="/hostels" className={navLinkClasses} onClick={handleLinkClick}>Hostels</Link></li>
+          <li><Link href="/college" className={navLinkClasses} onClick={handleLinkClick}>College</Link></li>
+          <li><Link href="/blogs" className={navLinkClasses} onClick={handleLinkClick}>Blogs</Link></li>
+          <li><Link href="/about-us" className={navLinkClasses} onClick={handleLinkClick}>About Us</Link></li>
           <div className="flex flex-col gap-4 w-4/5 max-w-xs pt-4 mt-4 border-t border-gray-200">
-            <button className="w-full px-5 py-3 text-sm font-semibold text-purple-600 border border-purple-600 rounded-full hover:bg-purple-50 transition-colors duration-200">
-              Download App
-            </button>
-           
+            <a
+              href="https://play.google.com/store/apps/details?id=provider.in&hl=en_IN"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full"
+            >
+              <button className="w-full px-5 py-3 text-sm font-semibold text-purple-600 border border-purple-600 rounded-full hover:bg-purple-50 transition-colors duration-200">
+                Download App
+              </button>
+            </a>
           </div>
         </ul>
       </div>
