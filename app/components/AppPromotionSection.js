@@ -122,7 +122,7 @@ const AppPromotionSection = () => {
               Experience seamless booking, dedicated local support, and a community built for you.
             </p>
             <a
-              href="#download-app"
+              href="https://play.google.com/store/apps/details?id=provider.in&hl=en_IN"
               className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <span role="img" aria-label="download icon" className="mr-2 text-xl">📱</span>

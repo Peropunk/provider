@@ -14,7 +14,9 @@ const fadeIn = {
 
 const AboutUs = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef(null);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -24,8 +26,13 @@ const AboutUs = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
+    setIsMounted(true);
     setIsVisible(true);
   }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -385,18 +392,161 @@ const AboutUs = () => {
           </div>
         </motion.section>
 
-        {/* Testimonial Section */}
+        {/* Our Team Section */}
         <motion.section
           initial="initial"
           animate="animate"
           variants={fadeIn}
           className="py-20"
         >
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-12 text-white">
-            <blockquote className="text-2xl font-light italic mb-6">
-              "Provider App made my final year stay stress-free. I visited 5 hostels in 2 days, and picked the best one—all at zero cost."
-            </blockquote>
-            <p className="text-lg font-semibold">— Jagrati, GL Bajaj alumna</p>
+          <div className="text-center mb-16">
+            <div className="relative inline-block">
+              <h2 className="text-5xl md:text-6xl font-extrabold mb-4 relative">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-gradient-x">
+                  Our Team
+                </span>
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full"></div>
+              </h2>
+             </div>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-8 font-light">
+              Meet the passionate leaders driving Provider App's mission to transform student accommodation in India
+            </p>
+          </div>
+
+          {/* First Row - CMD and CEO */}
+          <div className="grid md:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="text-center"
+            >
+              <div className="relative w-56 h-56 mx-auto mb-5 rounded-full overflow-visible ring-4 ring-purple-100 shadow-lg">
+                <Image
+                  src="/praveen.png"
+                  alt="Praveen Gopal"
+                  fill
+                  className="object-cover"
+                />
+                <a 
+                  href="https://www.linkedin.com/in/praveen-gopal-b6a50b229/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full bg-purple-600 text-white hover:bg-purple-700 shadow-md border-2 border-white z-20"
+                >
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-800">Praveen Gopal</h3>
+              <p className="text-purple-600 font-medium mb-5">CMD</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="text-center"
+            >
+              <div className="relative w-56 h-56 mx-auto mb-5 rounded-full overflow-visible ring-4 ring-blue-100 shadow-lg">
+                <Image
+                  src="/avadesh.png"
+                  alt="Avadhesh Chaudhary"
+                  fill
+                  className="object-cover"
+                />
+                <a 
+                  href="https://www.linkedin.com/in/avadhesh-chaudhary-78a0a6192/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow-md border-2 border-white z-20"
+                >
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-800">Avadhesh Chaudhary</h3>
+              <p className="text-blue-600 font-medium mb-5">CEO</p>
+            </motion.div>
+          </div>
+
+          {/* Second Row - COO, CMO, and Sales Head */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="text-center"
+            >
+              <div className="relative w-56 h-56 mx-auto mb-5 rounded-full overflow-visible ring-4 ring-emerald-100 shadow-md">
+                <Image
+                  src="/suprit.jpg"
+                  alt="Suprit Singh Arya"
+                  fill
+                  className="object-cover"
+                />
+                <a 
+                  href="https://www.linkedin.com/in/supritsingharya"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full bg-emerald-600 text-white hover:bg-emerald-700 shadow-md border-2 border-white z-20"
+                >
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-gray-800">Suprit Singh Arya</h3>
+              <p className="text-emerald-600 font-medium mb-5">COO</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="text-center"
+            >
+              <div className="relative w-56 h-56 mx-auto mb-5 rounded-full overflow-visible ring-4 ring-rose-100 shadow-md">
+                <Image
+                  src="/image.png"
+                  alt="Jagrati Dagur"
+                  fill
+                  className="object-cover"
+                />
+                <a 
+                  href="https://www.linkedin.com/in/jagrati-dagur-a233a9325/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full bg-rose-600 text-white hover:bg-rose-700 shadow-md border-2 border-white z-20"
+                >
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-gray-800">Jagrati Dagur</h3>
+              <p className="text-rose-600 font-medium mb-5">CMO</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="text-center"
+            >
+              <div className="relative w-56 h-56 mx-auto mb-5 rounded-full overflow-visible ring-4 ring-amber-100 shadow-md">
+                <Image
+                  src="/kshitij.png"
+                  alt="Kshitij Goel"
+                  fill
+                  className="object-cover"
+                />
+                <a 
+                  href="https://www.linkedin.com/in/kshitijgoell/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 shadow-md border-2 border-white z-20"
+                >
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-gray-800">Kshitij Goel</h3>
+              <p className="text-amber-600 font-medium mb-5">Sales Head</p>
+            </motion.div>
           </div>
         </motion.section>
 

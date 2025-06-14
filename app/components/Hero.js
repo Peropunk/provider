@@ -280,17 +280,7 @@ Provider App                  </span>
                       <span className="text-white text-xl font-bold">✓</span>
                     </div>
                     
-                    <div className="absolute bottom-8 left-8 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 hover:scale-105 transition-transform duration-300">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white text-sm">⭐</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-800">4.7/5 Rating</p>
-                          <p className="text-xs text-gray-600">Based on 1k+ reviews</p>
-                        </div>
-                      </div>
-                    </div>
+                    
 
                     {/* New Floating Features */}
                     <div className="absolute top-7/10 -left-4 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-3 hover:scale-105 transition-transform duration-300">
@@ -312,8 +302,19 @@ Provider App                  </span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div><div className="absolute bottom-8 right-0.5 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 hover:scale-105 transition-transform duration-300">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
+                          <span className="text-white text-sm">⭐</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">4.7/5 Rating</p>
+                          <p className="text-xs text-gray-600">Based on 1k+ reviews</p>
+                        </div>
+                      </div>
+                    </div>
             </div>
+            
           </div>
 
           {/* Enhanced Stats Section */}
@@ -340,8 +341,9 @@ Provider App                  </span>
                         end={50000} 
                         duration={1.5} 
                         separator="," 
-                        enableScrollSpy={false}
-                        startOnMount={true}
+                        enableScrollSpy={true}
+                        scrollSpyOnce={true}
+                        scrollSpyDelay={200}
                       />
                       <span className="text-green-500">+</span>
                     </p>
@@ -365,8 +367,9 @@ Provider App                  </span>
                         end={35000} 
                         duration={1.5} 
                         separator="," 
-                        enableScrollSpy={false}
-                        startOnMount={true}
+                        enableScrollSpy={true}
+                        scrollSpyOnce={true}
+                        scrollSpyDelay={200}
                       />
                       <span className="text-blue-500">+</span>
                     </p>
@@ -390,8 +393,9 @@ Provider App                  </span>
                         end={10000} 
                         duration={1.5} 
                         separator="," 
-                        enableScrollSpy={false}
-                        startOnMount={true}
+                        enableScrollSpy={true}
+                        scrollSpyOnce={true}
+                        scrollSpyDelay={200}
                       />
                       <span className="text-purple-500">+</span>
                     </p>
