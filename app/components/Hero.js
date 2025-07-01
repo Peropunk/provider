@@ -105,10 +105,24 @@ const Hero = () => {
     }
   }, [mousePosition, isMounted]);
 
+  const handleDownloadApp = () => {
+    const userAgent = typeof window !== 'undefined' ? navigator.userAgent || navigator.vendor || window.opera : '';
+    if (/android/i.test(userAgent)) {
+      // Redirect to Google Play Store
+      window.open('https://play.google.com/store/apps/details?id=provider.in', '_blank');
+    } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      // Redirect to Apple App Store
+      window.open('https://apps.apple.com/in/app/provider-app-search-hostel-pg/id1659063733', '_blank');
+    } else {
+      // Desktop fallback: redirect to Play Store
+      window.open('https://play.google.com/store/apps/details?id=provider.in', '_blank');
+    }
+  };
+
   if (!isLoaded) {
     return (
       <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen ">
           <div className="relative">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent"></div>
             <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-2 border-blue-400"></div>
@@ -119,7 +133,7 @@ const Hero = () => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 ">
       {/* Enhanced Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden" ref={floatingRef}>
         <div className="parallax-bg absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-blue-200/40 to-indigo-300/40 rounded-full blur-xl transform transition-transform duration-300"></div>
@@ -167,7 +181,7 @@ const Hero = () => {
               <div className="space-y-3">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tight">
                   <span className="block bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">
-Provider App                  </span>
+PROVIDER APP                  </span>
                   
                 </h1>
                 
@@ -221,9 +235,10 @@ Provider App                  </span>
               </div>
               
               {/* Enhanced CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row gap-4 pt-2 items-center sm:items-start justify-center sm:justify-start">
                 <button 
                   type="button"
+                  onClick={handleDownloadApp}
                   suppressHydrationWarning
                   className="group relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
                 >
@@ -233,17 +248,46 @@ Provider App                  </span>
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
-                
-                <button 
-                  type="button"
-                  suppressHydrationWarning
-                  className="group flex items-center gap-2 border-2 border-gray-300 hover:border-blue-400 text-gray-700 hover:text-blue-600 font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:bg-blue-50 hover:shadow-lg"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-lg group-hover:rotate-12 transition-transform duration-300">▶️</span>
+              </div>
+
+              {/* Video and Feature Boxes Row */}
+              <div className="flex flex-col md:flex-row gap-6 mt-6 items-center">
+                {/* YouTube Video */}
+                <div className="w-full md:w-[380px] aspect-video rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/lINMiZrwbS0?si=ll3CxA54WA2R75SO"
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                {/* Feature Boxes */}
+                <div className="flex flex-col gap-4 w-full md:w-auto">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-3 flex items-center gap-2 hover:scale-105 transition-transform duration-300">
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-sm">🔒</span>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-800">Verified Properties</p>
                   </div>
-                  Watch Demo
-                </button>
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-3 flex items-center gap-2 hover:scale-105 transition-transform duration-300">
+                    <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-sm">💰</span>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-800">Best Price Guarantee</p>
+                  </div>
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-3 flex items-center gap-2 hover:scale-105 transition-transform duration-300">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-sm">⭐</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">4.7/5 Rating</p>
+                      <p className="text-xs text-gray-600">Based on 1k+ reviews</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -279,40 +323,9 @@ Provider App                  </span>
                     <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce hover:scale-110 transition-transform duration-300">
                       <span className="text-white text-xl font-bold">✓</span>
                     </div>
-                    
-                    
-
-                    {/* New Floating Features */}
-                    <div className="absolute top-7/10 -left-4 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-3 hover:scale-105 transition-transform duration-300">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white text-sm">🔒</span>
-                        </div>
-                        <p className="text-sm font-semibold text-gray-800">Verified Properties</p>
-                      </div>
-                    </div>
-
-                    <div className="absolute bottom-1/4 -right-4 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-3 hover:scale-105 transition-transform duration-300">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white text-sm">💰</span>
-                        </div>
-                        <p className="text-sm font-semibold text-gray-800">Best Price Guarantee</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
-              </div><div className="absolute bottom-8 right-0.5 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 hover:scale-105 transition-transform duration-300">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white text-sm">⭐</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-gray-800">4.7/5 Rating</p>
-                          <p className="text-xs text-gray-600">Based on 1k+ reviews</p>
-                        </div>
-                      </div>
-                    </div>
+              </div>
             </div>
             
           </div>
