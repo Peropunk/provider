@@ -1,31 +1,31 @@
 // src/components/TrustBadgesSection.jsx
 import React from 'react';
-import { ShieldCheck, BadgeCheck, Users, Award } from 'lucide-react';
+import Image from 'next/image';
 
 const trustData = [
   {
-    icon: <ShieldCheck size={32} className="text-green-500" />,
-    text: '100% Secure Payments',
-    bgColor: 'bg-green-50',
-    textColor: 'text-green-700',
+    icon: <Image src="/certificates/startupindia.png" alt="#startupindia" width={200} height={200} className="object-contain" />,
+    text: '#startupindia',
+    bgColor: 'bg-orange-50',
+    textColor: 'text-orange-700',
   },
   {
-    icon: <BadgeCheck size={32} className="text-blue-500" />,
-    text: 'Verified Hostels',
+    icon: <Image src="/certificates/startinup.png" alt="Start In UP" width={256} height={256} className="object-contain" />,
+    text: 'Start In UP',
     bgColor: 'bg-blue-50',
     textColor: 'text-blue-700',
   },
   {
-    icon: <Users size={32} className="text-purple-500" />,
-    text: 'Trusted by 50K+ Students',
-    bgColor: 'bg-purple-50',
-    textColor: 'text-purple-700',
+    icon: <Image src="/certificates/msme.png" alt="MSME" width={128} height={128} className="object-contain" />,
+    text: 'MSME Registered',
+    bgColor: 'bg-yellow-50',
+    textColor: 'text-yellow-700',
   },
   {
-    icon: <Award size={32} className="text-amber-500" />,
-    text: 'Student-Centric Company',
-    bgColor: 'bg-amber-50',
-    textColor: 'text-amber-700',
+    icon: <Image src="/certificates/kashi.jpg" alt="MSME" width={128} height={128} className="object-contain" />,
+    text: 'Your Fourth Badge',
+    bgColor: 'bg-purple-50',
+    textColor: 'text-purple-700',
   },
 ];
 

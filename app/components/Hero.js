@@ -170,7 +170,7 @@ const Hero = () => {
             <div ref={textRef} className="relative z-10 space-y-6">
               
               {/* Enhanced Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-200/50 rounded-full backdrop-blur-sm hover:scale-105 transition-transform duration-300">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-200/50 rounded-full backdrop-blur-sm hover:scale-105 transition-transform duration-300 mt-4">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-sm font-semibold text-blue-700 tracking-wide">
                   🏠 India's #1 Student Housing Platform
@@ -257,7 +257,7 @@ PROVIDER APP                  </span>
                   <iframe
                     width="100%"
                     height="100%"
-                    src="https://www.youtube.com/embed/lINMiZrwbS0?si=ll3CxA54WA2R75SO"
+                    src="https://www.youtube.com/embed/lINMiZrwbS0?si=ll3CxA54WA2R75SO&autoplay=1"
                     title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -320,9 +320,9 @@ PROVIDER APP                  </span>
                     </div>
                     
                     {/* Enhanced Floating UI Elements */}
-                    <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce hover:scale-110 transition-transform duration-300">
+                    {/* <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce hover:scale-110 transition-transform duration-300">
                       <span className="text-white text-xl font-bold">✓</span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

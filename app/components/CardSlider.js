@@ -15,13 +15,6 @@ const features = [
     image: "/1.png",
   },
   {
-    title: "Trips & Local Support",
-    description:
-      "Explore your new city with ease! We organize exciting student trips and provide comprehensive local support to help you settle in, discover hidden gems, and make lifelong friends.",
-    icon: "🧳",
-    image: "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJhdmVsJTIwZ3JvdXB8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=80",
-  },
-  {
     title: "Direct Owner Contact ",
     description:
       "Connect directly with hostel owners. No brokers, no hidden fees. Enjoy transparent communication, quick query resolution, and a hassle-free booking experience.",
@@ -38,9 +31,9 @@ const features = [
   {
     title: "Free Stationery Delivery ",
     description:
-      "Get all your essential study supplies—notebooks, pens, and more—delivered right to your doorstep, absolutely free. Never run out of what you need to succeed.",
+      "Get all your essential study supplies— Calculators, pens, and more—delivered right to your doorstep, absolutely free. Never run out of what you need to succeed.",
     icon: "📦",
-    image: "/stationary.jpg",
+    image: "https://m.media-amazon.com/images/I/61IujYL0JTL.jpg",
   },
   {
     title: "Exclusive Internships",
@@ -163,7 +156,15 @@ export default function CardSlider() {
             <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
               {feature.description}
             </p>
-            <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <button
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              onClick={() => {
+                const faqSection = document.getElementById('faq');
+                if (faqSection) {
+                  faqSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
               Learn More
             </button>
           </div>

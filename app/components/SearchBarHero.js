@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Search, Home, Users, MapPin } from "lucide-react"; // Added more icons
 
 const propertyTypes = ["Hostel", "PG", "Room", "Flat"];
-const genders = ["Male", "Female", "Unisex"];
+const genders = ["Male", "Female", "Independent"];
 
 export default function SearchBarHero() {
   const [selectedPropertyType, setSelectedPropertyType] = useState(
@@ -101,7 +101,7 @@ export default function SearchBarHero() {
               className="flex items-center text-sm font-medium mb-2 text-left text-indigo-200"
             >
               <MapPin size={18} className="mr-2 text-purple-400" />
-              Property Name / City / Location
+              Property Name / Gender / City / Location
             </label>
             {/* Input with more contrast and better focus state */}
             <input
@@ -109,8 +109,7 @@ export default function SearchBarHero() {
               id="searchInput"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="e.g., 'Sunrise Hostel', 'Noida', 'Sector 62'"
-              className="w-full p-3.5 rounded-lg text-purple-900 bg-slate-50 placeholder-slate-500 
+              placeholder="e.g., Girls Hostel, Greater Noida, Alpha I"             className="w-full p-3.5 rounded-lg text-purple-900 bg-slate-50 placeholder-slate-500 
                          focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none shadow-sm
                          transition-all duration-200 ease-in-out border border-transparent focus:bg-white"
             />

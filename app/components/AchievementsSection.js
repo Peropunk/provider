@@ -38,9 +38,9 @@ const achievementsData = [
     bgColor: 'bg-pink-50',
   },
   {
-    numericValue: 1000,
-    displayValue: '1000+ Properties',
-    label: 'Over 50K+ Beds',
+    numericValue: 50000,
+    displayValue: '50,000+',
+    label: 'Beds',
     icon: <FaBuilding className="w-8 h-8" />,
     iconColor: 'text-cyan-500',
     bgColor: 'bg-cyan-50',
