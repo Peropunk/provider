@@ -25,8 +25,8 @@ export default function Home() {
     <AchievementsSection/>
     {/* <Solutions/> */}
     <StudentTestimonial/><TrustBadgesSection/>
-    {/* <ComparisonTableSection/> */}
-    <MeetOurMentors/>
+    <ComparisonTableSection/>
+    {/* <MeetOurMentors/> */}
     <FAQSection/>
     <GuidesAndResources/>
     <NewsHeadlinesSection/>

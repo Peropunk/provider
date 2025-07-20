@@ -96,7 +96,7 @@ const AboutUs = () => {
             >
               <h2 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Our Journey</h2>
               <p className="text-xl text-gray-600 leading-relaxed">
-                What began in 2021 with a few girls searching for a reliable hostel near Greater Noida, became a mission: to solve every student's biggest challenge—finding a safe, affordable, and verified place to live. From proud roots as an incubated project at ITS Engineering College in Knowledge Park 3, we've grown into a full-fledged platform trusted across India.
+                What began in 2021 with a few girls searching for a reliable hostel near Greater Noida, became a mission: to solve every student's biggest challenge—finding a safe, affordable, and verified place to live. From proud roots as an incubated project at GL Bajaj in Knowledge Park 3, we've grown into a full-fledged platform trusted across India.
               </p>
             </motion.div>
             <motion.div

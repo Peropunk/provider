@@ -3,17 +3,9 @@ import React from 'react';
 import Image from 'next/image';
 
 const newsItems = [
+
   {
     id: 1,
-    src: '/news1.jpeg', // Path relative to the 'public' folder
-    alt: 'First news headline clipping',
-    headline: 'Major Breakthrough in Student Housing Solutions!',
-    rotation: '-rotate-3', // Tailwind class for slight rotation
-    zIndex: 'z-10',
-    margin: 'lg:mr-[-40px]', // Negative margin for overlap on large screens
-  },
-  {
-    id: 2,
     src: '/news2.jpeg',
     alt: 'Second news headline clipping',
     headline: 'Provider App Voted #1 by Students Nationwide',
@@ -22,7 +14,7 @@ const newsItems = [
     margin: 'lg:scale-105', // Slightly larger and no x-margin for centering
   },
   {
-    id: 3,
+    id: 2,
     src: '/news3.png',
     alt: 'Third news headline clipping',
     headline: 'Exclusive Internships Program Launched Successfully',
@@ -31,14 +23,24 @@ const newsItems = [
     margin: 'lg:ml-[-40px]', // Negative margin for overlap
   },
   {
-    id: 4,
-    src: '/pw.jpeg',
+    id: 3,
+    src: '/images/news.png',
     alt: 'Third news headline clipping',
     headline: 'Exclusive Internships Program Launched Successfully',
     rotation: 'rotate-2',
     zIndex: 'z-10',
     margin: 'lg:ml-[-40px]', // Negative margin for overlap
   },
+  {
+    id: 4,
+    src: '/IMG_4173.jpg',
+    alt: 'Third news headline clipping',
+    headline: 'Exclusive Internships Program Launched Successfully',
+    rotation: 'rotate-2',
+    zIndex: 'z-10',
+    margin: 'lg:ml-[-40px]', // Negative margin for overlap
+  },
+
 ];
 
 const NewsHeadlinesSection = () => {
@@ -59,7 +61,7 @@ const NewsHeadlinesSection = () => {
             <div
               key={item.id}
               className={`
-                w-full max-w-sm lg:w-1/3 
+                w-full max-w-xs lg:w-1/4
                 bg-white p-3 border border-gray-300 rounded-md shadow-xl 
                 transform transition-all duration-300 ease-out
                 hover:shadow-2xl hover:scale-105 hover:!rotate-0 hover:!z-30
@@ -69,13 +71,13 @@ const NewsHeadlinesSection = () => {
                 ${index === 1 ? 'lg:relative lg:bottom-[-10px]' : ''} // Slightly elevate middle item on large screens
               `}
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden rounded">
+              <div className="relative w-full aspect-[4/3] overflow-hidden rounded bg-gray-100">
                 {/* Use Next.js Image component */}
                 <Image
                   src={item.src}
                   alt={item.alt}
                   layout="fill"
-                  objectFit="cover" // or "contain" depending on your images
+                  objectFit="contain" // Changed from "cover" to "contain" to show full image
                   className="rounded" // Ensure image itself is rounded if parent has overflow-hidden
                   priority={index === 1} // Prioritize loading the central image
                 />

@@ -33,7 +33,7 @@ export default function SearchBarHero() {
           Find Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-purple-400">Perfect Stay</span>
         </h1>
         <p className="text-lg md:text-xl text-indigo-200 mb-10 md:mb-12 max-w-2xl mx-auto">
-          Search Hostels, PGs, or Flats Across India with Ease
+          Search Hostels, PGs or Flats Across India with Ease
         </p>
 
         <form

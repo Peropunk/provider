@@ -17,11 +17,11 @@ import 'swiper/css/pagination';
 const testimonialsData = [
   {
     id: 1,
-    name: 'Priya Sharma',
-    photoUrl: null,
+    name: 'Ritesh',
+    photoUrl: "/images/testimonials/unnamed.webp",
     location: 'KP2, Greater Noida',
     rating: 5,
-    text: 'Provider made finding a safe and friendly hostel near my college so easy! The direct owner contact was a huge plus. Absolutely recommend it to every student.',
+    text: 'This app has truly been a lifesaver! Finding a good hostel can be a stressful and time-consuming task, but this app made the entire process smooth and hassle-free. The interface is clean, user-friendly, and packed with useful features like filters, real images, verified reviews, and instant booking options.',
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const testimonialsData = [
     photoUrl: '/images/testimonials/image.png',
     location: 'Delta',
     rating: 5,
-    text: "The no-cost EMI option for fees was a lifesaver for my parents. Plus, the organized trips helped me explore the city and make new friends quickly.",
+    text: "This application is great for college students to find a house warming hostel near by your own college. My own experience from this application is great, I took hostel recommended by this app for my 2nd year and it was perfect and cheaper than my own college Residencial Hostels. I got clean room with friendly roommate and staff, tasty food and 24×7 wifi and security and the best thing was unlimited laundry and transportation. I would definitely recommend this app to other college students.",
   },
   {
     id: 3,
@@ -42,19 +42,19 @@ const testimonialsData = [
   },
   {
     id: 4,
-    name: 'Rohan Mehta',
+    name: 'Vaani Krishnan',
     photoUrl: null,
     location: 'Alpha 2',
     rating: 5,
-    text: "The verified listings gave me peace of mind. I knew I was choosing a good place. The local support team was also very helpful when I first moved in.",
+    text: "Smooth Experience So Far! ⭐⭐⭐⭐⭐ The Provider app made it super easy to find good hostels in Noida. The options look great, and they even offer discounts. My experience using the app has been 10/10 so far!",
   },
   {
     id: 5,
-    name: 'Alisha Khan', // Changed for variety
+    name: 'Yashi Gupta', // Changed for variety
     photoUrl: null,
     location: null,
     rating: 5,
-    text: "The exclusive courses and stationery delivery have been incredibly helpful for my studies. Provider truly understands student needs.",
+    text: "The Provider app revolutionizes travel accommodation with its affordability and convenience. With a user-friendly interface and seamless booking process, it simplifies the experience for budget-conscious travelers. Manage bookings effortlessly and explore comprehensive hostel listings for a hassle-free hostel hunting experience.",
   }
 ];
 // --- End of Data ---
@@ -157,7 +157,7 @@ const StudentTestimonials = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-gray-900">
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">What Students Say About Provider</span>
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">What Students Say About Provider App</span>
           </h2>
           <p className="text-lg md:text-xl text-indigo-700 max-w-2xl mx-auto font-medium">
             Join thousands of satisfied students who found their perfect accommodation with us

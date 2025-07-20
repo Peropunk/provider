@@ -19,21 +19,21 @@ const features = [
     description:
       "Connect directly with hostel owners. No brokers, no hidden fees. Enjoy transparent communication, quick query resolution, and a hassle-free booking experience.",
     icon: "📞",
-    image: "/call.jpg",
+    image: "https://sdmntprwestus2.oaiusercontent.com/files/00000000-8eb8-61f8-b1d1-5b699dcd3c49/raw?se=2025-07-20T11%3A42%3A44Z&sp=r&sv=2024-08-04&sr=b&scid=0df029de-ca1b-5e2a-adbc-60e80ebc75e9&skoid=30ec2761-8f41-44db-b282-7a0f8809659b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-20T01%3A22%3A33Z&ske=2025-07-21T01%3A22%3A33Z&sks=b&skv=2024-08-04&sig=Bw0f6vJTWe8dnDVMqZ4q5lZDcG9CheB56D6btbEE4I0%3D",
   },
   {
     title: "No-Cost EMI",
     description:
       "Manage your finances smartly. Pay your hostel fees and other essential expenses in easy, interest-free monthly installments. Focus on your studies, not financial stress.",
     icon: "💸",
-    image: "https://images.unsplash.com/photo-1561414927-6d86591d0c4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bW9uZXklMjBwYXltZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=80",
+    image: "https://play-lh.googleusercontent.com/82j9KXsAmD1qlPaG25o9BJKHCeXEtyid5iAqtzL9q_jtZT7_Rjh9GosM3mrOjqC26kc=w480-h960-rw",
   },
   {
     title: "Free Stationery Delivery ",
     description:
-      "Get all your essential study supplies— Calculators, pens, and more—delivered right to your doorstep, absolutely free. Never run out of what you need to succeed.",
+      "Get all your essential study supplies— Calculators, Pens, Filesand more—delivered right to your doorstep, absolutely free delivery. Never run out of what you need to succeed.",
     icon: "📦",
-    image: "https://m.media-amazon.com/images/I/61IujYL0JTL.jpg",
+    image: "https://img.freepik.com/free-photo/workplace-with-set-stationary_23-2147830026.jpg?semt=ais_hybrid&w=740",
   },
   {
     title: "Exclusive Internships",

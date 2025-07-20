@@ -105,7 +105,7 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="relative py-20 overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30">
+    <section id="faq" className="relative py-20 overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30">
       {/* Enhanced Background Texture */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Grid Pattern */}

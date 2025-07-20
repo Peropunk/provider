@@ -334,7 +334,7 @@ PROVIDER APP                  </span>
           <div className="mt-16 pt-12 border-t border-gray-200/50">
             <div className="text-center mb-8">
               <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                Trusted by Students Across India 🇮🇳
+                Trusted by Students Across India
               </h3>
               <p className="text-gray-600">Join thousands of students who found their perfect accommodation</p>
             </div>

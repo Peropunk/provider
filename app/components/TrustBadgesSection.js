@@ -5,28 +5,23 @@ import Image from 'next/image';
 const trustData = [
   {
     icon: <Image src="/certificates/startupindia.png" alt="#startupindia" width={200} height={200} className="object-contain" />,
-    text: '#startupindia',
+    text:null,
     bgColor: 'bg-orange-50',
     textColor: 'text-orange-700',
   },
   {
     icon: <Image src="/certificates/startinup.png" alt="Start In UP" width={256} height={256} className="object-contain" />,
-    text: 'Start In UP',
+    text: null,
     bgColor: 'bg-blue-50',
     textColor: 'text-blue-700',
   },
   {
     icon: <Image src="/certificates/msme.png" alt="MSME" width={128} height={128} className="object-contain" />,
-    text: 'MSME Registered',
+    text: null,
     bgColor: 'bg-yellow-50',
     textColor: 'text-yellow-700',
   },
-  {
-    icon: <Image src="/certificates/kashi.jpg" alt="MSME" width={128} height={128} className="object-contain" />,
-    text: 'Your Fourth Badge',
-    bgColor: 'bg-purple-50',
-    textColor: 'text-purple-700',
-  },
+ 
 ];
 
 const TrustBadgesSection = () => {
@@ -74,7 +69,7 @@ const TrustBadgesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {trustData.map((item, index) => (
             <div
               key={index}
