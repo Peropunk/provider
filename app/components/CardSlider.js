@@ -19,7 +19,7 @@ const features = [
     description:
       "Connect directly with hostel owners. No brokers, no hidden fees. Enjoy transparent communication, quick query resolution, and a hassle-free booking experience.",
     icon: "📞",
-    image: "https://sdmntprwestus2.oaiusercontent.com/files/00000000-8eb8-61f8-b1d1-5b699dcd3c49/raw?se=2025-07-20T11%3A42%3A44Z&sp=r&sv=2024-08-04&sr=b&scid=0df029de-ca1b-5e2a-adbc-60e80ebc75e9&skoid=30ec2761-8f41-44db-b282-7a0f8809659b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-20T01%3A22%3A33Z&ske=2025-07-21T01%3A22%3A33Z&sks=b&skv=2024-08-04&sig=Bw0f6vJTWe8dnDVMqZ4q5lZDcG9CheB56D6btbEE4I0%3D",
+    image: "/owner.png",
   },
   {
     title: "No-Cost EMI",

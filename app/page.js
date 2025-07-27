@@ -14,6 +14,7 @@ import MeetOurMentors from "./components/MeetOurMentors"
 import JoinCommunity from "./components/JoinCommunity"
 import NewsHeadlinesSection from "./components/NewsHeadlinesSection"
 import Footer from "./components/Footer"
+import Booking3DExplainer from "./components/Booking3DExplainer";
 
 export default function Home() {
   return (
@@ -22,7 +23,8 @@ export default function Home() {
     <SearchBarHero/>
     <AppPromotionSection/>
     <CardSlider/>
-    <AchievementsSection/>
+    
+  <AchievementsSection/><Booking3DExplainer/>
     {/* <Solutions/> */}
     <StudentTestimonial/><TrustBadgesSection/>
     <ComparisonTableSection/>

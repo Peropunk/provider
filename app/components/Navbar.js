@@ -118,7 +118,7 @@ const Navbar = () => {
       {/* Logo */}
       <Link href="/" onClick={handleLinkClick}>
         <div>
-          <img className="h-12 sm:h-14 transition-all duration-300" src="/provider_logo.png" alt="Provider Logo" />
+          <img className="h-12 sm:h-14 transition-all duration-300" src="/lofo.png" alt="Provider Logo" />
         </div>
       </Link>
 

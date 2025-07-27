@@ -25,8 +25,8 @@ const testimonialsData = [
   },
   {
     id: 2,
-    name: 'Priyanka Mehta',
-    photoUrl: '/images/testimonials/image.png',
+    name: 'Ayush Raj',
+    photoUrl: null,
     location: 'Delta',
     rating: 5,
     text: "This application is great for college students to find a house warming hostel near by your own college. My own experience from this application is great, I took hostel recommended by this app for my 2nd year and it was perfect and cheaper than my own college Residencial Hostels. I got clean room with friendly roommate and staff, tasty food and 24×7 wifi and security and the best thing was unlimited laundry and transportation. I would definitely recommend this app to other college students.",

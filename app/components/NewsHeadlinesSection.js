@@ -71,7 +71,7 @@ const NewsHeadlinesSection = () => {
                 ${index === 1 ? 'lg:relative lg:bottom-[-10px]' : ''} // Slightly elevate middle item on large screens
               `}
             >
-              <div className="relative w-full aspect-[4/3] overflow-hidden rounded bg-gray-100">
+              <div className="relative w-full aspect-[1/1] overflow-hidden rounded bg-gray-100">
                 {/* Use Next.js Image component */}
                 <Image
                   src={item.src}

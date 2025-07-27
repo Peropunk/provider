@@ -181,7 +181,7 @@ const Hero = () => {
               <div className="space-y-3">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tight">
                   <span className="block bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">
-PROVIDER APP                  </span>
+                 </span>
                   
                 </h1>
                 
