@@ -15,6 +15,7 @@ import JoinCommunity from "./components/JoinCommunity"
 import NewsHeadlinesSection from "./components/NewsHeadlinesSection"
 import Footer from "./components/Footer"
 import Booking3DExplainer from "./components/Booking3DExplainer";
+import PosterSection from "./components/PosterSection";
 
 export default function Home() {
   return (
@@ -24,7 +25,7 @@ export default function Home() {
     <AppPromotionSection/>
     <CardSlider/>
     
-  <AchievementsSection/><Booking3DExplainer/>
+    <AchievementsSection/><Booking3DExplainer/><PosterSection/>
     {/* <Solutions/> */}
     <StudentTestimonial/><TrustBadgesSection/>
     <ComparisonTableSection/>
