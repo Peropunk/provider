@@ -176,7 +176,7 @@ const Navbar = () => {
       >
         <ul className="flex flex-col items-center gap-5 py-8 text-base font-medium text-gray-700">
           <li><Link href="/" className={navLinkClasses} onClick={handleLinkClick}>Home</Link></li>
-          <li><Link href="/hostels" className={navLinkClasses} onClick={handleLinkClick}>Hostels</Link></li>
+          <li><Link href="/property" className={navLinkClasses} onClick={handleLinkClick}>Property</Link></li>
           <li><Link href="/college" className={navLinkClasses} onClick={handleLinkClick}>College</Link></li>
           <li><Link href="/blogs" className={navLinkClasses} onClick={handleLinkClick}>Blogs</Link></li>
           <li><Link href="/about-us" className={navLinkClasses} onClick={handleLinkClick}>About Us</Link></li>
