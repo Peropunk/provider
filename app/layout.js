@@ -3,6 +3,7 @@ import "./globals.css";
 import MaxWidthWrapper from "./components/MaxWidthWrapper";
 import Navbar from './components/Navbar';
 import FloatingActionButtons from './components/FloatingActionButtons';
+import Providers from './providers'; // <== Import the wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,15 +26,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-    
-        className={`${geistSans.variable} ${geistMono.variable} antialiased  bg-[#ffffff]`}
-      >
-        <Navbar/>
-       
-        {children}
-        <FloatingActionButtons />
-       
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#ffffff]`}>
+        <Providers>
+          <Navbar />
+          {children}
+          <FloatingActionButtons />
+        </Providers>
       </body>
     </html>
   );

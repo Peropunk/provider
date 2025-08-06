@@ -23,7 +23,7 @@ export default function Home() {
     <Hero/>
     <SearchBarHero/>
     <AppPromotionSection/>
-    <CardSlider/>
+    {/* <CardSlider/> */}
     
     <AchievementsSection/><Booking3DExplainer/><PosterSection/>
     {/* <Solutions/> */}

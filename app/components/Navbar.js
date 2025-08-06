@@ -126,7 +126,7 @@ const Navbar = () => {
       <div className="hidden md:flex items-center">
         <ul className="flex gap-6 lg:gap-8 text-sm font-medium text-gray-700">
           <li><Link href="/" className={navLinkClasses}>Home</Link></li>
-          <li><Link href="/hostels" className={navLinkClasses}>Hostels</Link></li>
+          <li><Link href="/property" className={navLinkClasses}>Properties</Link></li>
           <li><Link href="/college" className={navLinkClasses}>College</Link></li>
           <li><Link href="/blogs" className={navLinkClasses}>Blogs</Link></li>
           <li><Link href="/about-us" className={navLinkClasses}>About Us</Link></li>
