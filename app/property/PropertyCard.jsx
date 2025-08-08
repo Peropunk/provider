@@ -6,10 +6,10 @@ function truncateText(text, maxLength) {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
-const StatusBadge = ({ type }) => {
-    // Refined badge colors for better theme consistency
+const VerificationBadge = ({ type }) => {
+    if (!type) return null;
     const styles = {
-        provider_verified: "bg-teal-100 text-teal-800", // Changed green to teal
+        provider_verified: "bg-teal-100 text-teal-800",
         listed_by_broker: "bg-yellow-100 text-yellow-800",
         unverified: "bg-red-100 text-red-800",
     };
@@ -17,7 +17,7 @@ const StatusBadge = ({ type }) => {
         provider_verified: "Verified",
         listed_by_broker: "Broker",
         unverified: "Unverified",
-    }
+    };
     return (
         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${styles[type] || styles.unverified}`}>
             {text[type] || "N/A"}
@@ -25,11 +25,44 @@ const StatusBadge = ({ type }) => {
     );
 };
 
+// This component is now correct and will work with the fix below.
+const AvailabilityBadge = ({ status }) => {
+    if (!status) return null;
+
+    const styles = {
+        available: "bg-green-100 text-green-800",
+        full: "bg-orange-100 text-orange-800",
+    };
+    const displayText = status.charAt(0).toUpperCase() + status.slice(1);
+
+    return (
+        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${styles[status] || 'bg-gray-100 text-gray-800'}`}>
+            {displayText}
+        </span>
+    );
+};
+
+const GenderBadge = ({ gender }) => {
+    if (!gender) return null;
+    return (
+        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+            {gender}
+        </span>
+    );
+};
+
+
 const PropertyCard = ({ singleData, isListView }) => {
   const { attributes } = singleData || {};
   const router = useRouter();
 
   if (!attributes) return null;
+
+  // --- THE FIX IS HERE ---
+  // We check the 'full' boolean from your data.
+  // If attributes.full is true, we set status to "full".
+  // Otherwise, we set it to "available".
+  const availabilityStatus = attributes.full ? 'full' : 'available';
 
   const navigateToPropertyDetails = () => {
     router.push(`/property/${singleData.id}`);
@@ -40,17 +73,27 @@ const PropertyCard = ({ singleData, isListView }) => {
         View Details
     </button>
   );
+  
+  const BadgesOverlay = () => (
+    <div className="absolute top-2 right-2 z-10 flex flex-wrap justify-end gap-2">
+        {/* We now pass our corrected 'availabilityStatus' variable to the badge */}
+        <AvailabilityBadge status={availabilityStatus} />
+        <GenderBadge gender={attributes.genders?.data?.[0]?.attributes.name} />
+        <VerificationBadge type={attributes.verification_type} />
+    </div>
+  );
 
   if (isListView) {
       return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-xl w-full flex flex-col sm:flex-row">
-            <div className="sm:w-1/3 h-48 sm:h-auto flex-shrink-0">
+            <div className="relative sm:w-1/3 h-48 sm:h-auto flex-shrink-0">
                 <img
                     src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
                     alt={attributes.name}
                     className="w-full h-full object-cover cursor-pointer"
                     onClick={navigateToPropertyDetails}
                 />
+                <BadgesOverlay />
             </div>
             <div className="p-4 sm:p-6 flex flex-col justify-between w-full">
                 <div>
@@ -61,7 +104,6 @@ const PropertyCard = ({ singleData, isListView }) => {
                                 <FaMapMarkerAlt /> {truncateText(attributes.address, 40)}
                             </p>
                         </div>
-                        <StatusBadge type={attributes.verification_type} />
                     </div>
                     <p className="text-sm text-gray-600 mt-3">
                         {truncateText(attributes.description, 100)}
@@ -95,9 +137,7 @@ const PropertyCard = ({ singleData, isListView }) => {
                 className="w-full h-48 object-cover cursor-pointer"
                 onClick={navigateToPropertyDetails}
             />
-            <div className="absolute top-2 right-2">
-                <StatusBadge type={attributes.verification_type} />
-            </div>
+            <BadgesOverlay />
         </div>
         <div className="p-4 flex flex-col flex-grow">
             <h3 className="text-lg font-bold text-gray-800">{attributes.name}</h3>

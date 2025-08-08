@@ -187,10 +187,7 @@ const Properties = ({ selectedLocation, sData, query, onReset }) => {
                             </p>
                         </div>
                         <div className="flex items-center gap-4">
-                            <select className="pl-4 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg shadow-sm" style={{ color: '#2c3e50' }}>
-                                <option>Sort by Date</option>
-                                <option>Sort by Price</option>
-                            </select>
+                           
                             <div className="flex items-center bg-gray-200 rounded-lg p-1">
                                 <button
                                     onClick={() => setIsListView(false)}

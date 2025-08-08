@@ -5,12 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from 'axios';
-// Note: Imports for @react-google-maps/api are removed.
 import { 
-  FaArrowLeft, FaMapMarkerAlt, FaBed, FaUserFriends, FaCheckCircle,
+  FaArrowLeft, FaMapMarkerAlt, FaBed, FaCheckCircle,
   FaPhone, FaWhatsapp, FaHeart, FaRegHeart, FaShare, FaWifi, FaTshirt,
   FaShieldAlt, FaBus, FaDumbbell, FaParking, FaBook, FaSnowflake, 
-  FaVideo, FaMapMarkedAlt // Added FaMapMarkedAlt for the new button
+  FaVideo, FaMobileAlt, // Changed icon for the new button
+  FaMapMarkedAlt
 } from 'react-icons/fa';
 
 const PropertyDetailPage = () => {
@@ -49,6 +49,18 @@ const PropertyDetailPage = () => {
     fetchProperty();
   }, [id]);
 
+  // --- ADDED DOWNLOAD LOGIC ---
+  const handleDownloadApp = () => {
+    const userAgent = typeof window !== 'undefined' ? navigator.userAgent || navigator.vendor || window.opera : '';
+    if (/android/i.test(userAgent)) {
+      window.open('https://play.google.com/store/apps/details?id=provider.in', '_blank');
+    } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      window.open('https://apps.apple.com/in/app/provider-app-search-hostel-pg/id1659063733', '_blank');
+    } else {
+      window.open('https://play.google.com/store/apps/details?id=provider.in', '_blank');
+    }
+  };
+
   const handleShare = () => {
     if (navigator.share && property) {
       navigator.share({
@@ -62,13 +74,7 @@ const PropertyDetailPage = () => {
     }
   };
 
-  const handleWhatsApp = () => {
-    if (!property) return;
-    const ownerPhone = property.attributes.owner_number;
-    const message = `Hi, I'm interested in your property: ${property.attributes.name} (ID: ${id})`;
-    const whatsappUrl = `https://wa.me/${ownerPhone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
+  // The handleWhatsApp function is no longer needed and can be removed.
 
   if (isLoading) {
     return (
@@ -100,8 +106,6 @@ const PropertyDetailPage = () => {
     attr.main_image?.data?.attributes?.url,
     ...(attr.images?.data?.map(img => img.attributes.url) || [])
   ].filter(Boolean);
-  
-  const propertyLocation = attr.latlng;
 
   const statusStyles = {
     full: "bg-red-100 text-red-800",
@@ -141,7 +145,17 @@ const PropertyDetailPage = () => {
                 {attr.status && <span className={`px-3 py-1 text-sm font-semibold rounded-full capitalize ${statusStyles[attr.status] || 'bg-gray-100 text-gray-800'}`}>{attr.status}</span>}
               </div>
 
-              {attr.price?.length > 0 && (<div className="mb-6"><h3 className="text-xl font-semibold text-gray-800 mb-3">Pricing</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{attr.price.map((p, index) => (<div key={index} className="p-4 bg-indigo-50 rounded-lg"><p className="font-semibold text-gray-700">{p.value}</p><p className="text-2xl font-bold text-indigo-600">₹{Number(p.price).toLocaleString('en-IN')}</p><p className="text-sm text-gray-500">/ per {p.duration}</p></div>))}</div></div>)}
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">Pricing</h3>
+                {/* --- MODIFIED "REVEAL PRICE" BUTTON --- */}
+                <button 
+                  onClick={handleDownloadApp}
+                  className="inline-flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+                >
+                  Reveal Price
+                </button>
+              </div>
+
               <div className="mb-6"><h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3><p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p></div>
               {attr.facilities?.data?.length > 0 && (<div><h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3><div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">{attr.facilities.data.map((facility) => {const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle; return (<div key={facility.id} className="flex items-center"><Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} /><span className="text-gray-700">{facility.attributes.value}</span></div>);})}</div></div>)}
             </div>
@@ -152,23 +166,19 @@ const PropertyDetailPage = () => {
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Contact Property Manager</h3>
                 <div className="space-y-3">
-                  <a href={`tel:${attr.owner_number}`} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhone className="mr-2" /> Call Now</a>
-                  <button onClick={handleWhatsApp} className="flex items-center justify-center w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-semibold"><FaWhatsapp className="mr-2" /> WhatsApp</button>
+                  {/* --- MODIFIED BUTTONS TO REDIRECT --- */}
+                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhone className="mr-2" /> Call Now</button>
+                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-semibold"><FaWhatsapp className="mr-2" /> WhatsApp</button>
                   {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
                   
-                  {/* --- MODIFIED LOCATION LINK --- */}
-                  {/* This replaces the embedded map with a direct link */}
-                  {propertyLocation?._latitude && propertyLocation?._longitude && (
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${propertyLocation._latitude},${propertyLocation._longitude}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-                    >
-                      <FaMapMarkedAlt className="mr-2" />
-                      View on Map
-                    </a>
-                  )}
+                  {/* --- REPLACED MAP LINK WITH "VIEW ON APP" BUTTON --- */}
+                  <button 
+                    onClick={handleDownloadApp}
+                    className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+                  >
+                    <FaMapMarkedAlt className="mr-2" />
+                    View on Map
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-md p-6">
@@ -176,9 +186,6 @@ const PropertyDetailPage = () => {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between"><span className="text-gray-500">Property Type</span><span className="font-medium text-gray-800">{attr.property_types}</span></div>
                   {attr.genders?.data?.length > 0 && <div className="flex justify-between"><span className="text-gray-500">Gender</span><span className="font-medium text-gray-800">{attr.genders.data[0].attributes.name}</span></div>}
-                  <div className="flex justify-between"><span className="text-gray-500">Available Seaters</span><span className="font-medium text-gray-800">{attr.seaters?.data?.map(s => s.attributes.value).join(', ') || 'N/A'}</span></div>
-                  {attr.booking_amount && <div className="flex justify-between"><span className="text-gray-500">Booking Amount</span><span className="font-medium text-gray-800">₹{Number(attr.booking_amount).toLocaleString('en-IN')}</span></div>}
-                  <div className="flex justify-between"><span className="text-gray-500">Property ID</span><span className="font-medium text-gray-800">#{property.id}</span></div>
                 </div>
               </div>
             </div>
