@@ -17,17 +17,19 @@ const useFetchPropertiesViewAll = ({ filters }) => {
          gql`
           query properties(
             $page: Int!
-            $location: String!
+            $location: String
             $property_type: String
             $gender: String
+            $seater: String
           ) {
             properties(
-              sort: "id:desc"
+              sort: "ranking_id:desc"
               pagination: { page: $page, pageSize: 20 }
               filters: {
                 location: { name: { eq: $location } }
-                property_types: { contains: $property_type }
-                genders: { name: { contains: $gender } }
+                property_types: { containsi: $property_type }
+                genders: { name: { containsi: $gender } }
+                seaters: { value: { containsi: $seater } }
               }
             ) {
               meta {
@@ -41,6 +43,7 @@ const useFetchPropertiesViewAll = ({ filters }) => {
               data {
                 id
                 attributes {
+                  ranking_id
                   viewsCount { count }
                   tag_value
                   tag_color
@@ -49,6 +52,7 @@ const useFetchPropertiesViewAll = ({ filters }) => {
                   property_types
                   description
                   verification_type
+                  price # We fetch the price array to filter on the client
                   genders {
                     data {
                       attributes {
@@ -75,7 +79,6 @@ const useFetchPropertiesViewAll = ({ filters }) => {
                     }
                   }
                   address
-                  price
                   latlng
                   images {
                     data {
@@ -134,11 +137,13 @@ const useFetchPropertiesViewAll = ({ filters }) => {
                 }
               }
             }
-          }`
-        ,
+          }`,
         {
-          ...filters,
           page: pageParam,
+          location: filters.location,
+          property_type: filters.property_type,
+          gender: filters.gender,
+          seater: filters.seater,
         }
       );
 

@@ -144,8 +144,8 @@ const PropertyCard = ({ singleData, isListView }) => {
             <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
                 <FaMapMarkerAlt /> {truncateText(attributes.address, 30)}
             </p>
-            <div className="grid grid-cols-3 gap-4 my-4 text-center text-sm flex-grow">
-                 <div><p className="text-gray-500">Gender</p><p className="font-semibold">{attributes.genders?.data?.[0]?.attributes.name || 'N/A'}</p></div>
+            <div className="grid grid-cols-2 gap-4 my-4 text-center text-sm flex-grow">
+                 
                  <div><p className="text-gray-500">Type</p><p className="font-semibold">{attributes.property_types || 'N/A'}</p></div>
                  <div><p className="text-gray-500">Seaters</p><p className="font-semibold">{attributes.seaters?.data?.[0]?.attributes.value || 'N/A'}</p></div>
             </div>

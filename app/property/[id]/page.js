@@ -7,7 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import {
   FaArrowLeft, FaMapMarkerAlt, FaBed, FaCheckCircle,
-  FaPhone, FaWhatsapp, FaHeart, FaRegHeart, FaShare, FaWifi, FaTshirt,
+  FaPhoneAlt, FaWhatsapp, FaHeart, FaRegHeart, FaShare, FaWifi, FaTshirt,
   FaShieldAlt, FaBus, FaDumbbell, FaParking, FaBook, FaSnowflake,
   FaVideo, FaMobileAlt, FaMapMarkedAlt, FaChevronLeft, FaChevronRight, FaExpand
 } from 'react-icons/fa';
@@ -100,10 +100,13 @@ const PropertyDetailPage = () => {
   }
 
   const attr = property.attributes;
-  const galleryImages = [
+  // Combine main image and gallery images, then remove any duplicates
+  const rawImageUrls = [
     attr.main_image?.data?.attributes?.url,
     ...(attr.images?.data?.map(img => img.attributes.url) || [])
   ].filter(Boolean);
+
+  const galleryImages = [...new Set(rawImageUrls)];
 
   const statusStyles = {
     full: "bg-red-100 text-red-800",
@@ -260,7 +263,7 @@ const PropertyDetailPage = () => {
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Enquire more</h3>
                 <div className="space-y-3">
-                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhone className="mr-2" /> Call Owner</button>
+                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhoneAlt className="mr-2" /> Call Owner</button>
                   {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
 
                   <button
@@ -294,12 +297,15 @@ const PropertyDetailPage = () => {
                     </div>
                   )}
 
-                  {attr.ranking_id && (
+                  {/* ====== MODIFIED SECTION ====== */}
+                  {attr.location?.data?.attributes?.name && (
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Location ID</span>
-                      <span className="font-medium text-gray-800">{attr.ranking_id}</span>
+                      <span className="text-gray-500">Location</span>
+                      <span className="font-medium text-gray-800">{attr.location.data.attributes.name}</span>
                     </div>
                   )}
+                  {/* ============================ */}
+
                 </div>
               </div>
 
