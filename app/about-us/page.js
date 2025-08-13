@@ -469,7 +469,7 @@ const AboutUs = () => {
           </div>
 
           {/* Second Row - COO, CMO, and Sales Head */}
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 gap-6 mb-16 max-w-4xl mx-auto">
             <motion.div
               whileHover={{ scale: 1.02, y: -5 }}
               className="text-center"
@@ -496,31 +496,6 @@ const AboutUs = () => {
               <p className="text-emerald-600 font-medium mb-5">COO</p>
             </motion.div>
 
-            <motion.div
-              whileHover={{ scale: 1.02, y: -5 }}
-              className="text-center"
-            >
-              <div className="relative w-56 h-56 mx-auto mb-5 rounded-full overflow-visible ring-4 ring-rose-100 shadow-md">
-                <Image
-                  src="/image.png"
-                  alt="Jagrati Dagur"
-                  fill
-                  className="object-cover"
-                />
-                <a 
-                  href="https://www.linkedin.com/in/jagrati-dagur-a233a9325/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-full bg-rose-600 text-white hover:bg-rose-700 shadow-md border-2 border-white z-20"
-                >
-                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                  </svg>
-                </a>
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-800">Jagrati Dagur</h3>
-              <p className="text-rose-600 font-medium mb-5">CMO</p>
-            </motion.div>
 
             <motion.div
               whileHover={{ scale: 1.02, y: -5 }}
@@ -660,7 +635,7 @@ const AboutUs = () => {
               className="space-y-4 mb-12"
             >
               <p className="text-xl text-gray-700">
-                Email: <a href="mailto:contact@providerapp.in" className="text-blue-600 hover:text-blue-700 font-semibold">contact@providerapp.in</a>
+                Email: <a href="mailto:admin@providerapp.in" className="text-blue-600 hover:text-blue-700 font-semibold">admin@providerapp.in</a>
               </p>
               <p className="text-xl text-gray-700">
                 Phone: <a href="tel:+917303831326" className="text-blue-600 hover:text-blue-700 font-semibold">+91 7303831326</a>

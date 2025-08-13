@@ -11,22 +11,28 @@ const useFetchPropertiesViewAll = ({ filters }) => {
   });
 
   return useInfiniteQuery({
-    queryKey: ['fetch-properties-viewall', filters],
+    // The queryKey now correctly includes the city if it exists
+    queryKey: ['fetch-properties-viewall', filters], 
     queryFn: async ({ pageParam = 1 }) => {
       const data = await graphQLClient.request(
          gql`
+          # 1. Add a new variable for the city ID to the query definition
           query properties(
             $page: Int!
             $location: String
             $property_type: String
             $gender: String
             $seater: String
+            $city_id: ID # <-- CHANGE 1: Define the city ID variable
           ) {
             properties(
               sort: "ranking_id:desc"
               pagination: { page: $page, pageSize: 20 }
               filters: {
+                # 2. Add a new filter condition for the city ID
+                # Now it can filter by EITHER location name OR city ID
                 location: { name: { eq: $location } }
+                city: { id: { eq: $city_id } } # <-- CHANGE 2: Add the city filter
                 property_types: { containsi: $property_type }
                 genders: { name: { containsi: $gender } }
                 seaters: { value: { containsi: $seater } }
@@ -52,7 +58,7 @@ const useFetchPropertiesViewAll = ({ filters }) => {
                   property_types
                   description
                   verification_type
-                  price # We fetch the price array to filter on the client
+                  price
                   genders {
                     data {
                       attributes {
@@ -139,11 +145,13 @@ const useFetchPropertiesViewAll = ({ filters }) => {
             }
           }`,
         {
+          // 3. Pass the city ID from our filters object to the query
           page: pageParam,
           location: filters.location,
           property_type: filters.property_type,
           gender: filters.gender,
           seater: filters.seater,
+          city_id: filters.city, // <-- CHANGE 3: Pass the city ID to the GQL variable
         }
       );
 

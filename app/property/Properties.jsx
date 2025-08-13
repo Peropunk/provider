@@ -13,25 +13,35 @@ const Properties = ({
     priceRange,
     seater
 }) => {
-    let location = "Knowledge Park 2 & 3";
-    if (selectedLocation) {
-        location = selectedLocation;
-    }
+    // Determine the location name to display in the UI. Defaults to "Greater Noida".
+    const displayLocation = selectedLocation || "Greater Noida";
 
     const [isListView, setIsListView] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     
     const ITEMS_PER_PAGE = 12;
 
-    const filters = {
-        page: currentPage,
-        location: location,
-        property_type: propertyType,
-        gender: gender,
-        // priceRange is handled on client, but we pass seater
-        seater: seater,
-    };
+    // --- CORRECTED AND EXPLICIT FILTER LOGIC ---
+    // This function ensures we send the correct filter to the API.
+    const getApiFilters = () => {
+        const apiFilters = {
+            page: currentPage,
+            property_type: propertyType,
+            gender: gender,
+            seater: seater,
+        };
 
+        // If a specific location string is provided, filter by location name.
+        if (selectedLocation) {
+            apiFilters.location = selectedLocation;
+        } else {
+            // Otherwise, default to fetching by city ID 5 (Greater Noida).
+            apiFilters.city = 5;
+        }
+        
+        return apiFilters;
+    };
+    
     const {
         data,
         isLoading,
@@ -40,7 +50,9 @@ const Properties = ({
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useFetchPropertiesViewAll({ filters });
+    } = useFetchPropertiesViewAll({ filters: getApiFilters() }); // Pass the generated filters to the hook
+
+    // The rest of the component logic remains the same...
 
     // Get all properties from loaded pages
     const allLoadedProperties = data?.pages?.flatMap((page) => page.properties) || [];
@@ -195,7 +207,7 @@ const Properties = ({
                                 {sData ? "Search Results" : "Properties"}
                             </h2>
                             <p className="text-lg text-gray-600 mt-1">
-                                {sData ? `For "${query}"` : `In "${location}"`}
+                                {sData ? `For "${query}"` : `In "${displayLocation}"`}
                                 <span className="text-sm font-normal text-gray-500 ml-2">
                                     ({totalLoadedItems}{!sData && hasNextPage ? '+' : ''} {totalLoadedItems === 1 ? 'property' : 'properties'})
                                 </span>
@@ -241,7 +253,7 @@ const Properties = ({
                         <p className="text-gray-600 mt-4 max-w-md mx-auto">
                             {sData 
                                 ? `We couldn't find any properties matching your search for "${query}". Please try a different search term.`
-                                : `There are currently no properties available in "${location}" with the selected filters. Please try again.`
+                                : `There are currently no properties available in "${displayLocation}" with the selected filters. Please try again.`
                             }
                         </p>
                         {sData && (

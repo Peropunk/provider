@@ -97,7 +97,9 @@ const Filter = ({
   }
 
   const propertyTypeOptions = ["PG", "Hostel", "Flat", "Room"];
-  const genderOptions = ["Boys", "Girls", "Co-ed"];
+  
+  // --- UPDATED GENDER OPTIONS ---
+  const genderOptions = ["Boys", "Girls", "Independent", "Family"];
 
   return (
     <div className="bg-white shadow-lg rounded-xl mx-auto max-w-6xl -mt-16 relative z-20">
@@ -106,7 +108,7 @@ const Filter = ({
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
             <SlidersHorizontal className="text-indigo-600 mr-2" size={20} />
-            <h3 className="text-lg font-semibold text-slate-800">Find Your Perfect Stay</h3>
+            <h3 className="text-lg font-semibold text-slate-800">Fill your requirements</h3>
           </div>
           {/* --- CLEAR FILTERS BUTTON --- */}
           {isFilterActive && (
@@ -195,13 +197,13 @@ const Filter = ({
 
             {/* Property Type Dropdown */}
             <select value={propertyType} onChange={(e) => onPropertyTypeChange(e.target.value)} className="w-full text-sm appearance-none px-4 py-3 text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400">
-              <option value="">All Types</option>
+              <option value="">Select Property Type</option>
               {propertyTypeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
             </select>
 
             {/* Gender Dropdown */}
             <select value={gender} onChange={(e) => onGenderChange(e.target.value)} className="w-full text-sm appearance-none px-4 py-3 text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400">
-              <option value="">All Genders</option>
+              <option value="">Select Gender</option>
               {genderOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
             </select>
           </div>
@@ -220,7 +222,7 @@ const Filter = ({
                 className="w-full md:w-auto inline-flex items-center justify-center px-10 py-3 border border-transparent font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
               >
                 <Search size={20} className="mr-2"/>
-                Apply Filters
+                Search Now
             </button>
          </div>
 

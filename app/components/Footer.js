@@ -8,8 +8,7 @@ const Footer = () => {
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
     { name: 'Terms', href: '/terms-of-service' },
-    { name: 'Privacy', href: '/privacy-policy' },
-    { name: 'Refund Policy', href: '/refund-policy' },
+    { name: 'Privacy', href: '/privacy' },
   ];
 
   const socialMedia = [
