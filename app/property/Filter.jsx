@@ -1,4 +1,4 @@
-import { Search, MapPin, Map, ChevronDown, SlidersHorizontal, X } from "lucide-react";
+import { Search, MapPin, Map, ChevronDown, SlidersHorizontal, X, Home, Users } from "lucide-react";
 import { useFetchLocation } from "../../hooks/useFetchLocations";
 import { useState, useEffect } from "react";
 
@@ -23,7 +23,6 @@ const Filter = ({
   const [cities, setCities] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  // This logic determines when the "Clear Filters" button is visible
   const isFilterActive = location || searchText || propertyType || gender || priceRange || seater;
 
   useEffect(() => {
@@ -56,29 +55,30 @@ const Filter = ({
     onSelectLocation(selectedLoc);
   };
 
+  // --- MODIFIED SEARCH HANDLER ---
   const handleSearch = (e) => {
     e.preventDefault();
     let query = searchText;
 
+    // Seater parsing logic
     const seaterRegex = /(\d+)\s*seater/i;
     const seaterMatch = query.match(seaterRegex);
     if (seaterMatch) {
       onSeaterChange(`${seaterMatch[1]} Seater`);
       query = query.replace(seaterRegex, '').trim();
-    } else {
-      onSeaterChange('');
     }
 
+    // Price parsing logic
     const priceRegex = /(?:under|below)?\s*(\d{4,})/i;
     const priceMatch = query.match(priceRegex);
     if (priceMatch) {
       const price = parseInt(priceMatch[1], 10);
       onPriceChange(`0-${price}`);
       query = query.replace(priceMatch[0], '').trim();
-    } else {
-      onPriceChange('');
     }
 
+    // Trigger search in parent component with remaining text query.
+    // The parent component will use its state for all other filters (location, gender, etc.).
     onSearchProperties(query);
   };
 
@@ -88,7 +88,6 @@ const Filter = ({
     }
   };
 
-  // This function is called when the "Clear Filters" button is clicked
   const handleClear = () => {
     setSearchText("");
     setSelectedCity(null);
@@ -96,21 +95,17 @@ const Filter = ({
     onClearFilters();
   }
 
-  const propertyTypeOptions = ["PG", "Hostel", "Flat", "Room"];
-  
-  // --- UPDATED GENDER OPTIONS ---
+  const propertyTypeOptions = [ "Hostel","PG", "Flat", "Room"];
   const genderOptions = ["Boys", "Girls", "Independent", "Family"];
 
   return (
     <div className="bg-white shadow-lg rounded-xl mx-auto max-w-6xl -mt-16 relative z-20">
       <div className="px-4 sm:px-6 lg:px-8 py-6">
-
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
             <SlidersHorizontal className="text-indigo-600 mr-2" size={20} />
             <h3 className="text-lg font-semibold text-slate-800">Fill your requirements</h3>
           </div>
-          {/* --- CLEAR FILTERS BUTTON --- */}
           {isFilterActive && (
             <button
               onClick={handleClear}
@@ -123,7 +118,7 @@ const Filter = ({
         </div>
 
         <div className="flex flex-col gap-4">
-          {/* --- Row 1: Search Bar --- */}
+          {/* Row 1: Search Bar */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <Search className="text-slate-400" size={20} />
@@ -138,7 +133,7 @@ const Filter = ({
             />
           </div>
 
-          {/* --- Row 2: Dropdown Filters --- */}
+          {/* Row 2: Dropdown Filters */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {/* City Dropdown */}
             <div className="relative">
@@ -196,16 +191,40 @@ const Filter = ({
             </div>
 
             {/* Property Type Dropdown */}
-            <select value={propertyType} onChange={(e) => onPropertyTypeChange(e.target.value)} className="w-full text-sm appearance-none px-4 py-3 text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400">
-              <option value="">Select Property Type</option>
-              {propertyTypeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-            </select>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <Home className="text-gray-400" size={18} />
+              </div>
+              <select 
+                value={propertyType} 
+                onChange={(e) => onPropertyTypeChange(e.target.value)} 
+                className="w-full appearance-none pl-10 pr-8 py-3 text-sm text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+              >
+                <option value="">Property Type</option>
+                {propertyTypeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ChevronDown className="text-gray-400" size={18} />
+              </div>
+            </div>
 
             {/* Gender Dropdown */}
-            <select value={gender} onChange={(e) => onGenderChange(e.target.value)} className="w-full text-sm appearance-none px-4 py-3 text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400">
-              <option value="">Select Gender</option>
-              {genderOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-            </select>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <Users className="text-gray-400" size={18} />
+              </div>
+              <select 
+                value={gender} 
+                onChange={(e) => onGenderChange(e.target.value)} 
+                className="w-full appearance-none pl-10 pr-8 py-3 text-sm text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+              >
+                <option value="">Select Gender</option>
+                {genderOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              </select>
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+                <ChevronDown className="text-gray-400" size={18} />
+              </div>
+            </div>
           </div>
         </div>
 

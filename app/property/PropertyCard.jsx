@@ -109,7 +109,7 @@ const PropertyCard = ({ singleData, isListView }) => {
                         {truncateText(attributes.description, 100)}
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 text-sm">
-                        <div><p className="text-gray-500">Gender</p><p className="font-semibold">{attributes.genders?.data?.[0]?.attributes.name || 'N/A'}</p></div>
+                        
                         <div><p className="text-gray-500">Type</p><p className="font-semibold">{attributes.property_types || 'N/A'}</p></div>
                         <div><p className="text-gray-500">Seaters</p><p className="font-semibold">{attributes.seaters?.data?.[0]?.attributes.value || 'N/A'}</p></div>
                     </div>
