@@ -325,11 +325,7 @@ const PropertyDetailPage = () => {
                 </div>
               </div>
 
-              {/* Description - Sixth on mobile */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
-              </div>
+             
 
               {/* Facilities - Seventh on mobile */}
               <div className="bg-white rounded-lg shadow-md p-6">
@@ -351,6 +347,12 @@ const PropertyDetailPage = () => {
                 )}
               </div>
             </div>
+
+             {/* Description - Sixth on mobile */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
+              </div>
 
             {/* Description and Facilities - Desktop layout */}
             <div className="hidden lg:block">

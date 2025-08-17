@@ -21,6 +21,12 @@ const trustData = [
     bgColor: 'bg-yellow-50',
     textColor: 'text-yellow-700',
   },
+  {
+    icon: <Image src="/DPIIT.png" alt="MSME" width={280} height={280} className="object-contain" />,
+    text: null,
+    bgColor: 'bg-yellow-50',
+    textColor: 'text-yellow-700',
+  },
  
 ];
 
@@ -69,7 +75,7 @@ const TrustBadgesSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
           {trustData.map((item, index) => (
             <div
               key={index}

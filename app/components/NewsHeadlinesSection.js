@@ -8,7 +8,7 @@ const newsItems = [
     id: 1,
     src: '/news2.jpeg',
     alt: 'Second news headline clipping',
-    headline: 'Provider App Voted #1 by Students Nationwide',
+    headline: 'Provider App valued at INR 50 Lakhs within a year of launch',
     rotation: 'rotate-1',
     zIndex: 'z-20', // Higher z-index to be on top
     margin: 'lg:scale-105', // Slightly larger and no x-margin for centering
@@ -17,7 +17,7 @@ const newsItems = [
     id: 2,
     src: '/news3.png',
     alt: 'Third news headline clipping',
-    headline: 'Exclusive Internships Program Launched Successfully',
+    headline: 'Awarded by G.L. Bajaj for helping 5000+ Students',
     rotation: 'rotate-2',
     zIndex: 'z-10',
     margin: 'lg:ml-[-40px]', // Negative margin for overlap
@@ -26,7 +26,7 @@ const newsItems = [
     id: 3,
     src: '/images/news.png',
     alt: 'Third news headline clipping',
-    headline: 'Exclusive Internships Program Launched Successfully',
+    headline: 'Featured on National Startup Day 2025',
     rotation: 'rotate-2',
     zIndex: 'z-10',
     margin: 'lg:ml-[-40px]', // Negative margin for overlap
@@ -35,7 +35,7 @@ const newsItems = [
     id: 4,
     src: '/IMG_4173.jpg',
     alt: 'Third news headline clipping',
-    headline: 'Exclusive Internships Program Launched Successfully',
+    headline: 'Chief guest at GNIOT on session held for early stage founders',
     rotation: 'rotate-2',
     zIndex: 'z-10',
     margin: 'lg:ml-[-40px]', // Negative margin for overlap

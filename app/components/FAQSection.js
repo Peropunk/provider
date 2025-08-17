@@ -39,7 +39,7 @@ const faqData = [
     id: 6,
     question: 'Do I get contact details of the hostel?',
     answer:
-      'Yes, upon successful booking confirmation, you will receive the hostel\'s address, contact number, and other relevant details. This information will be available in your confirmation email and in the app.',
+      'You can easily access the owner’s contact details and the hostel’s GPS location directly in the app.',
   },
 ];
 

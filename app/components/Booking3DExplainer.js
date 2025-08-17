@@ -5,16 +5,16 @@ import Image from 'next/image';
 
 const features = [
   {
-    title: 'Share Location with Friends',
-    description: 'Easily share your property location with friends and family for visits.',
+    title: 'Step 1 – Search & Explore',
+    description: 'Browse verified hostels, PGs, and flats in your city. Check real photos, amenities, and owner details.',
   },
   {
-    title: 'Schedule a Visit',
-    description: 'Book a convenient time to visit the property directly from the app.',
+    title: 'Step 2 – Visit or Take a Virtual Tour',
+    description: 'Use the schedule visit option to check the hostel in person, or explore it through a virtual tour online.',
   },
   {
-    title: 'Collect Token with Payment',
-    description: 'Secure your booking by paying the token amount via a WhatsApp link or QR code.',
+    title: 'Step 3 – Reserve Your Stay',
+    description: 'Once satisfied, pay a small security amount to instantly lock your bed/room. The rest is paid at the property.',
   },
 ];
 

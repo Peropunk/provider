@@ -25,13 +25,15 @@ export default function Home() {
     <AppPromotionSection/>
     <CardSlider/>
     
-    <AchievementsSection/><Booking3DExplainer/><PosterSection/>
+    <AchievementsSection/>
+    {/* <Booking3DExplainer/> */}
+    <PosterSection/>
     {/* <Solutions/> */}
     <StudentTestimonial/><TrustBadgesSection/>
     <ComparisonTableSection/>
     {/* <MeetOurMentors/> */}
     <FAQSection/>
-    <GuidesAndResources/>
+    {/* <GuidesAndResources/> */}
     <NewsHeadlinesSection/>
     <JoinCommunity/>
     <Footer/>
