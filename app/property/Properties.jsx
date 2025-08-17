@@ -213,9 +213,9 @@ const Properties = ({
                                 </span>
                             </p>
                         </div>
-                        <div className="flex items-center gap-4">
+                         <div className="flex items-center gap-4">
                            
-                            <div className="flex items-center bg-gray-200 rounded-lg p-1">
+                            <div className="hidden md:flex items-center bg-gray-200 rounded-lg p-1">
                                 <button
                                     onClick={() => setIsListView(false)}
                                     className={`p-2 rounded-md transition-colors ${!isListView ? 'bg-white text-indigo-600 shadow' : 'text-gray-600 hover:bg-gray-300'}`}

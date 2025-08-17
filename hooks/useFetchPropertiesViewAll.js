@@ -11,28 +11,23 @@ const useFetchPropertiesViewAll = ({ filters }) => {
   });
 
   return useInfiniteQuery({
-    // The queryKey now correctly includes the city if it exists
-    queryKey: ['fetch-properties-viewall', filters], 
+    queryKey: ["fetch-properties-viewall", filters],
     queryFn: async ({ pageParam = 1 }) => {
       const data = await graphQLClient.request(
-         gql`
-          # 1. Add a new variable for the city ID to the query definition
+        gql`
           query properties(
             $page: Int!
             $location: String
             $property_type: String
             $gender: String
             $seater: String
-            $city_id: ID # <-- CHANGE 1: Define the city ID variable
+            $city_id: ID
           ) {
             properties(
-              sort: "ranking_id:desc"
               pagination: { page: $page, pageSize: 20 }
               filters: {
-                # 2. Add a new filter condition for the city ID
-                # Now it can filter by EITHER location name OR city ID
                 location: { name: { eq: $location } }
-                city: { id: { eq: $city_id } } # <-- CHANGE 2: Add the city filter
+                city: { id: { eq: $city_id } }
                 property_types: { containsi: $property_type }
                 genders: { name: { containsi: $gender } }
                 seaters: { value: { containsi: $seater } }
@@ -60,11 +55,7 @@ const useFetchPropertiesViewAll = ({ filters }) => {
                   verification_type
                   price
                   genders {
-                    data {
-                      attributes {
-                        name
-                      }
-                    }
+                    data { attributes { name } }
                   }
                   approved
                   full
@@ -74,93 +65,56 @@ const useFetchPropertiesViewAll = ({ filters }) => {
                       attributes {
                         type
                         text_value
-                        image_banner {
-                          data {
-                            attributes {
-                              url
-                            }
-                          }
-                        }
+                        image_banner { data { attributes { url } } }
                       }
                     }
                   }
                   address
                   latlng
-                  images {
-                    data {
-                      attributes {
-                        url
-                        previewUrl
-                        caption
-                      }
-                    }
-                  }
-                  main_image {
-                    data {
-                      attributes {
-                        url
-                        previewUrl
-                        caption
-                      }
-                    }
-                  }
-                  city {
-                    data {
-                      attributes {
-                        name
-                      }
-                    }
-                  }
-                  location {
-                    data {
-                      attributes {
-                        name
-                      }
-                    }
-                  }
+                  images { data { attributes { url previewUrl caption } } }
+                  main_image { data { attributes { url previewUrl caption } } }
+                  city { data { attributes { name } } }
+                  location { data { attributes { name } } }
                   facilities {
                     data {
                       attributes {
                         value
-                        image {
-                          data {
-                            attributes {
-                              url
-                              caption
-                            }
-                          }
-                        }
+                        image { data { attributes { url caption } } }
                       }
                     }
                   }
-                  seaters {
-                    data {
-                      attributes {
-                        value
-                      }
-                    }
-                  }
+                  seaters { data { attributes { value } } }
                 }
               }
             }
           }`,
         {
-          // 3. Pass the city ID from our filters object to the query
           page: pageParam,
           location: filters.location,
           property_type: filters.property_type,
           gender: filters.gender,
           seater: filters.seater,
-          city_id: filters.city, // <-- CHANGE 3: Pass the city ID to the GQL variable
+          city_id: filters.city,
         }
       );
 
+      // Client-side sorting (numeric-aware, descending)
+      const sorted = [...data.properties.data].sort((a, b) => {
+        const aRank = a.attributes.ranking_id || "0";
+        const bRank = b.attributes.ranking_id || "0";
+
+        // Use localeCompare for natural sorting of alphanumeric strings.
+        // The second argument 'undefined' uses the default locale.
+        // The options object with `numeric: true` enables numeric sorting.
+        return bRank.localeCompare(aRank, undefined, { numeric: true });
+      });
+
       return {
-        properties: data.properties.data,
+        properties: sorted, // ✅ sorted client-side
         meta: data.properties.meta.pagination,
       };
     },
-    getNextPageParam: (lastPage, pages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.meta.page === lastPage.meta.pageCount) return undefined;
       return lastPage.meta.page + 1;
     },

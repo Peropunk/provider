@@ -368,13 +368,13 @@ const AboutUs = () => {
               className="bg-white p-8 rounded-xl text-center shadow-lg"
             >
               <div className="text-4xl font-bold text-blue-600 mb-2">50,000+</div>
-              <p className="text-gray-600">Students across campuses like Galgotias, GL Bajaj, NIU, Sharda, IILM, Bennett, Amity, and many more</p>
+              <p className="text-gray-600">Students found their new home with us</p>
             </motion.div>
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="bg-white p-8 rounded-xl text-center shadow-lg"
             >
-              <div className="text-4xl font-bold text-green-600 mb-2">5.0</div>
+              <div className="text-4xl font-bold text-green-600 mb-2">4.8</div>
               <p className="text-gray-600">Average rating from students & parents</p>
             </motion.div>
             <motion.div
@@ -382,7 +382,7 @@ const AboutUs = () => {
               className="bg-white p-8 rounded-xl text-center shadow-lg"
             >
               <div className="text-4xl font-bold text-purple-600 mb-2">7+</div>
-              <p className="text-gray-600">Cities Covered</p>
+              <p className="text-gray-600">Cities Covered across 5 states</p>
             </motion.div>
           </div>
           <div className="mt-12 text-center">

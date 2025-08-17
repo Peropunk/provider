@@ -25,7 +25,6 @@ const VerificationBadge = ({ type }) => {
     );
 };
 
-// This component is now correct and will work with the fix below.
 const AvailabilityBadge = ({ status }) => {
     if (!status) return null;
 
@@ -51,17 +50,12 @@ const GenderBadge = ({ gender }) => {
     );
 };
 
-
 const PropertyCard = ({ singleData, isListView }) => {
   const { attributes } = singleData || {};
   const router = useRouter();
 
   if (!attributes) return null;
 
-  // --- THE FIX IS HERE ---
-  // We check the 'full' boolean from your data.
-  // If attributes.full is true, we set status to "full".
-  // Otherwise, we set it to "available".
   const availabilityStatus = attributes.full ? 'full' : 'available';
 
   const navigateToPropertyDetails = () => {
@@ -76,7 +70,6 @@ const PropertyCard = ({ singleData, isListView }) => {
   
   const BadgesOverlay = () => (
     <div className="absolute top-2 right-2 z-10 flex flex-wrap justify-end gap-2">
-        {/* We now pass our corrected 'availabilityStatus' variable to the badge */}
         <AvailabilityBadge status={availabilityStatus} />
         <GenderBadge gender={attributes.genders?.data?.[0]?.attributes.name} />
         <VerificationBadge type={attributes.verification_type} />
@@ -86,13 +79,16 @@ const PropertyCard = ({ singleData, isListView }) => {
   if (isListView) {
       return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-xl w-full flex flex-col sm:flex-row">
-            <div className="relative sm:w-1/3 h-48 sm:h-auto flex-shrink-0">
-                <img
-                    src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
-                    alt={attributes.name}
-                    className="w-full h-full object-cover cursor-pointer"
-                    onClick={navigateToPropertyDetails}
-                />
+            <div className="relative sm:w-1/3 flex-shrink-0">
+                {/* Fixed landscape aspect ratio container */}
+                <div className="w-full aspect-[4/3] sm:h-48 relative overflow-hidden">
+                    <img
+                        src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
+                        alt={attributes.name}
+                        className="w-full h-full object-cover cursor-pointer"
+                        onClick={navigateToPropertyDetails}
+                    />
+                </div>
                 <BadgesOverlay />
             </div>
             <div className="p-4 sm:p-6 flex flex-col justify-between w-full">
@@ -109,7 +105,6 @@ const PropertyCard = ({ singleData, isListView }) => {
                         {truncateText(attributes.description, 100)}
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 text-sm">
-                        
                         <div><p className="text-gray-500">Type</p><p className="font-semibold">{attributes.property_types || 'N/A'}</p></div>
                         <div><p className="text-gray-500">Seaters</p><p className="font-semibold">{attributes.seaters?.data?.[0]?.attributes.value || 'N/A'}</p></div>
                     </div>
@@ -131,12 +126,15 @@ const PropertyCard = ({ singleData, isListView }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-xl flex flex-col">
         <div className="relative">
-            <img
-                src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
-                alt={attributes.name}
-                className="w-full h-48 object-cover cursor-pointer"
-                onClick={navigateToPropertyDetails}
-            />
+            {/* Fixed landscape aspect ratio container */}
+            <div className="w-full aspect-[4/3] relative overflow-hidden">
+                <img
+                    src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
+                    alt={attributes.name}
+                    className="w-full h-full object-cover cursor-pointer"
+                    onClick={navigateToPropertyDetails}
+                />
+            </div>
             <BadgesOverlay />
         </div>
         <div className="p-4 flex flex-col flex-grow">
@@ -145,7 +143,6 @@ const PropertyCard = ({ singleData, isListView }) => {
                 <FaMapMarkerAlt /> {truncateText(attributes.address, 30)}
             </p>
             <div className="grid grid-cols-2 gap-4 my-4 text-center text-sm flex-grow">
-                 
                  <div><p className="text-gray-500">Type</p><p className="font-semibold">{attributes.property_types || 'N/A'}</p></div>
                  <div><p className="text-gray-500">Seaters</p><p className="font-semibold">{attributes.seaters?.data?.[0]?.attributes.value || 'N/A'}</p></div>
             </div>
