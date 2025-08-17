@@ -1,10 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import React, { useEffect, useRef, useState } from "react";
 
 const features = [
   {
@@ -15,7 +11,7 @@ const features = [
     image: "/1.png",
   },
   {
-    title: "Direct Owner Contact ",
+    title: "Direct Owner Contact",
     description:
       "Connect directly with hostel owners. No brokers, no hidden fees. Enjoy transparent communication, quick query resolution, and a hassle-free booking experience.",
     icon: "📞",
@@ -26,80 +22,92 @@ const features = [
     description:
       "Manage your finances smartly. Pay your hostel fees and other essential expenses in easy, interest-free monthly installments. Focus on your studies, not financial stress.",
     icon: "💸",
-    image: "https://play-lh.googleusercontent.com/82j9KXsAmD1qlPaG25o9BJKHCeXEtyid5iAqtzL9q_jtZT7_Rjh9GosM3mrOjqC26kc=w480-h960-rw",
+    image:
+      "/emi.webp",
   },
   {
-    title: "Free Stationery Delivery ",
+    title: "Free Stationery Delivery",
     description:
-      "Get all your essential study supplies— Calculators, Pens, Filesand more—delivered right to your doorstep, absolutely free delivery. Never run out of what you need to succeed.",
+      "Get all your essential study supplies—Calculators, Pens, Files and more—delivered right to your doorstep, absolutely free delivery. Never run out of what you need to succeed.",
     icon: "📦",
-    image: "https://img.freepik.com/free-photo/workplace-with-set-stationary_23-2147830026.jpg?semt=ais_hybrid&w=740",
+    image:
+      "https://img.freepik.com/free-photo/workplace-with-set-stationary_23-2147830026.jpg?semt=ais_hybrid&w=740",
   },
   {
     title: "Exclusive Internships",
     description:
       "Kickstart your career with access to exclusive internship opportunities curated for students on our platform. Gain valuable industry experience and build your professional network.",
     icon: "🎯",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW50ZXJuc2hpcHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=400&q=80",
+    image:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80",
   },
 ];
 
 export default function CardSlider() {
-  const containerRef = useRef(null);
+  const wrapperRef = useRef(null);
   const cardsRef = useRef([]);
+  const firstCardRef = useRef(null);
+
+  const [started, setStarted] = useState(false); // animations only after first card hits top
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Observe when first card reaches the viewport top to "start" animations
   useEffect(() => {
-    // Ensure containerRef.current exists before using it for GSAP context
-    if (!containerRef.current) return;
+    const onScroll = () => {
+      if (!firstCardRef.current) return;
+      const rect = firstCardRef.current.getBoundingClientRect();
+      // When its top is at or above viewport top => start
+      if (rect.top <= 0 && !started) setStarted(true);
+      if (rect.top > 0 && started) setStarted(false); // if user scrolls back above
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [started]);
 
-    const ctx = gsap.context(() => {
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top-=100 top",
-          end: () => "+=" + window.innerHeight * (features.length + 1),
-          scrub: 0.5,
-          pin: true,
-        },
-      });
+  // Highlight the most visible (active) sticky card
+  useEffect(() => {
+    if (!cardsRef.current.length) return;
 
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return; // Guard against null elements if any
+    const ratios = new Map();
 
-        // Move the card fully up
-        timeline.to(card, {
-          yPercent: -105,
-          ease: "none",
-          duration: 1,
-        }, index);
-
-        // Scale out previous card when next card is halfway
-        if (index > 0) {
-          const prevCard = cardsRef.current[index - 1];
-          if (prevCard) { // Check if prevCard exists
-            timeline.to(prevCard, {
-              // No scale animation was in the original code for this specific tween
-              // opacity: 0, // Example: if you want to fade out
-              transformOrigin: "center center",
-              ease: "power2.out",
-              duration: .8,
-            }, index - 0.25);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const idx = Number(entry.target.dataset.index);
+          ratios.set(idx, entry.intersectionRatio);
+        });
+        // find the index with max ratio
+        let maxIdx = 0;
+        let maxVal = -1;
+        ratios.forEach((val, key) => {
+          if (val > maxVal) {
+            maxVal = val;
+            maxIdx = key;
           }
-        }
-      });
-    }, containerRef.current); // Pass the DOM element to context
+        });
+        setActiveIndex(maxIdx);
+      },
+      {
+        // Center-weighted visibility
+        root: null,
+        rootMargin: "-30% 0px -30% 0px",
+        threshold: [0, 0.01, 0.25, 0.5, 0.75, 1],
+      }
+    );
 
-    return () => ctx.revert();
+    cardsRef.current.forEach((el) => el && observer.observe(el));
+
+    return () => observer.disconnect();
   }, []);
 
-
   return (
-    <div ref={containerRef} className="relative w-full h-[65vh] overflow-hidden my-10 flex flex-col items-center justify-center py-10">
-      {/* Static Background Card */}
-      <div className="absolute w-full h-[80%] my-auto min-h-[400px] bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 rounded-3xl shadow-2xl flex flex-col items-center justify-center text-center gap-6 z-0">
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-40 h-40 bg-blue-200/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-200/20 rounded-full blur-3xl"></div>
+    <div className="w-full bg-blue-50">
+      {/* HERO / STATIC INTRO */}
+      <section className="relative w-full min-h-[85vh] my-10 flex flex-col items-center justify-center text-center gap-6 px-6">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-20 left-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-indigo-200/30 rounded-full blur-3xl" />
         </div>
 
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-full shadow-lg">
@@ -109,81 +117,102 @@ export default function CardSlider() {
             strokeWidth="0"
             viewBox="0 0 16 14"
             className="w-12 h-12 text-white"
-            height="1em"
-            width="1em"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
           </svg>
         </div>
+
         <h2 className="text-4xl md:text-5xl font-black tracking-tight">
-          Why Students <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Love Provider</span>
+          Why Students{" "}
+          <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            Love Provider
+          </span>
         </h2>
-        <p className="text-gray-600 max-w-xl text-lg">
+        <p className="text-gray-600 max-w-2xl text-lg">
           Discover a world of opportunities with our comprehensive student platform
         </p>
-        <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+        <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-transform duration-200 hover:scale-[1.02]">
           Explore Benefits in App
         </button>
-      </div>
+      </section>
 
-      {/* Scrolling Cards */}
-      {features.map((feature, index) => (
-        <div
-          key={index}
-          ref={(el) => {
-            if (cardsRef.current) {
-              cardsRef.current[index] = el;
-            }
-          }}
-          className="absolute w-[90%] h-[90%] bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden"
-          style={{
-            top: "100%",
-            zIndex: index + 1,
-          }}
-        >
-          {/* Background Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 z-0 rounded-3xl"></div>
-
-          {/* Left Text Section */}
-          <div className="max-w-xl relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-3xl">{feature.icon}</span>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight">
-                {feature.title}
-              </h1>
-            </div>
-            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              {feature.description}
-            </p>
-            <button
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              onClick={() => {
-                const faqSection = document.getElementById('faq');
-                if (faqSection) {
-                  faqSection.scrollIntoView({ behavior: 'smooth' });
-                }
+      {/* STICKY STACKED CARDS */}
+      <section ref={wrapperRef} className="relative">
+        {features.map((feature, index) => (
+          <div key={index} className="relative h-[100vh]">
+            {/* Each wrapper adds scroll space; the card itself sticks at top */}
+            <article
+              ref={(el) => {
+                if (index === 0) firstCardRef.current = el;
+                cardsRef.current[index] = el;
+              }}
+              data-index={index}
+              className={[
+                "sticky top-0 mx-auto w-[92%] md:w-[88%] rounded-3xl",
+                "bg-white shadow-xl",
+                "transition-all duration-500 will-change-transform transform-gpu",
+                "px-6 md:px-10 py-8 md:py-12",
+                // Mobile-first: stack vertically, then horizontally on medium screens
+                "flex flex-col md:flex-row items-center justify-center md:justify-between gap-8",
+                "min-h-[60vh]",
+                // Active vs inactive styling
+                started
+                  ? activeIndex === index
+                    ? "opacity-100 scale-100"
+                    : "opacity-70 md:opacity-80 scale-[0.97] md:scale-[0.98]"
+                  : "opacity-100 scale-100",
+              ].join(" ")}
+              style={{
+                scrollBehavior: "smooth",
               }}
             >
-              Learn More
-            </button>
-          </div>
+              {/* Left Text */}
+              <div className="w-full md:max-w-2xl text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start gap-3 mb-3 md:mb-4">
+                  <span className="text-3xl md:text-4xl">{feature.icon}</span>
+                  <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
+                    {feature.title}
+                  </h1>
+                </div>
 
-          {/* Right Image Preview Section */}
-          <div className="hidden md:flex flex-col gap-4 mt-10 md:mt-0 relative z-10">
-            <div className="bg-white rounded-2xl p-4 shadow-xl w-80 h-56 overflow-hidden transform hover:scale-105 transition-transform duration-300">
-              <img
-                src={feature.image}
-                alt={`Preview for ${feature.title}`}
-                className="w-full h-full object-cover rounded-xl"
-                onError={(e) => {
-                  console.error("Failed to load image:", feature.image, e);
-                }}
-              />
-            </div>
+                <p className="text-base md:text-xl leading-relaxed text-gray-700 mb-6 md:mb-8">
+                  {feature.description}
+                </p>
+
+                <button
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-xl font-semibold md:font-bold text-base md:text-lg shadow-md hover:shadow-lg transition-transform duration-200 hover:scale-[1.02]"
+                  onClick={() => {
+                    const faq = document.getElementById("faq");
+                    if (faq) faq.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  Learn More
+                </button>
+              </div>
+
+              {/* Right Image - NOW VISIBLE ON ALL SCREENS */}
+              <div className="w-full max-w-sm md:w-[22rem] shrink-0">
+                <div className="rounded-2xl overflow-hidden shadow-lg">
+                  <img
+                    src={feature.image}
+                    alt={`Preview for ${feature.title}`}
+                    className="w-full h-[12rem] md:h-[18rem] object-cover" // Responsive height for image
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      e.target.style.visibility = "hidden";
+                    }}
+                  />
+                </div>
+              </div>
+            </article>
           </div>
-        </div>
-      ))}
+        ))}
+      </section>
+
+      {/* Optional: FAQ anchor target */}
+      <div id="faq" className="h-4" />
     </div>
   );
 }
