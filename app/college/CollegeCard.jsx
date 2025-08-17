@@ -17,7 +17,7 @@ const CollegeCard = ({ item, colActiv }) => {
   const CardContent = () => (
     <>
       {/* Image Section */}
-      <div className={`relative overflow-hidden ${colActiv ? 'md:w-1/3' : 'w-full aspect-video'}`}>
+      <div className={`relative overflow-hidden ${colActiv ? 'w-full md:w-1/3 aspect-video md:aspect-auto' : 'w-full aspect-video'}`}>
         <Image
           src={item.imgLink || "/fallback-image.jpg"} // Fallback image for safety
           width={400}
@@ -30,19 +30,19 @@ const CollegeCard = ({ item, colActiv }) => {
       </div>
 
       {/* Text Content Section */}
-      <div className={`flex flex-1 flex-col p-4 sm:p-6 ${colActiv ? 'md:w-2/3' : 'w-full'}`}>
+      <div className={`flex flex-1 flex-col p-4 sm:p-6 ${colActiv ? 'w-full md:w-2/3' : 'w-full'}`}>
         {/* Card Header */}
         <div className="flex-grow">
           <Link href={`/college/${item.id}`} className="hover:underline">
-            <h4 className="text-xl font-bold text-gray-800 line-clamp-2" title={item.title}>
+            <h4 className="text-xl font-bold text-gray-800 line-clamp-1 leading-tight" title={item.title}>
               {item.title}
             </h4>
           </Link>
           <p className="mt-1 flex items-center text-sm text-gray-500">
             <FaMapMarkerAlt className="mr-2 shrink-0" />
-            <span>{item.location}</span>
+            <span className="line-clamp-1">{item.location}</span>
           </p>
-          <p className="mt-3 text-sm text-gray-600 line-clamp-3">
+          <p className="mt-3 text-sm text-gray-600 line-clamp-2 leading-relaxed">
             {item.description}
           </p>
         </div>
@@ -73,9 +73,9 @@ const CollegeCard = ({ item, colActiv }) => {
       className={`group ${colActiv ? 'w-full' : 'w-full'}`} // Ensure it takes full width of its grid cell
     >
       <div
-        className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex ${
+        className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex h-full ${
           colActiv
-            ? 'flex-col md:flex-row' // Stack on mobile, row on desktop for List view
+            ? 'flex-col md:flex-row' // Always column on mobile, row on desktop for List view
             : 'flex-col' // Always stacked for Grid view
         }`}
       >

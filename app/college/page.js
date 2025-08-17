@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FaBars, FaGripHorizontal } from 'react-icons/fa';
+import Footer from '../components/Footer';
 
 // Import your components
 import Filter from "./FilterCollege";
@@ -41,20 +42,8 @@ const Property = () => {
             
             {/* Right Side: Controls */}
             <div className="flex items-center gap-4">
-              {/* Sort By Dropdown */}
-              <div className="relative">
-                <select className="appearance-none w-full sm:w-auto bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                  <option>Sort By: Relevancy</option>
-                  <option>Sort By: Date</option>
-                  <option>Sort By: Name</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
-              </div>
-
-              {/* View Toggle Buttons */}
-              <div className="flex items-center bg-gray-200 rounded-md p-1">
+              {/* View Toggle Buttons - Desktop Only */}
+              <div className="hidden md:flex items-center bg-gray-200 rounded-md p-1">
                 <button
                   className={`px-3 py-1 rounded-md text-sm transition-colors ${
                     !colActiv ? "bg-white text-blue-600 shadow" : "text-gray-600 hover:bg-gray-300"
@@ -81,8 +70,8 @@ const Property = () => {
           <div
             className={`grid ${
               colActiv
-                ? 'grid-cols-1 gap-y-6' // List view: 1 column with vertical gap
-                : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8' // Grid view: responsive columns with a larger gap
+                ? 'grid-cols-1 gap-y-6' // List view: 1 column with vertical gap (desktop only)
+                : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8' // Grid view: responsive columns, mobile always uses this
             }`}
           >
             {filteredData.map((item) => (
@@ -104,8 +93,9 @@ const Property = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> <Footer />
     </div>
+   
   );
 };
 

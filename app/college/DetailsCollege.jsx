@@ -28,11 +28,16 @@ const SectionHeader = ({ title }) => (
 const Details = ({ id }) => {
     const data = faqData.find(item => item.id === id);
     const sliderRef = useRef(null);
+    const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
     const scrollBy = (amount) => {
         if (sliderRef.current) {
             sliderRef.current.scrollBy({ left: amount, behavior: 'smooth' });
         }
+    };
+
+    const toggleFaq = (index) => {
+        setOpenFaqIndex(openFaqIndex === index ? null : index);
     };
 
     if (!data) {
@@ -120,25 +125,6 @@ const Details = ({ id }) => {
                             </div>}
                         </div>
 
-                        {/* More Details Section with Icons */}
-                        <div className="bg-white p-8 rounded-2xl shadow-lg shadow-slate-900/5 mb-12">
-                            <SectionHeader title="More Details" />
-                            <div className="grid sm:grid-cols-3 gap-6 text-center">
-                                <a href="#" download className="group block bg-slate-50 p-6 rounded-lg hover:bg-blue-100 hover:scale-105 transition-all">
-                                    <FileText className="h-10 w-10 mx-auto text-blue-500 mb-3 transition-transform group-hover:-translate-y-1" />
-                                    <h5 className="font-bold text-slate-700">Cut Off 2023</h5>
-                                </a>
-                                <a href="#" download className="group block bg-slate-50 p-6 rounded-lg hover:bg-indigo-100 hover:scale-105 transition-all">
-                                    <ClipboardList className="h-10 w-10 mx-auto text-indigo-500 mb-3 transition-transform group-hover:-translate-y-1" />
-                                    <h5 className="font-bold text-slate-700">Admission Process</h5>
-                                </a>
-                                <a href="/DocumentRequired.pdf" download className="group block bg-slate-50 p-6 rounded-lg hover:bg-purple-100 hover:scale-105 transition-all">
-                                    <ClipboardCheck className="h-10 w-10 mx-auto text-purple-500 mb-3 transition-transform group-hover:-translate-y-1" />
-                                    <h5 className="font-bold text-slate-700">Documents Required</h5>
-                                </a>
-                            </div>
-                        </div>
-
                         {/* Companies Visited Scroller */}
                         {data.companies?.length > 0 && (
                             <div className="bg-white p-8 rounded-2xl shadow-lg shadow-slate-900/5 mb-12">
@@ -157,77 +143,100 @@ const Details = ({ id }) => {
                             </div>
                         )}
 
-{/* --- FAQ --- */}
-<div className="bg-white p-8 rounded-2xl shadow-lg shadow-slate-900/5 mb-12">
-  <SectionHeader title="Frequently Asked Questions" />
-  <div className="space-y-4">
-    {(data.faqs || []).map((item, i) => {
-      const [open, setOpen] = useState(false);
-      return (
-        <div
-          key={i}
-          className="border border-slate-200 rounded-xl overflow-hidden"
-        >
-          <button
-            onClick={() => setOpen(!open)}
-            className="flex items-center justify-between w-full p-4 text-left"
-          >
-            <span className="flex items-center">
-              <HelpCircle className="w-5 h-5 text-indigo-500 mr-3" />
-              <span className="font-medium text-slate-800">{item.title}</span>
-            </span>
-            <FaChevronDown
-              className={`transition-transform duration-300 ${
-                open ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-          {open && (
-            <div className="px-4 pb-4 text-slate-600 leading-relaxed">
-              {item.details || "Answer not available."}
-            </div>
-          )}
-        </div>
-      );
-    })}
-  </div>
-</div>
+                        {/* --- FAQ --- */}
+                        <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl shadow-lg shadow-slate-900/5 mb-12">
+                            <SectionHeader title="Frequently Asked Questions" />
+                            <div className="space-y-3 sm:space-y-4">
+                                {(data.faqs || []).map((item, i) => (
+                                    <div
+                                        key={i}
+                                        className="border border-slate-200 rounded-xl overflow-hidden"
+                                    >
+                                        <button
+                                            onClick={() => toggleFaq(i)}
+                                            className="flex items-center justify-between w-full p-3 sm:p-4 text-left hover:bg-slate-50 transition-colors"
+                                        >
+                                            <span className="flex items-start sm:items-center flex-1 min-w-0">
+                                                <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500 mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0" />
+                                                <span className="font-medium text-slate-800 text-sm sm:text-base pr-2 leading-tight sm:leading-normal">{item.title}</span>
+                                            </span>
+                                            <FaChevronDown
+                                                className={`transition-transform duration-300 text-slate-400 w-4 h-4 flex-shrink-0 ${
+                                                    openFaqIndex === i ? "rotate-180" : ""
+                                                }`}
+                                            />
+                                        </button>
+                                        {openFaqIndex === i && (
+                                            <div className="px-3 sm:px-4 pb-3 sm:pb-4 text-slate-600 leading-relaxed text-sm sm:text-base">
+                                                {item.details || "Answer not available."}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-{/* --- Gallery --- */}
-{data.gallery?.length > 0 && (
-  <div className="bg-white p-8 rounded-2xl shadow-lg shadow-slate-900/5 mb-12">
-    <SectionHeader title="Campus Gallery" />
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      {data.gallery.map((img, i) => (
-        <div key={i} className="overflow-hidden rounded-lg aspect-[4/3]">
-          <img
-            src={img.img}
-            alt={`Gallery ${i + 1}`}
-            className="w-full h-full object-cover hover:scale-105 transition-transform"
-          />
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
-
+                        {/* --- Gallery --- */}
+                        {data.gallery?.length > 0 && (
+                            <div className="bg-white p-8 rounded-2xl shadow-lg shadow-slate-900/5 mb-12">
+                                <SectionHeader title="Campus Gallery" />
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                    {data.gallery.map((img, i) => (
+                                        <div key={i} className="overflow-hidden rounded-lg aspect-[4/3]">
+                                            <img
+                                                src={img.img}
+                                                alt={`Gallery ${i + 1}`}
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Google Map */}
-                        {data.mapLink && <div className="bg-white rounded-2xl shadow-lg shadow-slate-900/5 overflow-hidden">
-                            <div className="w-full h-96" dangerouslySetInnerHTML={{ __html: data.mapLink }} />
-                        </div>}
+                        {data.mapLink && typeof data.mapLink === 'string' && (
+                            <div className="bg-white rounded-2xl shadow-lg shadow-slate-900/5 overflow-hidden">
+                                <div className="w-full h-96" dangerouslySetInnerHTML={{ __html: data.mapLink }} />
+                            </div>
+                        )}
                     </div>
 
                     {/* -- Sidebar (Right Column) -- */}
                     <aside className="lg:col-span-4 lg:sticky top-10 h-fit mt-12 lg:mt-0">
-                        <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200/80">
+                        {/* Quick Information */}
+                        <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200/80 mb-6">
                             <h4 className="text-2xl font-bold text-slate-800 mb-5">Quick Information</h4>
                             <ul className="space-y-4 text-lg">
                                 <li className="flex items-center text-slate-700"><School className="h-6 w-6 text-blue-500 mr-4 shrink-0" /> <div><span className="font-semibold">Established:</span> {data.year}</div></li>
                                 <li className="flex items-center text-slate-700"><Award className="h-6 w-6 text-indigo-500 mr-4 shrink-0" /> <div><span className="font-semibold">NAAC Grade:</span> {data.grade}</div></li>
                                 <li className="flex items-center text-slate-700"><Building className="h-6 w-6 text-purple-500 mr-4 shrink-0" /> <div><span className="font-semibold">Area:</span> {data.area}</div></li>
                             </ul>
+                        </div>
+
+                        {/* More Details Section */}
+                        <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200/80">
+                            <h4 className="text-2xl font-bold text-slate-800 mb-5">More Details</h4>
+                            <div className="space-y-3">
+                                <a href="#" download className="group flex items-center bg-slate-50 p-4 rounded-lg hover:bg-blue-100 hover:scale-105 transition-all">
+                                    <FileText className="h-8 w-8 text-blue-500 mr-4 transition-transform group-hover:-translate-y-1" />
+                                    <div>
+                                        <h5 className="font-bold text-slate-700">Cut Off 2023</h5>
+                                    </div>
+                                </a>
+                                <a href="#" download className="group flex items-center bg-slate-50 p-4 rounded-lg hover:bg-indigo-100 hover:scale-105 transition-all">
+                                    <ClipboardList className="h-8 w-8 text-indigo-500 mr-4 transition-transform group-hover:-translate-y-1" />
+                                    <div>
+                                        <h5 className="font-bold text-slate-700">Admission Process</h5>
+                                    </div>
+                                </a>
+                                <a href="/DocumentRequired.pdf" download className="group flex items-center bg-slate-50 p-4 rounded-lg hover:bg-purple-100 hover:scale-105 transition-all">
+                                    <ClipboardCheck className="h-8 w-8 text-purple-500 mr-4 transition-transform group-hover:-translate-y-1" />
+                                    <div>
+                                        <h5 className="font-bold text-slate-700">Documents Required</h5>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </aside>
                 </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import Footer from '../../components/Footer';
 import axios from 'axios';
 import {
   FaArrowLeft, FaMapMarkerAlt, FaBed, FaCheckCircle,
@@ -49,6 +50,20 @@ const PropertyDetailPage = () => {
     };
     fetchProperty();
   }, [id]);
+
+  // Scroll to top when component mounts and when property data is loaded
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
+  useEffect(() => {
+    if (property) {
+      // Small delay to ensure content is rendered
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
+  }, [property]);
 
   const handleDownloadApp = () => {
     const userAgent = typeof window !== 'undefined' ? navigator.userAgent || navigator.vendor || window.opera : '';
@@ -117,11 +132,8 @@ const PropertyDetailPage = () => {
     setCurrentImageIndex(prev => (prev === 0 ? galleryImages.length - 1 : prev - 1));
   };
 
+  // FIXED: Removed the app download redirect limitation
   const goToNext = () => {
-    if (currentImageIndex === 2 && galleryImages.length > 3) {
-      handleDownloadApp();
-      return; // Stop advancing and prompt to download
-    }
     setCurrentImageIndex(prev => (prev === galleryImages.length - 1 ? 0 : prev + 1));
   };
 
@@ -146,16 +158,20 @@ const PropertyDetailPage = () => {
           <span className="text-white text-6xl font-bold opacity-30 select-none">Provider App</span>
         </div>
 
+        {/* Exit button - left center */}
         <button
           onClick={toggleFullscreen}
-          className="absolute top-4 left-4 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"
-          aria-label="Close fullscreen"
+          className="absolute left-6 top-1/6 -translate-y-1/2 z-50 text-white p-3 bg-black bg-opacity-60 rounded-full hover:bg-opacity-80 transition-opacity"
+          aria-label="Exit fullscreen"
         >
-          <FaArrowLeft size={24} />
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
 
-        <button onClick={goToPrevious} className="absolute left-4 top-1/2 -translate-y-1/2 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"><FaChevronLeft size={24} /></button>
-        <button onClick={goToNext} className="absolute right-4 top-1/2 -translate-y-1/2 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"><FaChevronRight size={24} /></button>
+        {/* Navigation arrows - moved further inward */}
+        <button onClick={goToPrevious} className="absolute left-16 top-1/2 -translate-y-1/2 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"><FaChevronLeft size={24} /></button>
+        <button onClick={goToNext} className="absolute right-6 top-1/2 -translate-y-1/2 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"><FaChevronRight size={24} /></button>
       </div>
     );
   }
@@ -164,9 +180,11 @@ const PropertyDetailPage = () => {
     <div className="min-h-screen bg-gray-50 pb-24 lg:pb-0"> {/* Padding bottom for mobile sticky button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main content - left column on desktop */}
           <div className="lg:col-span-2">
+            {/* Images - Always first */}
             {galleryImages.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
                 <div
                   className={`relative ${showThumbnails ? 'h-96' : 'h-[65vh]'} transition-all duration-300 ease-in-out cursor-pointer`}
                   onClick={() => setShowThumbnails(!showThumbnails)}
@@ -234,7 +252,8 @@ const PropertyDetailPage = () => {
               </div>
             )}
 
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            {/* Property details - Second */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-4">
               <div className="flex flex-wrap items-start justify-between mb-4">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">{attr.name}</h1>
@@ -242,8 +261,12 @@ const PropertyDetailPage = () => {
                 </div>
                 {attr.status && <span className={`px-3 py-1 text-sm font-semibold rounded-full capitalize ${statusStyles[attr.status] || 'bg-gray-100 text-gray-800'}`}>{attr.status}</span>}
               </div>
+            </div>
 
-              <div className="mb-6">
+            {/* Mobile-only sections in specific order */}
+            <div className="block lg:hidden space-y-4">
+              {/* Pricing - Third on mobile */}
+              <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">Pricing</h3>
                 <button
                   onClick={handleDownloadApp}
@@ -253,28 +276,7 @@ const PropertyDetailPage = () => {
                 </button>
               </div>
 
-              {attr.facilities?.data?.length > 0 && (<div className="mb-6"><h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3><div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">{attr.facilities.data.map((facility) => {const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle; return (<div key={facility.id} className="flex items-center"><Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} /><span className="text-gray-700">{facility.attributes.value}</span></div>);})}</div></div>)}
-              <div className="mb-6"><h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3><p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p></div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Enquire more</h3>
-                <div className="space-y-3">
-                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhoneAlt className="mr-2" /> Call Owner</button>
-                  {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
-
-                  <button
-                    onClick={handleDownloadApp}
-                    className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
-                  >
-                    <FaMapMarkedAlt className="mr-2" />
-                    View on Map
-                  </button>
-                </div>
-              </div>
+              {/* Quick Info - Fourth on mobile */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Quick Info</h3>
                 <div className="space-y-3 text-sm">
@@ -297,20 +299,156 @@ const PropertyDetailPage = () => {
                     </div>
                   )}
 
-                  {/* ====== MODIFIED SECTION ====== */}
                   {attr.location?.data?.attributes?.name && (
                     <div className="flex justify-between">
                       <span className="text-gray-500">Location</span>
                       <span className="font-medium text-gray-800">{attr.location.data.attributes.name}</span>
                     </div>
                   )}
-                  {/* ============================ */}
-
                 </div>
               </div>
 
-              {/* ====== SCHEDULE VISIT BUTTON FOR DESKTOP ====== */}
-              <div className="hidden lg:block">
+              {/* Enquire more - Fifth on mobile */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Enquire more</h3>
+                <div className="space-y-3">
+                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhoneAlt className="mr-2" /> Call Owner</button>
+                  {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
+
+                  <button
+                    onClick={handleDownloadApp}
+                    className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+                  >
+                    <FaMapMarkedAlt className="mr-2" />
+                    View on Map
+                  </button>
+                </div>
+              </div>
+
+              {/* Description - Sixth on mobile */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
+              </div>
+
+              {/* Facilities - Seventh on mobile */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                {attr.facilities?.data?.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                      {attr.facilities.data.map((facility) => {
+                        const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle; 
+                        return (
+                          <div key={facility.id} className="flex items-center">
+                            <Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} />
+                            <span className="text-gray-700 text-sm">{facility.attributes.value}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Description and Facilities - Desktop layout */}
+            <div className="hidden lg:block">
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
+                </div>
+              </div>
+
+              {/* Facilities - Desktop only */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                {attr.facilities?.data?.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">
+                      {attr.facilities.data.map((facility) => {
+                        const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle; 
+                        return (
+                          <div key={facility.id} className="flex items-center">
+                            <Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} />
+                            <span className="text-gray-700">{facility.attributes.value}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar - Desktop only */}
+          <div className="hidden lg:block lg:col-span-1">
+            <div className="lg:sticky lg:top-24 space-y-4">
+              
+              {/* Pricing - Desktop */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">Pricing</h3>
+                <button
+                  onClick={handleDownloadApp}
+                  className="inline-flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+                >
+                  Reveal Price
+                </button>
+              </div>
+
+              {/* Enquire more - Desktop */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Enquire more</h3>
+                <div className="space-y-3">
+                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhoneAlt className="mr-2" /> Call Owner</button>
+                  {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
+
+                  <button
+                    onClick={handleDownloadApp}
+                    className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+                  >
+                    <FaMapMarkedAlt className="mr-2" />
+                    View on Map
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Info - Desktop */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Quick Info</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between"><span className="text-gray-500">Property Type</span><span className="font-medium text-gray-800">{attr.property_types}</span></div>
+                  {attr.genders?.data?.length > 0 && <div className="flex justify-between"><span className="text-gray-500">Gender</span><span className="font-medium text-gray-800">{attr.genders.data[0].attributes.name}</span></div>}
+                  
+                  {attr.seaters?.data?.length > 0 && (
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-500 mt-1">Room Types</span>
+                      <div className="flex flex-wrap gap-2 justify-end max-w-[70%]">
+                        {attr.seaters.data.map((seater) => (
+                          <span 
+                            key={seater.id} 
+                            className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-1 rounded-full"
+                          >
+                            {seater.attributes.value}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {attr.location?.data?.attributes?.name && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Location</span>
+                      <span className="font-medium text-gray-800">{attr.location.data.attributes.name}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Schedule Visit Button - Desktop only */}
+              <div>
                 <p className="text-sm font-semibold text-center text-gray-800 mb-2">Want to visit this hostel?</p>
                 <button
                   onClick={handleDownloadApp}
@@ -319,13 +457,12 @@ const PropertyDetailPage = () => {
                   Schedule a Visit
                 </button>
               </div>
-               {/* =========================================== */}
             </div>
           </div>
         </div>
       </div>
 
-      {/* ====== SCHEDULE VISIT STICKY BUTTON FOR MOBILE ====== */}
+      {/* Schedule Visit Sticky Button - Mobile only */}
       <div className="block lg:hidden fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-40">
         <button
           onClick={handleDownloadApp}
@@ -334,7 +471,7 @@ const PropertyDetailPage = () => {
           Schedule a Visit
         </button>
       </div>
-      {/* ======================================================= */}
+      <Footer/>
     </div>
   );
 };

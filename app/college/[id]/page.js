@@ -4,6 +4,7 @@ import Market from "../Market";
 import AllProperties from "../AllColleges";
 import Details from "../DetailsCollege";
 import {useParams} from "next/navigation";
+import Footer from "../../components/Footer";
 // import AlertForm from "../../components/propertyAlert/AlertFormCollege";
 
 const PropertyDetails = () => {
@@ -24,7 +25,7 @@ const PropertyDetails = () => {
     <AllProperties id={id}/>
 
     {/* Alert Form for College */} 
-
+        <Footer/>
     </>
     );
 };
