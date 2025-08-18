@@ -128,7 +128,7 @@ const Navbar = () => {
           <li><Link href="/" className={navLinkClasses}>Home</Link></li>
           <li><Link href="/property" className={navLinkClasses}>Properties</Link></li>
           <li><Link href="/college" className={navLinkClasses}>College</Link></li>
-          <li><Link href="/blogs" className={navLinkClasses}>Blogs</Link></li>
+          {/* <li><Link href="/blogs" className={navLinkClasses}>Blogs</Link></li> */}
           <li><Link href="/about-us" className={navLinkClasses}>About Us</Link></li>
         </ul>
       </div>
@@ -178,7 +178,7 @@ const Navbar = () => {
           <li><Link href="/" className={navLinkClasses} onClick={handleLinkClick}>Home</Link></li>
           <li><Link href="/property" className={navLinkClasses} onClick={handleLinkClick}>Property</Link></li>
           <li><Link href="/college" className={navLinkClasses} onClick={handleLinkClick}>College</Link></li>
-          <li><Link href="/blogs" className={navLinkClasses} onClick={handleLinkClick}>Blogs</Link></li>
+          {/* <li><Link href="/blogs" className={navLinkClasses} onClick={handleLinkClick}>Blogs</Link></li> */}
           <li><Link href="/about-us" className={navLinkClasses} onClick={handleLinkClick}>About Us</Link></li>
           <div className="flex flex-col gap-4 w-4/5 max-w-xs pt-4 mt-4 border-t border-gray-200">
             <button
