@@ -13,7 +13,8 @@ const useFetchPropertiesViewAll = ({ filters }) => {
   return useInfiniteQuery({
     queryKey: ["fetch-properties-viewall", filters],
     queryFn: async ({ pageParam = 1 }) => {
-      const data = await graphQLClient.request(
+      // First, get the first page to know total pages
+      const firstPageData = await graphQLClient.request(
         gql`
           query properties(
             $page: Int!
@@ -89,7 +90,7 @@ const useFetchPropertiesViewAll = ({ filters }) => {
             }
           }`,
         {
-          page: pageParam,
+          page: 1,
           location: filters.location,
           property_type: filters.property_type,
           gender: filters.gender,
@@ -98,20 +99,133 @@ const useFetchPropertiesViewAll = ({ filters }) => {
         }
       );
 
-      // Client-side sorting (numeric-aware, descending)
-      const sorted = [...data.properties.data].sort((a, b) => {
+      const totalPages = firstPageData.properties.meta.pagination.pageCount;
+      
+      // If there's only one page, return the sorted first page
+      if (totalPages === 1) {
+        const sorted = [...firstPageData.properties.data].sort((a, b) => {
+          const aRank = a.attributes.ranking_id || "0";
+          const bRank = b.attributes.ranking_id || "0";
+          return bRank.localeCompare(aRank, undefined, { numeric: true });
+        });
+
+        return {
+          properties: sorted,
+          meta: firstPageData.properties.meta.pagination,
+        };
+      }
+
+      // Fetch all remaining pages
+      const allPagesPromises = [];
+      
+      // Add first page data
+      let allProperties = [...firstPageData.properties.data];
+      
+      // Fetch remaining pages (starting from page 2)
+      for (let page = 2; page <= totalPages; page++) {
+        allPagesPromises.push(
+          graphQLClient.request(
+            gql`
+              query properties(
+                $page: Int!
+                $location: String
+                $property_type: String
+                $gender: String
+                $seater: String
+                $city_id: ID
+              ) {
+                properties(
+                  pagination: { page: $page, pageSize: 20 }
+                  filters: {
+                    location: { name: { eq: $location } }
+                    city: { id: { eq: $city_id } }
+                    property_types: { containsi: $property_type }
+                    genders: { name: { containsi: $gender } }
+                    seaters: { value: { containsi: $seater } }
+                  }
+                ) {
+                  data {
+                    id
+                    attributes {
+                      ranking_id
+                      viewsCount { count }
+                      tag_value
+                      tag_color
+                      saved
+                      name
+                      property_types
+                      description
+                      verification_type
+                      price
+                      genders {
+                        data { attributes { name } }
+                      }
+                      approved
+                      full
+                      owner_number
+                      property_chips_banner {
+                        data {
+                          attributes {
+                            type
+                            text_value
+                            image_banner { data { attributes { url } } }
+                          }
+                        }
+                      }
+                      address
+                      latlng
+                      images { data { attributes { url previewUrl caption } } }
+                      main_image { data { attributes { url previewUrl caption } } }
+                      city { data { attributes { name } } }
+                      location { data { attributes { name } } }
+                      facilities {
+                        data {
+                          attributes {
+                            value
+                            image { data { attributes { url caption } } }
+                          }
+                        }
+                      }
+                      seaters { data { attributes { value } } }
+                    }
+                  }
+                }
+              }`,
+            {
+              page,
+              location: filters.location,
+              property_type: filters.property_type,
+              gender: filters.gender,
+              seater: filters.seater,
+              city_id: filters.city,
+            }
+          )
+        );
+      }
+
+      // Wait for all pages to be fetched
+      const remainingPagesData = await Promise.all(allPagesPromises);
+      
+      // Combine all properties from all pages
+      remainingPagesData.forEach(pageData => {
+        allProperties = [...allProperties, ...pageData.properties.data];
+      });
+
+      // Sort ALL properties by ranking_id (numeric-aware, descending)
+      const globalSorted = allProperties.sort((a, b) => {
         const aRank = a.attributes.ranking_id || "0";
         const bRank = b.attributes.ranking_id || "0";
-
-        // Use localeCompare for natural sorting of alphanumeric strings.
-        // The second argument 'undefined' uses the default locale.
-        // The options object with `numeric: true` enables numeric sorting.
         return bRank.localeCompare(aRank, undefined, { numeric: true });
       });
 
+      // Return paginated results from the globally sorted array
+      const startIndex = (pageParam - 1) * 20;
+      const endIndex = startIndex + 20;
+      const paginatedProperties = globalSorted.slice(startIndex, endIndex);
+
       return {
-        properties: sorted, // ✅ sorted client-side
-        meta: data.properties.meta.pagination,
+        properties: paginatedProperties,
+        meta: firstPageData.properties.meta.pagination,
       };
     },
     getNextPageParam: (lastPage) => {
