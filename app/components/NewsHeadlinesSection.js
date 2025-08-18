@@ -33,7 +33,7 @@ const newsItems = [
   },
   {
     id: 4,
-    src: '/IMG_4173.jpg',
+    src: '/IMG_4173.JPG',
     alt: 'Third news headline clipping',
     headline: 'Chief guest at GNIOT on session held for early stage founders',
     rotation: 'rotate-2',
