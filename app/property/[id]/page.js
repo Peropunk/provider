@@ -132,7 +132,6 @@ const PropertyDetailPage = () => {
     setCurrentImageIndex(prev => (prev === 0 ? galleryImages.length - 1 : prev - 1));
   };
 
-  // FIXED: Removed the app download redirect limitation
   const goToNext = () => {
     setCurrentImageIndex(prev => (prev === galleryImages.length - 1 ? 0 : prev + 1));
   };
@@ -157,8 +156,6 @@ const PropertyDetailPage = () => {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <span className="text-white text-6xl font-bold opacity-30 select-none">Provider App</span>
         </div>
-
-        {/* Exit button - left center */}
         <button
           onClick={toggleFullscreen}
           className="absolute left-6 top-1/6 -translate-y-1/2 z-50 text-white p-3 bg-black bg-opacity-60 rounded-full hover:bg-opacity-80 transition-opacity"
@@ -168,8 +165,6 @@ const PropertyDetailPage = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-
-        {/* Navigation arrows - moved further inward */}
         <button onClick={goToPrevious} className="absolute left-16 top-1/2 -translate-y-1/2 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"><FaChevronLeft size={24} /></button>
         <button onClick={goToNext} className="absolute right-6 top-1/2 -translate-y-1/2 z-50 text-white p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-opacity"><FaChevronRight size={24} /></button>
       </div>
@@ -325,7 +320,11 @@ const PropertyDetailPage = () => {
                 </div>
               </div>
 
-             
+              {/* Description - Sixth on mobile (MOVED HERE) */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
+              </div>
 
               {/* Facilities - Seventh on mobile */}
               <div className="bg-white rounded-lg shadow-md p-6">
@@ -347,12 +346,6 @@ const PropertyDetailPage = () => {
                 )}
               </div>
             </div>
-
-             {/* Description - Sixth on mobile */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">Description</h3>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
-              </div>
 
             {/* Description and Facilities - Desktop layout */}
             <div className="hidden lg:block">

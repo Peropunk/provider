@@ -87,6 +87,42 @@ const nextConfig = {
         port: '',
         pathname: '/colleges/wp-content/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.hindustantimes.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.nearestmetro.in',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.vecteezy.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.yourstory.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 't4.ftcdn.net',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.indianexpress.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
