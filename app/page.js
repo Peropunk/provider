@@ -24,16 +24,15 @@ export default function Home() {
     <SearchBarHero/>
     <AppPromotionSection/>
     <CardSlider/>
-    
     <AchievementsSection/>
-    {/* <Booking3DExplainer/> */}
+    <Booking3DExplainer/>
     <PosterSection/>
-    {/* <Solutions/> */}
+    <Solutions/>
     <StudentTestimonial/><TrustBadgesSection/>
     <ComparisonTableSection/>
-    {/* <MeetOurMentors/> */}
+    <MeetOurMentors/>
     <FAQSection/>
-    {/* <GuidesAndResources/> */}
+    <GuidesAndResources/>
     <NewsHeadlinesSection/>
     <JoinCommunity/>
     <Footer/>

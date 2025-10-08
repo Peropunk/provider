@@ -100,75 +100,75 @@ const Properties = ({
         setCurrentPage(1);
     }, [sData, selectedLocation, propertyType, gender, priceRange, seater]);
 
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-        
-        const requiredItems = pageNumber * ITEMS_PER_PAGE;
-        if (!sData && requiredItems > allLoadedProperties.length && hasNextPage) {
-            const pagesNeeded = Math.ceil((requiredItems - allLoadedProperties.length) / ITEMS_PER_PAGE);
-            for (let i = 0; i < pagesNeeded && hasNextPage; i++) {
-                fetchNextPage();
-            }
-        }
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+   const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    
+    const requiredItems = pageNumber * ITEMS_PER_PAGE;
+    if (!sData && requiredItems > allLoadedProperties.length && hasNextPage) {
+        // Just fetch next page once - React Query will handle it
+        fetchNextPage();
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
     const generatePageNumbers = () => {
-        const pages = [];
-        const maxVisiblePages = 5;
-        
-        let totalPages = totalClientPages;
-        if (!sData && hasNextPage) {
-            totalPages = Math.max(totalClientPages, currentPage + 2);
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    let totalPages = totalClientPages;
+    if (!sData && hasNextPage) {
+        totalPages = Math.max(totalClientPages, currentPage + 2);
+    }
+    
+    if (totalPages <= maxVisiblePages) {
+        for (let i = 1; i <= totalPages; i++) {
+            pages.push(i);
         }
-        
-        if (totalPages <= maxVisiblePages) {
-            for (let i = 1; i <= totalPages; i++) {
+    } else {
+        if (currentPage <= 3) {
+            for (let i = 1; i <= 3; i++) {
+                pages.push(i);
+            }
+            if (totalPages > 4) {
+                pages.push('...');
+                if (!sData && hasNextPage) {
+                    pages.push('More');
+                } else {
+                    pages.push(totalPages);
+                }
+            }
+        } else if (!sData && hasNextPage) {
+            pages.push(1);
+            pages.push('...');
+            // FIX: Start from Math.max(2, currentPage - 1) to avoid duplicate 1
+            for (let i = Math.max(2, currentPage - 1); i <= currentPage + 1; i++) {
+                pages.push(i);
+            }
+            pages.push('...');
+            pages.push('More');
+        } else if (currentPage >= totalPages - 2) {
+            pages.push(1);
+            if (totalPages > 4) {
+                pages.push('...');
+            }
+            // FIX: Ensure we start from correct page
+            for (let i = Math.max(2, totalPages - 2); i <= totalPages; i++) {
                 pages.push(i);
             }
         } else {
-            if (currentPage <= 3) {
-                for (let i = 1; i <= 3; i++) {
-                    pages.push(i);
-                }
-                if (totalPages > 4) {
-                    pages.push('...');
-                    if (!sData && hasNextPage) {
-                        pages.push('More');
-                    } else {
-                        pages.push(totalPages);
-                    }
-                }
-            } else if (!sData && hasNextPage) {
-                pages.push(1);
-                pages.push('...');
-                for (let i = Math.max(1, currentPage - 1); i <= currentPage + 1; i++) {
-                    pages.push(i);
-                }
-                pages.push('...');
-                pages.push('More');
-            } else if (currentPage >= totalPages - 2) {
-                pages.push(1);
-                if (totalPages > 4) {
-                    pages.push('...');
-                }
-                for (let i = totalPages - 2; i <= totalPages; i++) {
-                    pages.push(i);
-                }
-            } else {
-                pages.push(1);
-                pages.push('...');
-                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-                    pages.push(i);
-                }
-                pages.push('...');
-                pages.push(totalPages);
+            pages.push(1);
+            pages.push('...');
+            for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                pages.push(i);
             }
+            pages.push('...');
+            pages.push(totalPages);
         }
-        
-        return pages;
-    };
+    }
+    
+    return pages;
+};
 
     const handleLoadMore = () => {
         if (hasNextPage && !isFetchingNextPage) {
