@@ -6,15 +6,19 @@ import Image from 'next/image';
 const features = [
   {
     title: 'Step 1 – Search & Explore',
-    description: 'Browse verified hostels, PGs, and flats in your city. Check real photos, amenities, and owner details.',
+    description: 'Select city, locality, property type and gender and explore various property',
   },
   {
-    title: 'Step 2 – Visit or Take a Virtual Tour',
-    description: 'Use the schedule visit option to check the hostel in person, or explore it through a virtual tour online.',
+    title: 'Step 2 – Explore property',
+    description: 'Check distance, map view ,call owner, facilities, description, pricing, images',
   },
   {
-    title: 'Step 3 – Reserve Your Stay',
-    description: 'Once satisfied, pay a small security amount to instantly lock your bed/room. The rest is paid at the property.',
+    title: 'Step 3 – Schedule visit',
+    description: 'Select your preferred date and time to visit the property you like the most',
+  },
+  {
+    title: 'Step 4 – Book Hostel',
+    description: 'Pay booking amount and confirm your booking instantly through the app',
   },
 ];
 
@@ -26,6 +30,10 @@ const images = [
   {
     src: '/images/testimonials/security.png',
     alt: 'Security step',
+  },
+  {
+    src: '/images/testimonials/compare.png',
+    alt: 'Compare step',
   },
   {
     src: '/images/testimonials/compare.png',

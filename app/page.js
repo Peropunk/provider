@@ -27,7 +27,7 @@ export default function Home() {
     <AchievementsSection/>
     <Booking3DExplainer/>
     <PosterSection/>
-    <Solutions/>
+    {/* <Solutions/> */}
     <StudentTestimonial/><TrustBadgesSection/>
     <ComparisonTableSection/>
     <MeetOurMentors/>

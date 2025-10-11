@@ -197,13 +197,13 @@ const Hero = () => {
                 <div className="flex flex-wrap items-center gap-2 text-base md:text-lg font-medium">
                   <span className="text-gray-600">Find</span>
                   <span className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 rounded-lg font-semibold hover:scale-110 hover:shadow-lg transition-all duration-300">
-                    🏠 Hostels
+                    Hostels
                   </span>
                   <span className="px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-700 rounded-lg font-semibold hover:scale-110 hover:shadow-lg transition-all duration-300">
-                    🏢 PGs
+                    PGs
                   </span>
                   <span className="px-3 py-1.5 bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-700 rounded-lg font-semibold hover:scale-110 hover:shadow-lg transition-all duration-300">
-                    🏘️ Flats
+                    Flats
                   </span>
                   <span className="text-gray-600 font-semibold">& More</span>
                 </div>
@@ -377,7 +377,7 @@ const Hero = () => {
                   <div className="text-center">
                     <p className="text-4xl md:text-5xl font-black text-gray-900 mb-2">
                       <CountUp 
-                        end={35000} 
+                        end={40000} 
                         duration={1.5} 
                         separator="," 
                         enableScrollSpy={true}

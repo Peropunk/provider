@@ -33,11 +33,9 @@ const CollegeCard = ({ item, colActiv }) => {
       <div className={`flex flex-1 flex-col p-4 sm:p-6 ${colActiv ? 'w-full md:w-2/3' : 'w-full'}`}>
         {/* Card Header */}
         <div className="flex-grow">
-          <Link href={`/college/${item.id}`} className="hover:underline">
-            <h4 className="text-xl font-bold text-gray-800 line-clamp-1 leading-tight" title={item.title}>
-              {item.title}
-            </h4>
-          </Link>
+          <h4 className="text-xl font-bold text-gray-800 line-clamp-1 leading-tight" title={item.title}>
+            {item.title}
+          </h4>
           <p className="mt-1 flex items-center text-sm text-gray-500">
             <FaMapMarkerAlt className="mr-2 shrink-0" />
             <span className="line-clamp-1">{item.location}</span>
@@ -57,10 +55,9 @@ const CollegeCard = ({ item, colActiv }) => {
 
         {/* Footer with CTA */}
         <div className="mt-6 pt-4 border-t border-gray-200">
-           <Link href={`/college/${item.id}`} className="inline-flex items-center font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-              View Details
-              <HiArrowNarrowRight className="ml-2" />
-           </Link>
+          <span className="inline-block px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 group-hover:bg-indigo-700 transition-colors">
+            View Details
+          </span>
         </div>
       </div>
     </>
@@ -72,15 +69,17 @@ const CollegeCard = ({ item, colActiv }) => {
     <div
       className={`group ${colActiv ? 'w-full' : 'w-full'}`} // Ensure it takes full width of its grid cell
     >
-      <div
-        className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex h-full ${
-          colActiv
-            ? 'flex-col md:flex-row' // Always column on mobile, row on desktop for List view
-            : 'flex-col' // Always stacked for Grid view
-        }`}
-      >
-        <CardContent />
-      </div>
+      <Link href={`/college/${item.id}`} className="block h-full">
+        <div
+          className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex h-full cursor-pointer ${
+            colActiv
+              ? 'flex-col md:flex-row' // Always column on mobile, row on desktop for List view
+              : 'flex-col' // Always stacked for Grid view
+          }`}
+        >
+          <CardContent />
+        </div>
+      </Link>
     </div>
   );
 };

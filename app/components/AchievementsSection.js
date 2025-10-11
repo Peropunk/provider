@@ -14,8 +14,8 @@ const achievementsData = [
     bgColor: 'bg-blue-50',
   },
   {
-    numericValue: 35000,
-    displayValue: '35,000+',
+    numericValue: 40000,
+    displayValue: '40,000+',
     label: 'App Downloads',
     icon: <FaMobileAlt className="w-8 h-8" />,
     iconColor: 'text-indigo-500',
@@ -30,8 +30,8 @@ const achievementsData = [
     bgColor: 'bg-purple-50',
   },
   {
-    numericValue: 6,
-    displayValue: '6+ Cities',
+    numericValue: 7,
+    displayValue: '7+ Cities',
     label: 'Across 4 States',
     icon: <FaCity className="w-8 h-8" />,
     iconColor: 'text-pink-500',

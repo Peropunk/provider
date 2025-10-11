@@ -58,7 +58,7 @@ const Filter = ({ data, onFilterChange, onReset }) => {
 
   return (
     // Section with a subtle background gradient for depth
-    <section className="font-sans bg-gradient-to-b from-white via-slate-50 to-slate-100 py-12">
+    <section className="font-sans bg-gradient-to-b from-white via-slate-50 to-slate-100 py-6">
       <div className="container mx-auto px-4">
         
         {/* The main filter card with "Glassmorphism" effect */}

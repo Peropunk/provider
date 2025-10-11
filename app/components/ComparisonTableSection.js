@@ -1,6 +1,6 @@
-// src/components/ComparisonTableSection.jsx
+"use client"
 import React from 'react';
-import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertTriangle, ChevronRight } from 'lucide-react';
 
 const comparisonData = [
   { feature: 'Real Hostel Images', provider: 'check', other: 'cross' },
@@ -12,8 +12,8 @@ const comparisonData = [
 ];
 
 const IconMap = {
-  check: <CheckCircle2 size={28} className="text-blue-500 drop-shadow-sm" />, // blue accent
-  cross: <XCircle size={28} className="text-red-400 drop-shadow-sm" />, // softer red
+  check: <CheckCircle2 size={28} className="text-blue-500 drop-shadow-sm" />,
+  cross: <XCircle size={28} className="text-red-400 drop-shadow-sm" />,
   warn: <AlertTriangle size={28} className="text-yellow-400 drop-shadow-sm" />,
 };
 
@@ -34,8 +34,37 @@ const ComparisonTableSection = () => {
 
           {/* Right Column: Table */}
           <div className="md:w-2/3">
+            {/* Scroll indicator for mobile */}
+            <div className="md:hidden flex items-center justify-end mb-2 text-blue-600 text-sm font-medium animate-pulse">
+              <span>Swipe to see more</span>
+              <ChevronRight size={20} className="ml-1" />
+            </div>
+            
             <div className="bg-white/90 backdrop-blur-md border border-blue-100 rounded-2xl shadow-xl overflow-hidden">
-              <div className="overflow-x-auto">
+              <div 
+                className="overflow-x-auto scrollbar-visible"
+                style={{
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#3b82f6 #e0e7ff'
+                }}
+              >
+                <style jsx>{`
+                  .scrollbar-visible::-webkit-scrollbar {
+                    height: 8px;
+                  }
+                  .scrollbar-visible::-webkit-scrollbar-track {
+                    background: #e0e7ff;
+                    border-radius: 10px;
+                  }
+                  .scrollbar-visible::-webkit-scrollbar-thumb {
+                    background: #3b82f6;
+                    border-radius: 10px;
+                  }
+                  .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+                    background: #2563eb;
+                  }
+                `}</style>
+                
                 <table className="w-full min-w-[500px] md:min-w-full font-sans">
                   <thead>
                     <tr className="bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-blue-100">

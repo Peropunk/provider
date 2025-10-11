@@ -66,24 +66,15 @@ const BlogPost = () => {
             initial="initial"
             animate="animate"
             variants={staggerChildren}
-            className="relative pt-32 pb-20"
+            className="relative pt-8 pb-8"
           >
-            {/* Back Button */}
-            <motion.div variants={fadeIn} className="mb-8">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
-              >
-                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                <span className="text-sm font-medium">Back to Blog</span>
-              </Link>
-            </motion.div>
+           
 
             {/* Article Header */}
             <div className="max-w-4xl mx-auto">
               <motion.div
                 variants={fadeIn}
-                className="mb-8"
+                className="mb-2"
               >
                 {/* Category Badge */}
                 {post.category && (
@@ -93,7 +84,7 @@ const BlogPost = () => {
                 )}
                 
                 {/* Title */}
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-700 leading-tight">
+                <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-700 leading-tight">
                   {post.title}
                 </h1>
 
@@ -108,7 +99,7 @@ const BlogPost = () => {
               {/* Meta Information */}
               <motion.div
                 variants={fadeIn}
-                className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-12"
+                className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-4"
               >
                 {post.author && (
                   <div className="flex items-center gap-2">

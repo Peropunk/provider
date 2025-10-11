@@ -100,7 +100,7 @@ const Filter = ({
 
   return (
     <div className="bg-white shadow-lg rounded-xl mx-auto max-w-6xl -mt-16 relative z-20">
-      <div className="px-4 sm:px-6 lg:px-8 py-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
             <SlidersHorizontal className="text-indigo-600 mr-2" size={20} />
@@ -234,13 +234,13 @@ const Filter = ({
           </div>
         )}
 
-         <div className="mt-6 text-center">
+         <div className="mt-4 text-center">
             <button
                 type="button"
                 onClick={handleSearch}
                 className="w-full md:w-auto inline-flex items-center justify-center px-10 py-3 border border-transparent font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
               >
-                <Search size={20} className="mr-2"/>
+                <Search size={16} className="mr-2"/>
                 Search Now
             </button>
          </div>

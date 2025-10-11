@@ -22,9 +22,9 @@ const trustData = [
     textColor: 'text-yellow-700',
   },
   {
-    icon: <Image src="/DPIIT.png" alt="MSME" width={280} height={280} className="object-contain" />,
+    icon: <Image src="/certificates/DPIIT.png" alt="MSME" width={128} height={128} className="object-contain" />,
     text: null,
-    bgColor: 'bg-yellow-50',
+    bgColor: 'bg-red-50',
     textColor: 'text-yellow-700',
   },
  

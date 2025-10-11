@@ -125,7 +125,7 @@ const MeetOurMentors = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div ref={headingRef} className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight text-gray-900">
-            Our <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Founders</span>
+            Our <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Mentors</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-light">
             Our team of seasoned professionals and visionary leaders are dedicated to empowering your journey.

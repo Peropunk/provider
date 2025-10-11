@@ -178,7 +178,7 @@ const Properties = ({
 
     if (isLoading && !data) {
       return (
-        <section className="py-20" style={{ backgroundColor: '#f8f9fa' }}>
+        <section className="py-16" style={{ backgroundColor: '#f8f9fa' }}>
           <div className="container mx-auto px-4 text-center">
             <p className="text-xl text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Loading Properties...</p>
           </div>
@@ -188,7 +188,7 @@ const Properties = ({
     
     if (isError) {
       return (
-        <section className="py-20 bg-red-50">
+        <section className="py-16 bg-red-50">
           <div className="container mx-auto px-4 text-center">
             <p className="text-xl text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Failed to load properties. Please try again later.</p>
             <p className="text-md text-red-600 mt-2">{error.message}</p>
@@ -198,9 +198,9 @@ const Properties = ({
     }
 
     return (
-        <section className="py-20" style={{ backgroundColor: '#f8f9fa', fontFamily: 'Montserrat, sans-serif' }}>
+        <section className="py-6" style={{ backgroundColor: '#f8f9fa', fontFamily: 'Montserrat, sans-serif' }}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
+                <div className="bg-white rounded-lg shadow-lg p-4 mb-12">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
                             <h2 className="text-3xl font-bold text-gray-800" style={{ color: '#2c3e50' }}>
