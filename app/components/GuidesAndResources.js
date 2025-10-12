@@ -12,30 +12,30 @@ import { gsap } from 'gsap';
 const blogPostsData = [
   {
     id: 1,
-    title: 'Top Hostels in Varanasi for Students',
-    slug: '/blog/top-hostels-varanasi-students',
-    excerpt: 'Discover the best and most affordable student accommodations in the heart of Varanasi.',
-    imageUrl: '/varanasi.jpg', // Example image path
+    title: 'Finding the Perfect Girls Hostel Near GL Bajaj Institute of Technology and Management: How a Provider App Can Helps',
+    slug: '/blog',
+    excerpt: 'Searching for suitable accommodation is a crucial aspect of a students life. Discover the importance of finding a suitable girls',
+    imageUrl: '/blog1.avif', // Example image path
     imageAlt: 'Students in a hostel in Varanasi',
     category: 'Accommodation',
     gradient: 'from-blue-500/20 to-indigo-500/20',
   },
   {
     id: 2,
-    title: 'How to Find a Safe PG in Delhi',
-    slug: '/blog/how-to-find-safe-pg-delhi',
-    excerpt: 'A comprehensive guide to navigating the PG hunt in Delhi, focusing on safety and amenities.',
-    imageUrl: '/delhi.jpg', // Example image path
+    title: 'Unlocking the Best Girls Hostels near Galgotias University, Greater Noida: Your Path to Comfortable and Convenient Living',
+    slug: '/blog',
+    excerpt: 'Are you a student searching for the ideal girls hostel near Galgotias University? We delve into the world of provider apps and',
+    imageUrl: '/blog2.png', // Example image path
     imageAlt: 'Map of Delhi with location pins',
     category: 'Safety Guide',
     gradient: 'from-purple-500/20 to-pink-500/20',
   },
   {
     id: 3,
-    title: 'Best Summer Internships in India for 2025',
-    slug: '/blog/best-summer-internships-india-2025',
-    excerpt: 'Kickstart your career with these top-rated summer internship opportunities across various sectors in India.',
-    imageUrl: '/maang.webp', // Example image path
+    title: 'The Ultimate Guide for owners to list their Hostel, PG, Flat, or Rooms: How to Grow Your Business with Minimal Effort',
+    slug: '/blog',
+    excerpt: 'As a hostel, PG, or room owner, finding tenants can be daunting. Learn how provider apps can help you stand out',
+    imageUrl: '/blog3.jpg', // Example image path
     imageAlt: 'Students collaborating during an internship',
     category: 'Career',
     gradient: 'from-green-500/20 to-teal-500/20',

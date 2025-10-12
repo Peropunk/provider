@@ -96,7 +96,7 @@ const AboutUs = () => {
             >
               <h2 className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Our Journey</h2>
               <p className="text-xl text-gray-600 leading-relaxed">
-                What began in 2021 with a few girls searching for a reliable hostel near Greater Noida, became a mission: to solve every student's biggest challenge—finding a safe, affordable, and verified place to live. From proud roots as an incubated project at GL Bajaj in Knowledge Park 3, we've grown into a full-fledged platform trusted across India.
+                What began in 2021 with a few girls searching for a reliable hostel near Varanasi, became a mission: to solve every student's biggest challenge—finding a safe, affordable, and verified place to live. From proud roots as an incubated project at GL Bajaj in Knowledge Park 3, we've grown into a full-fledged platform trusted across India.
               </p>
             </motion.div>
             <motion.div
@@ -161,7 +161,7 @@ const AboutUs = () => {
             >
               <h3 className="text-3xl font-semibold text-gray-900 mb-3 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Our Vision</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                At Provider, we believe that a student's journey begins with the right place to stay. Our platform is designed to take the stress out of hostel hunting by offering curated listings, real-time support, and campus-connected properties—ensuring every student has access to a secure and comfortable living experience.
+                At Provider, we believe that a student's journey begins with the right place to stay. Our platform is designed to remove the stress during finding hostel, PG and flats.
               </p>
             </motion.div>
             <motion.div
@@ -179,7 +179,7 @@ const AboutUs = () => {
             >
               <h3 className="text-3xl font-semibold text-gray-900 mb-3 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Our Reach</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                With a strong presence across Greater Noida, Gurugram, Varanasi, Kota, and other educational hubs, we have become the go-to solution for students and parents seeking trusted out-campus accommodation.
+                With a strong presence across Delhi NCR, Greater Noida, Gurugram, Varanasi, Kota, and other educational hubs, we have become the go-to solution for students and parents seeking trusted out-campus accommodation.
               </p>
             </motion.div>
           </div>
@@ -199,7 +199,7 @@ const AboutUs = () => {
                 "Free cab visits for property tours",
                 "Real-time support for booking and relocation",
                 "Early booking discounts & student-friendly offers",
-                "Dedicated channel partnerships with colleges"
+                "No broker involvement and transparent deals"
               ].map((feature, index) => (
                 <motion.div
                   key={index}
@@ -225,7 +225,7 @@ const AboutUs = () => {
             className="relative z-10 text-center max-w-3xl mx-auto px-4"
           >
             <p className="text-xl text-gray-600 leading-relaxed mb-4 font-light">
-              More than just a booking platform, Provider App is building a complete student ecosystem—one that connects housing, student services, career support, and campus partnerships into one seamless experience.
+              More than just a booking platform, Provider App is building a complete student ecosystem—one that connects housing, student services, career support, and community engagements into one seamless experience.
             </p>
             <p className="text-2xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               As we continue to grow, our commitment remains the same: to make student living simpler, safer, and smarter.
@@ -374,7 +374,7 @@ const AboutUs = () => {
               whileHover={{ scale: 1.05 }}
               className="bg-white p-8 rounded-xl text-center shadow-lg"
             >
-              <div className="text-4xl font-bold text-green-600 mb-2">4.8</div>
+              <div className="text-4xl font-bold text-green-600 mb-2">4.8/5</div>
               <p className="text-gray-600">Average rating from students & parents</p>
             </motion.div>
             <motion.div
@@ -382,12 +382,12 @@ const AboutUs = () => {
               className="bg-white p-8 rounded-xl text-center shadow-lg"
             >
               <div className="text-4xl font-bold text-purple-600 mb-2">7+</div>
-              <p className="text-gray-600">Cities Covered across 5 states</p>
+              <p className="text-gray-600">Cities Covered across 4 states</p>
             </motion.div>
           </div>
           <div className="mt-12 text-center">
             <p className="text-lg text-gray-600">
-              🎓 Supported by MSME, Startup India, and featured on college partner sites like ITS.
+              🎓 Supported by MSME, Startup India, and featured on college partner sites like GL BAJAJ.
             </p>
           </div>
         </motion.section>
@@ -625,7 +625,7 @@ const AboutUs = () => {
               viewport={{ once: true }}
               className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto"
             >
-              We partner with colleges, student influencers, and campus groups to expand quality housing. Reach out to us at:
+              We partner with Hostels, PGs, colleges, student influencers, and campus groups to expand quality housing. Reach out to us at:
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
