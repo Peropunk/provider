@@ -6,19 +6,19 @@ import Image from 'next/image';
 const features = [
   {
     title: 'Step 1 – Search & Explore',
-    description: 'Select city, locality, property type and gender and explore various property',
+    description: 'Select city, locality, property type and gender and explore various property.',
   },
   {
     title: 'Step 2 – Explore property',
-    description: 'Check distance, map view ,call owner, facilities, description, pricing, images',
+    description: 'Check distance from your college, view on map, call owner, see facilities, pricing, images & video view.',
   },
   {
     title: 'Step 3 – Schedule visit',
-    description: 'Select your preferred date and time to visit the property you like the most',
+    description: 'Select your preferred date and time to visit the property you like the most.',
   },
   {
     title: 'Step 4 – Book Hostel',
-    description: 'Pay booking amount and confirm your booking instantly through the app',
+    description: 'Pay booking amount and confirm your booking instantly through the app.',
   },
 ];
 

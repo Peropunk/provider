@@ -141,7 +141,7 @@ const AboutUs = () => {
               Provider App is India's leading student accommodation platform, built with a mission to redefine how students find verified and affordable living spaces across major educational cities.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Founded by engineering graduates who personally experienced the challenges of student housing, Provider App was created to solve a real problem faced by thousands of students every year—finding safe, budget-friendly, and reliable accommodation near their colleges. What began with a single college in Greater Noida has now expanded to over 7 cities across 4 states, helping students book verified hostels, PGs, flats, and co-living spaces through a simple, transparent, and trusted platform.
+              Founded by engineering graduates who personally experienced the challenges of student housing, Provider App was created to solve a real problem faced by thousands of students every year—finding safe, budget-friendly, and reliable accommodation near their colleges. What began with a single college in Greater Noida has now expanded to over 7 cities across 4 states, helping students book verified Hostels, PGs, Flats, and co-living spaces through a simple, transparent, and trusted platform.
             </p>
           </motion.div>
 
@@ -161,7 +161,7 @@ const AboutUs = () => {
             >
               <h3 className="text-3xl font-semibold text-gray-900 mb-3 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Our Vision</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                At Provider, we believe that a student's journey begins with the right place to stay. Our platform is designed to remove the stress during finding hostel, PG and flats.
+                At Provider App, we believe that a student’s journey truly begins with finding the right place to stay, a space that feels like home. Our vision is to simplify the search for Hostels, PGs, & Flats by offering trusted listings, transparent pricing, and a stress-free booking experience for every student.
               </p>
             </motion.div>
             <motion.div
@@ -179,7 +179,7 @@ const AboutUs = () => {
             >
               <h3 className="text-3xl font-semibold text-gray-900 mb-3 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Our Reach</h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                With a strong presence across Delhi NCR, Greater Noida, Gurugram, Varanasi, Kota, and other educational hubs, we have become the go-to solution for students and parents seeking trusted out-campus accommodation.
+               With a strong presence across Delhi NCR including key student cities like Greater Noida, Gurugram, Varanasi, Kota, and other major educational hubs. We have become the go-to solution for students and parents seeking trusted out-campus accommodation.
               </p>
             </motion.div>
           </div>
@@ -194,12 +194,12 @@ const AboutUs = () => {
             <h3 className="text-3xl font-semibold mb-6 relative z-10">What We Offer</h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
               {[
-                "Verified hostel & PG listings near top colleges",
+                "Verified Hostel & PG listings near top colleges",
                 "Transparent pricing with no hidden charges",
                 "Free cab visits for property tours",
                 "Real-time support for booking and relocation",
                 "Early booking discounts & student-friendly offers",
-                "No broker involvement and transparent deals"
+                "Direct call to the Owner means No Broker involved"
               ].map((feature, index) => (
                 <motion.div
                   key={index}
@@ -550,7 +550,7 @@ const AboutUs = () => {
               viewport={{ once: true }}
               className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto"
             >
-              If you're looking for a verified, trusted, student-first place to stay in hostels or PGs near colleges—download Provider App now. Start your hassle-free stay today!
+              If you're looking for a verified, trusted, student-first place to stay in Hostels or PGs near colleges—download Provider App now. Start your hassle-free stay today!
             </motion.p>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -635,10 +635,10 @@ const AboutUs = () => {
               className="space-y-4 mb-12"
             >
               <p className="text-xl text-gray-700">
-                Email: <a href="mailto:admin@providerapp.in" className="text-blue-600 hover:text-blue-700 font-semibold">admin@providerapp.in</a>
+                Email: <a href="mailto:admin@dreamprovider.in" className="text-blue-600 hover:text-blue-700 font-semibold">admin@dreamprovider.in</a>
               </p>
               <p className="text-xl text-gray-700">
-                Phone: <a href="tel:+917303831326" className="text-blue-600 hover:text-blue-700 font-semibold">+91 7303831326</a>
+                Phone: <a href="tel:+917303831326" className="text-blue-600 hover:text-blue-700 font-semibold">+91 73038 31326</a>
               </p>
             </motion.div>
             <motion.div 

@@ -8,7 +8,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
-    { name: 'About Us', href: '/about' },
+    { name: 'About Us', href: '/about-us' },
     { name: 'Privacy Policy', href: '/privacy' },
   ];
 
@@ -53,10 +53,10 @@ const Footer = () => {
           {/* Brand & Tagline */}
           <div className="mb-6 md:mb-0">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              Dream Provider
+              Dream Provider Pvt Ltd.
             </h2>
             <p className="mt-2 text-sm text-slate-400">
-              Empowering India’s Students.
+              Book your Hostel, Anytime, Anywhere.
             </p>
           </div>
 

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { HiArrowNarrowRight } from "react-icons/hi";
 
 // This component now uses Tailwind CSS for a modern, aesthetic look.
 const CollegeCard = ({ item, colActiv }) => {
@@ -16,8 +15,8 @@ const CollegeCard = ({ item, colActiv }) => {
   // Common Card Content for reusability between Grid and List views
   const CardContent = () => (
     <>
-      {/* Image Section */}
-      <div className={`relative overflow-hidden ${colActiv ? 'w-full md:w-1/3 aspect-video md:aspect-auto' : 'w-full aspect-video'}`}>
+      {/* Image Section - The fix is applied here */}
+      <div className={`relative overflow-hidden ${colActiv ? 'w-full aspect-[4/3]  md:w-1/3 md:aspect-[4/3] md:flex-shrink-0' : 'w-full aspect-video'}`}>
         <Image
           src={item.imgLink || "/fallback-image.jpg"} // Fallback image for safety
           width={400}
@@ -25,8 +24,6 @@ const CollegeCard = ({ item, colActiv }) => {
           alt={item.title || "College Image"}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        {/* You can add an overlay or a badge here if you want */}
-        {/* Example: <span className="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md">{item.grade}</span> */}
       </div>
 
       {/* Text Content Section */}
@@ -50,12 +47,11 @@ const CollegeCard = ({ item, colActiv }) => {
           <div className="text-gray-600">Established: <span className="font-semibold text-gray-800">{item.year}</span></div>
           <div className="text-gray-600">NAAC Grade: <span className="font-semibold text-gray-800">{item.grade}</span></div>
           <div className="text-gray-600">Area: <span className="font-semibold text-gray-800">{item.area}</span></div>
-          <div className="text-gray-600">Published: <span className="font-semibold text-gray-800">{item.published}</span></div>
         </div>
 
         {/* Footer with CTA */}
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <span className="inline-block px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 group-hover:bg-indigo-700 transition-colors">
+        <div className="mt-6 pt-4 border-t border-gray-200 text-center">
+          <span className="inline-block px-8 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 group-hover:bg-indigo-700 transition-colors">
             View Details
           </span>
         </div>
@@ -63,12 +59,9 @@ const CollegeCard = ({ item, colActiv }) => {
     </>
   );
 
-
   // Render based on the 'colActiv' prop (Grid vs. List view)
   return (
-    <div
-      className={`group ${colActiv ? 'w-full' : 'w-full'}`} // Ensure it takes full width of its grid cell
-    >
+    <div className={`group ${colActiv ? 'w-full' : 'w-full'}`}>
       <Link href={`/college/${item.id}`} className="block h-full">
         <div
           className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex h-full cursor-pointer ${

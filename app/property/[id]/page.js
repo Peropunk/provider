@@ -347,7 +347,7 @@ const PropertyDetailPage = () => {
               
             </div>
 {/* Facilities - Desktop only */}
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 {attr.facilities?.data?.length > 0 && (
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3>

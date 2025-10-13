@@ -203,9 +203,9 @@ const Properties = ({
                 <div className="bg-white rounded-lg shadow-lg p-4 mb-12">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-800" style={{ color: '#2c3e50' }}>
+                            {/* <h2 className="text-3xl font-bold text-gray-800" style={{ color: '#2c3e50' }}>
                                 {sData ? "Search Results" : "Properties"}
-                            </h2>
+                            </h2> */}
                             <p className="text-lg text-gray-600 mt-1">
                                 {sData ? `For "${query}"` : `In "${displayLocation}"`}
                                 <span className="text-sm font-normal text-gray-500 ml-2">

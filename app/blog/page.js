@@ -61,13 +61,19 @@ const Blog = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 -left-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-300"></div>
-        <div className="absolute -bottom-40 left-1/2 transform -translate-x-1/2 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-700"></div>
-      </div>
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+      
+      {/* Main content area that will grow to push the footer down */}
+      <main className="flex-grow">
+        
+        {/* The container with the problematic styles is now just for the background */}
+        <div className="relative overflow-hidden">
+          {/* Background decorative elements (no longer affect the footer) */}
+          <div className="absolute inset-0">
+            <div className="absolute top-20 -left-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+            <div className="absolute top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-300"></div>
+            <div className="absolute -bottom-40 left-1/2 transform -translate-x-1/2 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-700"></div>
+          </div>
 
       <MaxWidthWrapper>
         <motion.section 
@@ -255,7 +261,9 @@ const Blog = () => {
           
         </motion.section>
       </MaxWidthWrapper>
-      <Footer />
+       </div>
+      </main>
+      <Footer/>
     </div>
   );
 };

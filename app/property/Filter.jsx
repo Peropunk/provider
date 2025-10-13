@@ -1,5 +1,9 @@
+// src/components/Filter.jsx
+
+'use client';
+
 import { Search, MapPin, Map, ChevronDown, SlidersHorizontal, X, Home, Users } from "lucide-react";
-import { useFetchLocation } from "../../hooks/useFetchLocations";
+import { useFetchLocation } from "../../hooks/useFetchLocations"; // Assuming you have this hook
 import { useState, useEffect } from "react";
 
 const Filter = ({
@@ -17,6 +21,8 @@ const Filter = ({
   onSeaterChange,
   onClearFilters
 }) => {
+  // NOTE: Your useFetchLocation hook is assumed to work as intended.
+  // For this example, I'll mock the data flow in the parent.
   const { data, error, isLoading, isSuccess } = useFetchLocation();
   const [selectedCity, setSelectedCity] = useState(null);
   const [currentLocations, setCurrentLocations] = useState([]);
@@ -40,11 +46,9 @@ const Filter = ({
         setCurrentLocations([]);
         return;
     }
-
     const selectedIndex = cities.findIndex(
       (city) => city.attributes.name === selectedCityName
     );
-
     if (selectedIndex !== -1) {
         setCurrentLocations(cities[selectedIndex]?.attributes?.locations?.data || []);
     }
@@ -55,20 +59,15 @@ const Filter = ({
     onSelectLocation(selectedLoc);
   };
 
-  // --- MODIFIED SEARCH HANDLER ---
   const handleSearch = (e) => {
     e.preventDefault();
     let query = searchText;
-
-    // Seater parsing logic
     const seaterRegex = /(\d+)\s*seater/i;
     const seaterMatch = query.match(seaterRegex);
     if (seaterMatch) {
       onSeaterChange(`${seaterMatch[1]} Seater`);
       query = query.replace(seaterRegex, '').trim();
     }
-
-    // Price parsing logic
     const priceRegex = /(?:under|below)?\s*(\d{4,})/i;
     const priceMatch = query.match(priceRegex);
     if (priceMatch) {
@@ -76,9 +75,6 @@ const Filter = ({
       onPriceChange(`0-${price}`);
       query = query.replace(priceMatch[0], '').trim();
     }
-
-    // Trigger search in parent component with remaining text query.
-    // The parent component will use its state for all other filters (location, gender, etc.).
     onSearchProperties(query);
   };
 
@@ -95,7 +91,7 @@ const Filter = ({
     onClearFilters();
   }
 
-  const propertyTypeOptions = [ "Hostel","PG", "Flat", "Room"];
+  const propertyTypeOptions = ["Hostel", "PG", "Flat", "Room"];
   const genderOptions = ["Boys", "Girls", "Independent", "Family"];
 
   return (
@@ -118,7 +114,6 @@ const Filter = ({
         </div>
 
         <div className="flex flex-col gap-4">
-          {/* Row 1: Search Bar */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <Search className="text-slate-400" size={20} />
@@ -132,10 +127,7 @@ const Filter = ({
               className="block w-full pl-12 pr-4 py-3 border border-slate-300 rounded-lg leading-5 bg-slate-50 placeholder-slate-500 focus:outline-none focus:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
             />
           </div>
-
-          {/* Row 2: Dropdown Filters */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* City Dropdown */}
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MapPin className="text-gray-400" size={18}/>
@@ -161,8 +153,6 @@ const Filter = ({
                 <ChevronDown className="text-gray-400" size={18} />
                 </div>
             </div>
-
-            {/* Location Dropdown */}
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Map className="text-gray-400" size={18} />
@@ -189,8 +179,6 @@ const Filter = ({
                     <ChevronDown className="text-gray-400" size={18} />
                 </div>
             </div>
-
-            {/* Property Type Dropdown */}
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <Home className="text-gray-400" size={18} />
@@ -207,8 +195,6 @@ const Filter = ({
                 <ChevronDown className="text-gray-400" size={18} />
               </div>
             </div>
-
-            {/* Gender Dropdown */}
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <Users className="text-gray-400" size={18} />
@@ -234,17 +220,16 @@ const Filter = ({
           </div>
         )}
 
-         <div className="mt-4 text-center">
+        <div className="mt-4 text-center">
             <button
                 type="button"
                 onClick={handleSearch}
                 className="w-full md:w-auto inline-flex items-center justify-center px-10 py-3 border border-transparent font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
-              >
+            >
                 <Search size={16} className="mr-2"/>
                 Search Now
             </button>
-         </div>
-
+        </div>
       </div>
     </div>
   );
