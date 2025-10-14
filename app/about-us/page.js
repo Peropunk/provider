@@ -309,7 +309,7 @@ const AboutUs = () => {
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="bg-white p-8 rounded-xl shadow-lg"
-            >
+            ><h3 className="text-2xl font-semibold mb-4">Why we are best</h3>
               <ul className="space-y-4 text-gray-600">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
