@@ -1,5 +1,6 @@
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 function truncateText(text, maxLength) {
     if (!text) return "";
@@ -57,7 +58,7 @@ const GenderBadge = ({ gender }) => {
     );
 };
 
-const PropertyCard = ({ singleData, isListView }) => {
+const PropertyCard = ({ singleData, isListView, index }) => {
     const { attributes } = singleData || {};
     const router = useRouter();
 
@@ -90,11 +91,14 @@ const PropertyCard = ({ singleData, isListView }) => {
                 <div className="relative sm:w-1/3 flex-shrink-0">
                     {/* Fixed landscape aspect ratio container */}
                     <div className="w-full aspect-[4/3] sm:h-48 relative overflow-hidden">
-                        <img
+                        <Image
                             src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
                             alt={attributes.name}
-                            className="w-full h-full object-cover cursor-pointer"
+                            fill
+                            className="object-cover cursor-pointer"
                             onClick={navigateToPropertyDetails}
+                            priority={index < 2}
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 33vw, 300px"
                         />
                     </div>
                     <BadgesOverlay />
@@ -136,11 +140,14 @@ const PropertyCard = ({ singleData, isListView }) => {
             <div className="relative">
                 {/* Fixed landscape aspect ratio container */}
                 <div className="w-full aspect-[4/3] relative overflow-hidden">
-                    <img
+                    <Image
                         src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
                         alt={attributes.name}
-                        className="w-full h-full object-cover cursor-pointer"
+                        fill
+                        className="object-cover cursor-pointer"
                         onClick={navigateToPropertyDetails}
+                        priority={index < 2}
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 400px"
                     />
                 </div>
                 <BadgesOverlay />

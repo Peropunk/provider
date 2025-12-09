@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { FaBars, FaGripHorizontal, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import PropertyCard from "./PropertyCard"; 
+import PropertyCard from "./PropertyCard";
 import useFetchPropertiesViewAll from "../../hooks/useFetchPropertiesViewAll";
 
-const Properties = ({ 
-    selectedLocation, 
-    sData, 
-    query, 
+const Properties = ({
+    selectedLocation,
+    sData,
+    query,
     onReset,
     propertyType,
     gender,
@@ -18,7 +18,7 @@ const Properties = ({
 
     const [isListView, setIsListView] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const ITEMS_PER_PAGE = 12;
 
     // --- CORRECTED AND EXPLICIT FILTER LOGIC ---
@@ -38,10 +38,10 @@ const Properties = ({
             // Otherwise, default to fetching by city ID 5 (Greater Noida).
             apiFilters.city = 5;
         }
-        
+
         return apiFilters;
     };
-    
+
     const {
         data,
         isLoading,
@@ -56,7 +56,7 @@ const Properties = ({
 
     // Get all properties from loaded pages
     const allLoadedProperties = data?.pages?.flatMap((page) => page.properties) || [];
-    
+
     // For search data, use client-side pagination
     const searchProperties = sData?.data || [];
     const currentProperties = sData ? searchProperties : allLoadedProperties;
@@ -78,7 +78,7 @@ const Properties = ({
         }
         return true;
     });
-    
+
     // Pagination calculations now operate on the client-filtered properties
     const totalLoadedItems = filteredProperties.length;
     const totalClientPages = Math.ceil(totalLoadedItems / ITEMS_PER_PAGE);
@@ -100,75 +100,75 @@ const Properties = ({
         setCurrentPage(1);
     }, [sData, selectedLocation, propertyType, gender, priceRange, seater]);
 
-   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    
-    const requiredItems = pageNumber * ITEMS_PER_PAGE;
-    if (!sData && requiredItems > allLoadedProperties.length && hasNextPage) {
-        // Just fetch next page once - React Query will handle it
-        fetchNextPage();
-    }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+
+        const requiredItems = pageNumber * ITEMS_PER_PAGE;
+        if (!sData && requiredItems > allLoadedProperties.length && hasNextPage) {
+            // Just fetch next page once - React Query will handle it
+            fetchNextPage();
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const generatePageNumbers = () => {
-    const pages = [];
-    const maxVisiblePages = 5;
-    
-    let totalPages = totalClientPages;
-    if (!sData && hasNextPage) {
-        totalPages = Math.max(totalClientPages, currentPage + 2);
-    }
-    
-    if (totalPages <= maxVisiblePages) {
-        for (let i = 1; i <= totalPages; i++) {
-            pages.push(i);
+        const pages = [];
+        const maxVisiblePages = 5;
+
+        let totalPages = totalClientPages;
+        if (!sData && hasNextPage) {
+            totalPages = Math.max(totalClientPages, currentPage + 2);
         }
-    } else {
-        if (currentPage <= 3) {
-            for (let i = 1; i <= 3; i++) {
-                pages.push(i);
-            }
-            if (totalPages > 4) {
-                pages.push('...');
-                if (!sData && hasNextPage) {
-                    pages.push('More');
-                } else {
-                    pages.push(totalPages);
-                }
-            }
-        } else if (!sData && hasNextPage) {
-            pages.push(1);
-            pages.push('...');
-            // FIX: Start from Math.max(2, currentPage - 1) to avoid duplicate 1
-            for (let i = Math.max(2, currentPage - 1); i <= currentPage + 1; i++) {
-                pages.push(i);
-            }
-            pages.push('...');
-            pages.push('More');
-        } else if (currentPage >= totalPages - 2) {
-            pages.push(1);
-            if (totalPages > 4) {
-                pages.push('...');
-            }
-            // FIX: Ensure we start from correct page
-            for (let i = Math.max(2, totalPages - 2); i <= totalPages; i++) {
+
+        if (totalPages <= maxVisiblePages) {
+            for (let i = 1; i <= totalPages; i++) {
                 pages.push(i);
             }
         } else {
-            pages.push(1);
-            pages.push('...');
-            for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-                pages.push(i);
+            if (currentPage <= 3) {
+                for (let i = 1; i <= 3; i++) {
+                    pages.push(i);
+                }
+                if (totalPages > 4) {
+                    pages.push('...');
+                    if (!sData && hasNextPage) {
+                        pages.push('More');
+                    } else {
+                        pages.push(totalPages);
+                    }
+                }
+            } else if (!sData && hasNextPage) {
+                pages.push(1);
+                pages.push('...');
+                // FIX: Start from Math.max(2, currentPage - 1) to avoid duplicate 1
+                for (let i = Math.max(2, currentPage - 1); i <= currentPage + 1; i++) {
+                    pages.push(i);
+                }
+                pages.push('...');
+                pages.push('More');
+            } else if (currentPage >= totalPages - 2) {
+                pages.push(1);
+                if (totalPages > 4) {
+                    pages.push('...');
+                }
+                // FIX: Ensure we start from correct page
+                for (let i = Math.max(2, totalPages - 2); i <= totalPages; i++) {
+                    pages.push(i);
+                }
+            } else {
+                pages.push(1);
+                pages.push('...');
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pages.push(i);
+                }
+                pages.push('...');
+                pages.push(totalPages);
             }
-            pages.push('...');
-            pages.push(totalPages);
         }
-    }
-    
-    return pages;
-};
+
+        return pages;
+    };
 
     const handleLoadMore = () => {
         if (hasNextPage && !isFetchingNextPage) {
@@ -177,24 +177,24 @@ const Properties = ({
     };
 
     if (isLoading && !data) {
-      return (
-        <section className="py-16" style={{ backgroundColor: '#f8f9fa' }}>
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-xl text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Loading Properties...</p>
-          </div>
-        </section>
-      );
+        return (
+            <section className="py-16" style={{ backgroundColor: '#f8f9fa' }}>
+                <div className="container mx-auto px-4 text-center">
+                    <p className="text-xl text-gray-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Loading Properties...</p>
+                </div>
+            </section>
+        );
     }
-    
+
     if (isError) {
-      return (
-        <section className="py-16 bg-red-50">
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-xl text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Failed to load properties. Please try again later.</p>
-            <p className="text-md text-red-600 mt-2">{error.message}</p>
-          </div>
-        </section>
-      );
+        return (
+            <section className="py-16 bg-red-50">
+                <div className="container mx-auto px-4 text-center">
+                    <p className="text-xl text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Failed to load properties. Please try again later.</p>
+                    <p className="text-md text-red-600 mt-2">{error.message}</p>
+                </div>
+            </section>
+        );
     }
 
     return (
@@ -213,8 +213,8 @@ const Properties = ({
                                 </span>
                             </p>
                         </div>
-                         <div className="flex items-center gap-4">
-                           
+                        <div className="flex items-center gap-4">
+
                             <div className="hidden md:flex items-center bg-gray-200 rounded-lg p-1">
                                 <button
                                     onClick={() => setIsListView(false)}
@@ -236,8 +236,13 @@ const Properties = ({
                 </div>
 
                 <div className={`grid gap-8 ${isListView ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
-                    {currentPageProperties.map((singleData) => (
-                        <PropertyCard key={singleData.id} singleData={singleData} isListView={isListView} />
+                    {currentPageProperties.map((singleData, index) => (
+                        <PropertyCard
+                            key={singleData.id}
+                            singleData={singleData}
+                            isListView={isListView}
+                            index={index}
+                        />
                     ))}
                 </div>
 
@@ -251,7 +256,7 @@ const Properties = ({
                     <div className="text-center py-24">
                         <h3 className="text-2xl font-semibold text-gray-800" style={{ color: '#2c3e50' }}>No Properties Found</h3>
                         <p className="text-gray-600 mt-4 max-w-md mx-auto">
-                            {sData 
+                            {sData
                                 ? `We couldn't find any properties matching your search for "${query}". Please try a different search term.`
                                 : `There are currently no properties available in "${displayLocation}" with the selected filters. Please try again.`
                             }
@@ -294,15 +299,14 @@ const Properties = ({
                                         }
                                     }}
                                     disabled={pageNumber === '...'}
-                                    className={`relative inline-flex items-center justify-center w-12 h-12 text-sm font-bold rounded-lg border transition-colors ${
-                                        pageNumber === currentPage
+                                    className={`relative inline-flex items-center justify-center w-12 h-12 text-sm font-bold rounded-lg border transition-colors ${pageNumber === currentPage
                                             ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg'
                                             : pageNumber === '...'
-                                            ? 'bg-white text-gray-400 border-gray-300 cursor-default'
-                                            : pageNumber === 'More'
-                                            ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
-                                            : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
-                                    }`}
+                                                ? 'bg-white text-gray-400 border-gray-300 cursor-default'
+                                                : pageNumber === 'More'
+                                                    ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
+                                                    : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
+                                        }`}
                                 >
                                     {pageNumber}
                                 </button>

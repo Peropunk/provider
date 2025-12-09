@@ -2,7 +2,7 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-          {
+      {
         protocol: 'https',
         hostname: 'strapi-s3torage.s3.ap-south-1.amazonaws.com',
         port: '',
@@ -21,7 +21,7 @@ const nextConfig = {
         port: '',
         pathname: '/public/uploads/media/**', // More specific pathname
       },
-         // --- ADD THIS NEW ONE ---
+      // --- ADD THIS NEW ONE ---
       {
         protocol: 'https',
         hostname: 'www.classhud.com',
@@ -34,7 +34,7 @@ const nextConfig = {
         port: '',
         pathname: '/images/**',
       },
-         {
+      {
         protocol: 'https',
         hostname: 'images.collegedunia.com',
         port: '',
@@ -46,7 +46,7 @@ const nextConfig = {
         port: '',
         pathname: '/images/CollegeImages/**',
       },
-        {
+      {
         protocol: 'https',
         hostname: 'openthemagazine.com',
         port: '',
@@ -57,7 +57,7 @@ const nextConfig = {
         hostname: 'www.reviewadda.com',
         port: '',
         pathname: '/assets/uploads/article_images/**',
-      },{
+      }, {
         protocol: 'https',
         hostname: 'itsengg.edu.in',
         port: '',
@@ -69,19 +69,19 @@ const nextConfig = {
         port: '',
         pathname: '/wp-content/uploads/**',
       },
-       {
+      {
         protocol: 'https',
         hostname: 'img.jagranjosh.com',
         port: '',
         pathname: '/images/**',
       },
-       {
+      {
         protocol: 'https',
         hostname: 'sp-ao.shortpixel.ai',
         port: '',
         pathname: '/client/**',
       },
-       {
+      {
         protocol: 'https',
         hostname: 'edufever.in',
         port: '',
@@ -120,6 +120,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'images.indianexpress.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
         port: '',
         pathname: '/**',
       },
