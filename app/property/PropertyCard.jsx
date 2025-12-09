@@ -92,7 +92,7 @@ const PropertyCard = ({ singleData, isListView, index }) => {
                     {/* Fixed landscape aspect ratio container */}
                     <div className="w-full aspect-[4/3] sm:h-48 relative overflow-hidden">
                         <Image
-                            src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
+                            src={attributes.main_image?.data?.attributes.url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNjY2NjY2MiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iIzMzMzMzMyIgZm9udC1zaXplPSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW1hZ2UgTm90IEZvdW5kPC90ZXh0Pjwvc3ZnPg=='}
                             alt={attributes.name}
                             fill
                             className="object-cover cursor-pointer"
@@ -141,7 +141,7 @@ const PropertyCard = ({ singleData, isListView, index }) => {
                 {/* Fixed landscape aspect ratio container */}
                 <div className="w-full aspect-[4/3] relative overflow-hidden">
                     <Image
-                        src={attributes.main_image?.data?.attributes.url || 'https://via.placeholder.com/400x300'}
+                        src={attributes.main_image?.data?.attributes.url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNjY2NjY2MiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iIzMzMzMzMyIgZm9udC1zaXplPSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW1hZ2UgTm90IEZvdW5kPC90ZXh0Pjwvc3ZnPg=='}
                         alt={attributes.name}
                         fill
                         className="object-cover cursor-pointer"
