@@ -24,19 +24,19 @@ const features = [
 
 const images = [
   {
-    src: '/images/testimonials/contact.png',
+    src: '/img/mockup-1.png',
     alt: 'Contact step',
   },
   {
-    src: '/images/testimonials/security.png',
+    src: '/img/mockup-3.png',
     alt: 'Security step',
   },
   {
-    src: '/images/testimonials/compare.png',
+    src: '/img/mockup-2.png',
     alt: 'Compare step',
   },
   {
-    src: '/images/testimonials/compare.png',
+    src: '/img/mockup-3.png',
     alt: 'Compare step',
   },
 ];
@@ -76,7 +76,7 @@ const Booking3DExplainer = () => {
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
               <pattern id="grid" width="12" height="12" patternUnits="userSpaceOnUse">
-                <path d="M 12 0 L 0 0 0 12" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <path d="M 12 0 L 0 0 0 12" fill="none" stroke="currentColor" strokeWidth="0.5" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
@@ -92,12 +92,12 @@ const Booking3DExplainer = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight font-display" style={{fontFamily: 'Inter, Segoe UI, Arial, sans-serif'}}>
+          <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight font-display" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               How Booking Works on the App
             </span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{fontFamily: 'Inter, Segoe UI, Arial, sans-serif'}}>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
             A simple, secure, and streamlined process to find and book your next property.
           </p>
         </div>
@@ -111,16 +111,15 @@ const Booking3DExplainer = () => {
                 <div
                   key={feature.title}
                   onClick={() => handleFeatureClick(idx)}
-                  className={`rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-in-out transform hover:-translate-y-1 ${
-                    current === idx
-                      ? 'bg-white shadow-lg border-2 border-indigo-500 scale-105'
-                      : 'bg-white/70 shadow-md border-2 border-transparent hover:border-indigo-200/50 hover:shadow-lg'
-                  }`}
+                  className={`rounded-2xl p-6 cursor-pointer transition-all duration-500 ease-in-out transform hover:-translate-y-1 ${current === idx
+                    ? 'bg-white shadow-lg border-2 border-indigo-500 scale-105'
+                    : 'bg-white/70 shadow-md border-2 border-transparent hover:border-indigo-200/50 hover:shadow-lg'
+                    }`}
                 >
-                  <h3 className="text-xl font-bold text-indigo-800 mb-2" style={{fontFamily: 'Inter, Segoe UI, Arial, sans-serif'}}>
+                  <h3 className="text-xl font-bold text-indigo-800 mb-2" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600" style={{fontFamily: 'Inter, Segoe UI, Arial, sans-serif'}}>
+                  <p className="text-gray-600" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {feature.description}
                   </p>
                 </div>
@@ -138,9 +137,8 @@ const Booking3DExplainer = () => {
                         src={image.src}
                         alt={image.alt}
                         fill
-                        className={`object-contain transition-opacity duration-700 ease-in-out ${
-                          current === idx ? 'opacity-100' : 'opacity-0'
-                        }`}
+                        className={`object-contain transition-opacity duration-700 ease-in-out ${current === idx ? 'opacity-100' : 'opacity-0'
+                          }`}
                         priority={idx === 0}
                       />
                     ))}
@@ -151,9 +149,8 @@ const Booking3DExplainer = () => {
                 {images.map((_, idx) => (
                   <button
                     key={idx}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      current === idx ? 'bg-indigo-600 scale-125' : 'bg-indigo-200 hover:bg-indigo-300'
-                    }`}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${current === idx ? 'bg-indigo-600 scale-125' : 'bg-indigo-200 hover:bg-indigo-300'
+                      }`}
                     onClick={() => handleFeatureClick(idx)}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
