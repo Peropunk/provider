@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GraphQLClient, gql } from "graphql-request";
 
-const GRAPHQL_URL = "http://api.dreamprovider.in/graphql";
+const GRAPHQL_URL = "https://api.dreamprovider.in/graphql";
 const graphQLClient = new GraphQLClient(GRAPHQL_URL, {});
 
 export function useFetchColleges() {
