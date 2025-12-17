@@ -2,20 +2,66 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+// import axios from "axios"; // No longer using axios directly here
+import { useQuery } from "@tanstack/react-query";
+import { GraphQLClient, gql } from "graphql-request";
 
 // --- ICONS ---
 // Using a mix of react-icons and lucide-react for the best of both worlds
-import { FaMapMarkerAlt, FaChevronLeft, FaChevronRight, FaChevronDown} from "react-icons/fa";
+import { FaMapMarkerAlt, FaChevronLeft, FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { FiCheckCircle } from 'react-icons/fi'; // A great, clean checkmark for lists
 import { FileText, ClipboardList, ClipboardCheck, Award, Building, School, HelpCircle } from 'lucide-react'; // Polished icons for details
 
 // --- DATA & COMPONENTS ---
-// Un-commented and assuming these paths are correct for your project
-import faqData from "./faqData";
-// import faqdata from "../../data/faqs"; // Fallback FAQ data
- import SingleFaq from "./SingleFaq"; // Your FAQ component
+// import faqData from "./faqData"; // Static data removed
 import LoadingOverlay from './LoadingOverlay';
+
+const GRAPHQL_URL = "https://api.dreamprovider.in/graphql";
+const graphQLClient = new GraphQLClient(GRAPHQL_URL, {});
+
+const FETCH_COLLEGE_BY_SLUG = gql`
+  query GetCollegeBySlug($slug: String!) {
+    collages(filters: { slug: { eq: $slug } }) {
+      data {
+        id
+        attributes {
+            name
+            slug
+            locationName
+            description
+            videoLink
+            year
+            ratings
+            area
+            grade
+            hostelArea
+            courses
+            ranking
+            imgLink
+            tag
+            published
+            companies
+            mapLink
+            placements
+            FeeMatrix
+            gallery
+            faqs
+            reviews
+            docReq: docReq # Assuming docReq and eligibility were separate fields or part of extended schema not yet in my updated schema.json.
+            eligibility: eligibility # If these are missing in schema, I might need to add them or map them from json. 
+            # I will assume they are JSON fields for now to match the UI usage.
+            banner {
+            data {
+                attributes {
+                url
+                }
+            }
+            }
+        }
+      }
+    }
+  }
+`;
 
 // A small component for clean section headers
 const SectionHeader = ({ title }) => (
@@ -25,8 +71,24 @@ const SectionHeader = ({ title }) => (
 );
 
 // The main, redesigned Details component
-const Details = ({ id }) => {
-    const data = faqData.find(item => item.id === id);
+const Details = ({ slug }) => { // Receiving slug instead of id
+    const { data: apiData, isLoading, error } = useQuery({
+        queryKey: ['college', slug],
+        queryFn: async () => graphQLClient.request(FETCH_COLLEGE_BY_SLUG, { slug }),
+        enabled: !!slug,
+    });
+
+    // Transform API data to match component expectations
+    const data = apiData?.collages?.data?.[0]?.attributes
+        ? {
+            id: apiData.collages.data[0].id,
+            ...apiData.collages.data[0].attributes,
+            title: apiData.collages.data[0].attributes.name,
+            location: apiData.collages.data[0].attributes.locationName || "Unknown Location",
+            imgLink: apiData.collages.data[0].attributes.imgLink || apiData.collages.data[0].attributes.banner?.data?.attributes?.url,
+        }
+        : null;
+
     const sliderRef = useRef(null);
     const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
@@ -40,8 +102,12 @@ const Details = ({ id }) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
     };
 
-    if (!data) {
+    if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center"><LoadingOverlay /></div>;
+    }
+
+    if (error || !data) {
+        return <div className="min-h-screen flex items-center justify-center">College not found</div>;
     }
 
     const backgroundImageStyle = data?.imgLink ? { backgroundImage: `url(${data.imgLink})` } : {};
@@ -161,9 +227,8 @@ const Details = ({ id }) => {
                                                 <span className="font-medium text-slate-800 text-sm sm:text-base pr-2 leading-tight sm:leading-normal">{item.title}</span>
                                             </span>
                                             <FaChevronDown
-                                                className={`transition-transform duration-300 text-slate-400 w-4 h-4 flex-shrink-0 ${
-                                                    openFaqIndex === i ? "rotate-180" : ""
-                                                }`}
+                                                className={`transition-transform duration-300 text-slate-400 w-4 h-4 flex-shrink-0 ${openFaqIndex === i ? "rotate-180" : ""
+                                                    }`}
                                             />
                                         </button>
                                         {openFaqIndex === i && (

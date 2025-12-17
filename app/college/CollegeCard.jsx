@@ -9,7 +9,7 @@ const CollegeCard = ({ item, colActiv }) => {
 
   // If the 'item' prop is not provided, we can render a placeholder or nothing.
   if (!item) {
-    return null; 
+    return null;
   }
 
   // Common Card Content for reusability between Grid and List views
@@ -62,13 +62,12 @@ const CollegeCard = ({ item, colActiv }) => {
   // Render based on the 'colActiv' prop (Grid vs. List view)
   return (
     <div className={`group ${colActiv ? 'w-full' : 'w-full'}`}>
-      <Link href={`/college/${item.id}`} className="block h-full">
+      <Link href={`/college/${item.slug}`} className="block h-full">
         <div
-          className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex h-full cursor-pointer ${
-            colActiv
+          className={`bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex h-full cursor-pointer ${colActiv
               ? 'flex-col md:flex-row' // Always column on mobile, row on desktop for List view
               : 'flex-col' // Always stacked for Grid view
-          }`}
+            }`}
         >
           <CardContent />
         </div>
