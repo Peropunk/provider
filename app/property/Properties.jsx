@@ -22,10 +22,8 @@ const Properties = ({
     const ITEMS_PER_PAGE = 12;
 
     // --- CORRECTED AND EXPLICIT FILTER LOGIC ---
-    // This function ensures we send the correct filter to the API.
     const getApiFilters = () => {
         const apiFilters = {
-            page: currentPage,
             property_type: propertyType,
             gender: gender,
             seater: seater,
@@ -42,24 +40,18 @@ const Properties = ({
         return apiFilters;
     };
 
+    // Use simple useQuery hook now
     const {
-        data,
+        data: allProperties,
         isLoading,
         isError,
         error,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-    } = useFetchPropertiesViewAll({ filters: getApiFilters() }); // Pass the generated filters to the hook
+    } = useFetchPropertiesViewAll({ filters: getApiFilters() });
 
-    // The rest of the component logic remains the same...
-
-    // Get all properties from loaded pages
-    const allLoadedProperties = data?.pages?.flatMap((page) => page.properties) || [];
-
-    // For search data, use client-side pagination
+    // Handle Search Data vs Fetched Data
     const searchProperties = sData?.data || [];
-    const currentProperties = sData ? searchProperties : allLoadedProperties;
+    // If we have search results, show them. Otherwise show cached/fetched properties.
+    const currentProperties = sData ? searchProperties : (allProperties || []);
 
     // CLIENT-SIDE FILTERING for price
     const filteredProperties = currentProperties.filter(property => {
@@ -82,18 +74,17 @@ const Properties = ({
     // Pagination calculations now operate on the client-filtered properties
     const totalLoadedItems = filteredProperties.length;
     const totalClientPages = Math.ceil(totalLoadedItems / ITEMS_PER_PAGE);
+
+    // Ensure currentPage is valid (e.g., if filtering reduces pages)
+    useEffect(() => {
+        if ((currentPage > totalClientPages) && totalClientPages > 0) {
+            setCurrentPage(1);
+        }
+    }, [totalClientPages, currentPage]);
+
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const currentPageProperties = filteredProperties.slice(startIndex, endIndex);
-
-    // Check if we need to load more data from server
-    const needsMoreData = !sData && currentPage === totalClientPages && hasNextPage && currentPageProperties.length < ITEMS_PER_PAGE;
-
-    useEffect(() => {
-        if (needsMoreData && !isFetchingNextPage) {
-            fetchNextPage();
-        }
-    }, [needsMoreData, fetchNextPage, isFetchingNextPage]);
 
     // Reset to page 1 when any filter changes
     useEffect(() => {
@@ -102,24 +93,13 @@ const Properties = ({
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-
-        const requiredItems = pageNumber * ITEMS_PER_PAGE;
-        if (!sData && requiredItems > allLoadedProperties.length && hasNextPage) {
-            // Just fetch next page once - React Query will handle it
-            fetchNextPage();
-        }
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const generatePageNumbers = () => {
         const pages = [];
         const maxVisiblePages = 5;
-
-        let totalPages = totalClientPages;
-        if (!sData && hasNextPage) {
-            totalPages = Math.max(totalClientPages, currentPage + 2);
-        }
+        const totalPages = totalClientPages;
 
         if (totalPages <= maxVisiblePages) {
             for (let i = 1; i <= totalPages; i++) {
@@ -132,28 +112,12 @@ const Properties = ({
                 }
                 if (totalPages > 4) {
                     pages.push('...');
-                    if (!sData && hasNextPage) {
-                        pages.push('More');
-                    } else {
-                        pages.push(totalPages);
-                    }
+                    pages.push(totalPages);
                 }
-            } else if (!sData && hasNextPage) {
-                pages.push(1);
-                pages.push('...');
-                // FIX: Start from Math.max(2, currentPage - 1) to avoid duplicate 1
-                for (let i = Math.max(2, currentPage - 1); i <= currentPage + 1; i++) {
-                    pages.push(i);
-                }
-                pages.push('...');
-                pages.push('More');
             } else if (currentPage >= totalPages - 2) {
                 pages.push(1);
-                if (totalPages > 4) {
-                    pages.push('...');
-                }
-                // FIX: Ensure we start from correct page
-                for (let i = Math.max(2, totalPages - 2); i <= totalPages; i++) {
+                pages.push('...');
+                for (let i = totalPages - 2; i <= totalPages; i++) {
                     pages.push(i);
                 }
             } else {
@@ -166,17 +130,10 @@ const Properties = ({
                 pages.push(totalPages);
             }
         }
-
         return pages;
     };
 
-    const handleLoadMore = () => {
-        if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-        }
-    };
-
-    if (isLoading && !data) {
+    if (isLoading && !sData && !allProperties) {
         return (
             <section className="py-16" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="container mx-auto px-4 text-center">
@@ -186,12 +143,12 @@ const Properties = ({
         );
     }
 
-    if (isError) {
+    if (isError && !sData) {
         return (
             <section className="py-16 bg-red-50">
                 <div className="container mx-auto px-4 text-center">
                     <p className="text-xl text-red-700" style={{ fontFamily: 'Montserrat, sans-serif' }}>Failed to load properties. Please try again later.</p>
-                    <p className="text-md text-red-600 mt-2">{error.message}</p>
+                    <p className="text-md text-red-600 mt-2">{error?.message}</p>
                 </div>
             </section>
         );
@@ -203,18 +160,14 @@ const Properties = ({
                 <div className="bg-white rounded-lg shadow-lg p-4 mb-12">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div>
-                            {/* <h2 className="text-3xl font-bold text-gray-800" style={{ color: '#2c3e50' }}>
-                                {sData ? "Search Results" : "Properties"}
-                            </h2> */}
                             <p className="text-lg text-gray-600 mt-1">
                                 {sData ? `For "${query}"` : `In "${displayLocation}"`}
                                 <span className="text-sm font-normal text-gray-500 ml-2">
-                                    ({totalLoadedItems}{!sData && hasNextPage ? '+' : ''} {totalLoadedItems === 1 ? 'property' : 'properties'})
+                                    ({totalLoadedItems} {totalLoadedItems === 1 ? 'property' : 'properties'})
                                 </span>
                             </p>
                         </div>
                         <div className="flex items-center gap-4">
-
                             <div className="hidden md:flex items-center bg-gray-200 rounded-lg p-1">
                                 <button
                                     onClick={() => setIsListView(false)}
@@ -246,12 +199,6 @@ const Properties = ({
                     ))}
                 </div>
 
-                {(isFetchingNextPage || needsMoreData) && (
-                    <div className="text-center py-12">
-                        <p className="text-xl text-gray-700">Loading more properties...</p>
-                    </div>
-                )}
-
                 {totalLoadedItems === 0 && !isLoading && (
                     <div className="text-center py-24">
                         <h3 className="text-2xl font-semibold text-gray-800" style={{ color: '#2c3e50' }}>No Properties Found</h3>
@@ -272,12 +219,12 @@ const Properties = ({
                     </div>
                 )}
 
-                {(totalClientPages > 1 || (!sData && hasNextPage)) && (
+                {totalClientPages > 1 && (
                     <div className="mt-16 flex flex-col sm:flex-row items-center justify-between gap-6">
                         <div className="text-md text-gray-700">
                             Showing <span className="font-bold">{startIndex + 1}</span> to{' '}
                             <span className="font-bold">{Math.min(endIndex, totalLoadedItems)}</span> of{' '}
-                            <span className="font-bold">{totalLoadedItems}{!sData && hasNextPage ? '+' : ''}</span> results
+                            <span className="font-bold">{totalLoadedItems}</span> results
                         </div>
                         <div className="flex items-center space-x-2">
                             <button
@@ -292,34 +239,24 @@ const Properties = ({
                                 <button
                                     key={index}
                                     onClick={() => {
-                                        if (pageNumber === 'More') {
-                                            handleLoadMore();
-                                        } else if (typeof pageNumber === 'number') {
+                                        if (typeof pageNumber === 'number') {
                                             handlePageChange(pageNumber);
                                         }
                                     }}
                                     disabled={pageNumber === '...'}
                                     className={`relative inline-flex items-center justify-center w-12 h-12 text-sm font-bold rounded-lg border transition-colors ${pageNumber === currentPage
-                                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg'
-                                            : pageNumber === '...'
-                                                ? 'bg-white text-gray-400 border-gray-300 cursor-default'
-                                                : pageNumber === 'More'
-                                                    ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
-                                                    : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
+                                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg'
+                                        : pageNumber === '...'
+                                            ? 'bg-white text-gray-400 border-gray-300 cursor-default'
+                                            : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
                                         }`}
                                 >
                                     {pageNumber}
                                 </button>
                             ))}
                             <button
-                                onClick={() => {
-                                    if (currentPage < totalClientPages) {
-                                        handlePageChange(currentPage + 1);
-                                    } else if (!sData && hasNextPage) {
-                                        handleLoadMore();
-                                    }
-                                }}
-                                disabled={sData && currentPage === totalClientPages}
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalClientPages}
                                 className="relative inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
                             >
                                 <span className="mr-2 hidden sm:inline">Next</span>

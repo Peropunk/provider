@@ -89,6 +89,15 @@ const PropertyDetailPage = () => {
     }
   };
 
+  const handleOpenMap = () => {
+    const latlng = property?.attributes?.latlng;
+    if (latlng && latlng._latitude && latlng._longitude) {
+      window.open(`https://www.google.com/maps/search/?api=1&query=${latlng._latitude},${latlng._longitude}`, '_blank');
+    } else {
+      alert("Location not available on map.");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -197,7 +206,7 @@ const PropertyDetailPage = () => {
                     <span className="text-white text-4xl font-bold opacity-25 select-none">Provider App</span>
                   </div>
 
-                   <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+                  <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
                     <button
                       onClick={(e) => { e.stopPropagation(); router.back(); }}
                       className="flex items-center text-white p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
@@ -224,10 +233,10 @@ const PropertyDetailPage = () => {
                   </div>
 
                   <div className="absolute inset-0 flex items-center justify-between p-2">
-                     <button onClick={(e) => { e.stopPropagation(); goToPrevious(); }} className="p-2 bg-black bg-opacity-40 text-white rounded-full hover:bg-opacity-60 transition-all"><FaChevronLeft size={20} /></button>
-                     <button onClick={(e) => { e.stopPropagation(); goToNext(); }} className="p-2 bg-black bg-opacity-40 text-white rounded-full hover:bg-opacity-60 transition-all"><FaChevronRight size={20} /></button>
+                    <button onClick={(e) => { e.stopPropagation(); goToPrevious(); }} className="p-2 bg-black bg-opacity-40 text-white rounded-full hover:bg-opacity-60 transition-all"><FaChevronLeft size={20} /></button>
+                    <button onClick={(e) => { e.stopPropagation(); goToNext(); }} className="p-2 bg-black bg-opacity-40 text-white rounded-full hover:bg-opacity-60 transition-all"><FaChevronRight size={20} /></button>
                   </div>
-                   <button onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} className="absolute bottom-2 right-2 p-2 bg-black bg-opacity-40 text-white rounded-full hover:bg-opacity-60 transition-all"><FaExpand size={16} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} className="absolute bottom-2 right-2 p-2 bg-black bg-opacity-40 text-white rounded-full hover:bg-opacity-60 transition-all"><FaExpand size={16} /></button>
                 </div>
 
                 {showThumbnails && galleryImages.length > 1 && (
@@ -277,14 +286,14 @@ const PropertyDetailPage = () => {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between"><span className="text-gray-500">Property Type</span><span className="font-medium text-gray-800">{attr.property_types}</span></div>
                   {attr.genders?.data?.length > 0 && <div className="flex justify-between"><span className="text-gray-500">Gender</span><span className="font-medium text-gray-800">{attr.genders.data[0].attributes.name}</span></div>}
-                  
+
                   {attr.seaters?.data?.length > 0 && (
                     <div className="flex justify-between items-start">
                       <span className="text-gray-500 mt-1">Room Types</span>
                       <div className="flex flex-wrap gap-2 justify-end max-w-[70%]">
                         {attr.seaters.data.map((seater) => (
-                          <span 
-                            key={seater.id} 
+                          <span
+                            key={seater.id}
                             className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-1 rounded-full"
                           >
                             {seater.attributes.value}
@@ -311,7 +320,7 @@ const PropertyDetailPage = () => {
                   {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
 
                   <button
-                    onClick={handleDownloadApp}
+                    onClick={handleOpenMap}
                     className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
                   >
                     <FaMapMarkedAlt className="mr-2" />
@@ -319,14 +328,14 @@ const PropertyDetailPage = () => {
                   </button>
                 </div>
               </div>
-{/* Facilities - Seventh on mobile */}
+              {/* Facilities - Seventh on mobile */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 {attr.facilities?.data?.length > 0 && (
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                       {attr.facilities.data.map((facility) => {
-                        const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle; 
+                        const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle;
                         return (
                           <div key={facility.id} className="flex items-center">
                             <Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} />
@@ -344,27 +353,27 @@ const PropertyDetailPage = () => {
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">{attr.description}</p>
               </div>
 
-              
+
             </div>
-{/* Facilities - Desktop only */}
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                {attr.facilities?.data?.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">
-                      {attr.facilities.data.map((facility) => {
-                        const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle; 
-                        return (
-                          <div key={facility.id} className="flex items-center">
-                            <Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} />
-                            <span className="text-gray-700">{facility.attributes.value}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
+            {/* Facilities - Desktop only */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              {attr.facilities?.data?.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">What this place offers</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">
+                    {attr.facilities.data.map((facility) => {
+                      const Icon = facilityIconMapping[facility.attributes.value] || FaCheckCircle;
+                      return (
+                        <div key={facility.id} className="flex items-center">
+                          <Icon className="text-indigo-600 mr-3 flex-shrink-0" size={20} />
+                          <span className="text-gray-700">{facility.attributes.value}</span>
+                        </div>
+                      );
+                    })}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
             {/* Description and Facilities - Desktop layout */}
             <div className="hidden lg:block">
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -374,14 +383,14 @@ const PropertyDetailPage = () => {
                 </div>
               </div>
 
-              
+
             </div>
           </div>
 
           {/* Sidebar - Desktop only */}
           <div className="hidden lg:block lg:col-span-1">
             <div className="lg:sticky lg:top-24 space-y-4">
-              
+
               {/* Pricing - Desktop */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">Pricing</h3>
@@ -401,7 +410,7 @@ const PropertyDetailPage = () => {
                   {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
 
                   <button
-                    onClick={handleDownloadApp}
+                    onClick={handleOpenMap}
                     className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
                   >
                     <FaMapMarkedAlt className="mr-2" />
@@ -416,14 +425,14 @@ const PropertyDetailPage = () => {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between"><span className="text-gray-500">Property Type</span><span className="font-medium text-gray-800">{attr.property_types}</span></div>
                   {attr.genders?.data?.length > 0 && <div className="flex justify-between"><span className="text-gray-500">Gender</span><span className="font-medium text-gray-800">{attr.genders.data[0].attributes.name}</span></div>}
-                  
+
                   {attr.seaters?.data?.length > 0 && (
                     <div className="flex justify-between items-start">
                       <span className="text-gray-500 mt-1">Room Types</span>
                       <div className="flex flex-wrap gap-2 justify-end max-w-[70%]">
                         {attr.seaters.data.map((seater) => (
-                          <span 
-                            key={seater.id} 
+                          <span
+                            key={seater.id}
                             className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-1 rounded-full"
                           >
                             {seater.attributes.value}
@@ -466,7 +475,7 @@ const PropertyDetailPage = () => {
           Schedule a Visit
         </button>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

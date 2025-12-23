@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 // import axios from "axios"; // No longer using axios directly here
-import { useQuery } from "@tanstack/react-query";
-import { GraphQLClient, gql } from "graphql-request";
+import { useFetchCollegeBySlug } from "../../hooks/useFetchColleges";
 
 // --- ICONS ---
 // Using a mix of react-icons and lucide-react for the best of both worlds
@@ -16,52 +15,7 @@ import { FileText, ClipboardList, ClipboardCheck, Award, Building, School, HelpC
 // import faqData from "./faqData"; // Static data removed
 import LoadingOverlay from './LoadingOverlay';
 
-const GRAPHQL_URL = "https://api.dreamprovider.in/graphql";
-const graphQLClient = new GraphQLClient(GRAPHQL_URL, {});
-
-const FETCH_COLLEGE_BY_SLUG = gql`
-  query GetCollegeBySlug($slug: String!) {
-    collages(filters: { slug: { eq: $slug } }) {
-      data {
-        id
-        attributes {
-            name
-            slug
-            locationName
-            description
-            videoLink
-            year
-            ratings
-            area
-            grade
-            hostelArea
-            courses
-            ranking
-            imgLink
-            tag
-            published
-            companies
-            mapLink
-            placements
-            FeeMatrix
-            gallery
-            faqs
-            reviews
-            docReq: docReq # Assuming docReq and eligibility were separate fields or part of extended schema not yet in my updated schema.json.
-            eligibility: eligibility # If these are missing in schema, I might need to add them or map them from json. 
-            # I will assume they are JSON fields for now to match the UI usage.
-            banner {
-            data {
-                attributes {
-                url
-                }
-            }
-            }
-        }
-      }
-    }
-  }
-`;
+// Query removed - using useFetchCollegeBySlug hook
 
 // A small component for clean section headers
 const SectionHeader = ({ title }) => (
@@ -72,20 +26,17 @@ const SectionHeader = ({ title }) => (
 
 // The main, redesigned Details component
 const Details = ({ slug }) => { // Receiving slug instead of id
-    const { data: apiData, isLoading, error } = useQuery({
-        queryKey: ['college', slug],
-        queryFn: async () => graphQLClient.request(FETCH_COLLEGE_BY_SLUG, { slug }),
-        enabled: !!slug,
-    });
+    const { data: collegeData, isLoading, error } = useFetchCollegeBySlug(slug);
 
     // Transform API data to match component expectations
-    const data = apiData?.collages?.data?.[0]?.attributes
+    const attributes = collegeData?.attributes;
+    const data = attributes
         ? {
-            id: apiData.collages.data[0].id,
-            ...apiData.collages.data[0].attributes,
-            title: apiData.collages.data[0].attributes.name,
-            location: apiData.collages.data[0].attributes.locationName || "Unknown Location",
-            imgLink: apiData.collages.data[0].attributes.imgLink || apiData.collages.data[0].attributes.banner?.data?.attributes?.url,
+            id: collegeData.id,
+            ...attributes,
+            title: attributes.name,
+            location: attributes.locationName || "Unknown Location",
+            imgLink: attributes.imgLink || attributes.banner?.data?.attributes?.url,
         }
         : null;
 

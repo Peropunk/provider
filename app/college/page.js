@@ -19,8 +19,8 @@ const Property = () => {
 
   // Sync hook data to local state for filtering
   useEffect(() => {
-    if (data?.collages?.data) {
-      const formattedData = data.collages.data.map(item => {
+    if (data) {
+      const formattedData = data.map(item => {
         const attrs = item.attributes;
         return {
           id: item.id,
@@ -105,8 +105,8 @@ const Property = () => {
           {/* --- Responsive Grid/List for College Cards --- */}
           <div
             className={`grid ${colActiv
-                ? 'grid-cols-1 gap-y-6' // List view: 1 column with vertical gap (desktop only)
-                : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8' // Grid view: responsive columns, mobile always uses this
+              ? 'grid-cols-1 gap-y-6' // List view: 1 column with vertical gap (desktop only)
+              : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8' // Grid view: responsive columns, mobile always uses this
               }`}
           >
             {filteredData.map((item) => (

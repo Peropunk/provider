@@ -1,59 +1,98 @@
 import { useQuery } from "@tanstack/react-query";
 import { GraphQLClient, gql } from "graphql-request";
 
-const GRAPHQL_URL = "https://api.dreamprovider.in/graphql";
-const graphQLClient = new GraphQLClient(GRAPHQL_URL, {});
+const client = new GraphQLClient("http://localhost:1337/graphql");
 
-export function useFetchColleges() {
-  return useQuery({
-    queryKey: ["fetch-colleges"],
-    queryFn: async () => {
-      const data = await graphQLClient.request(
-        gql`
-          query {
-            collages(pagination: { limit: 100 }) {
-              data {
-                id
-                attributes {
-                  name
-                  slug
-                  locationName
-                  description
-                  videoLink
-                  year
-                  ratings
-                  area
-                  grade
-                  hostelArea
-                  courses
-                  ranking
-                  imgLink
-                  tag
-                  published
-                  companies
-                  mapLink
-                  placements
-                  FeeMatrix
-                  gallery
-                  faqs
-                  reviews
-                  banner {
-                    data {
-                      attributes {
-                        url
-                      }
-                    }
-                  }
-                  # Add other relation fields if needed like city or location relation
-                }
+const GET_COLLEGES = gql`
+  query GetColleges {
+    collages(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          name
+          slug
+          locationName
+          ratings
+          grade
+          description
+          year
+          area
+          imgLink
+          banner {
+            data {
+              attributes {
+                url
               }
             }
           }
-        `
-      );
-      return data;
+        }
+      }
+    }
+  }
+`;
+
+export function useFetchColleges() {
+  return useQuery({
+    queryKey: ["colleges"],
+    queryFn: async () => {
+      const res = await client.request(GET_COLLEGES);
+      return res.collages.data;
     },
-    staleTime: 1000 * 60 * 60, // Data is fresh for 1 hour (caching)
-    cacheTime: 1000 * 60 * 60 * 24, // Keep in cache for 24 hours
+    staleTime: 1000 * 60 * 60
+  });
+}
+
+const GET_COLLEGE_BY_SLUG = gql`
+  query GetCollegeBySlug($slug: String!) {
+    collages(filters: { slug: { eq: $slug } }) {
+      data {
+        id
+        attributes {
+          name
+          slug
+          locationName
+          description
+          videoLink
+          year
+          ratings
+          area
+          grade
+          hostelArea
+          courses
+          ranking
+          imgLink
+          tag
+          published
+          companies
+          mapLink
+          placements
+          FeeMatrix
+          gallery
+          faqs
+          reviews
+          docReq
+          eligibility
+          banner {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export function useFetchCollegeBySlug(slug) {
+  return useQuery({
+    queryKey: ["college", slug],
+    queryFn: async () => {
+      const res = await client.request(GET_COLLEGE_BY_SLUG, { slug });
+      return res.collages.data[0];
+    },
+    enabled: !!slug,
+    staleTime: 1000 * 60 * 60
   });
 }

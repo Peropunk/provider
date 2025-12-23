@@ -3,46 +3,14 @@ import PropertyCard from "../property/PropertyCard";
 import axios from "axios";
 import LoadingOverlay from './LoadingOverlay';
 import { useState, useEffect } from "react";
-import { GraphQLClient, gql } from "graphql-request";
+import { useFetchCollegeBySlug } from "../../hooks/useFetchColleges";
 
-const GRAPHQL_URL = "https://api.dreamprovider.in/graphql";
-const graphQLClient = new GraphQLClient(GRAPHQL_URL, {});
-
-const FETCH_COLLEGE_TAG = gql`
-  query GetCollegeTag($slug: String!) {
-    collages(filters: { slug: { eq: $slug } }) {
-      data {
-        attributes {
-          tag
-        }
-      }
-    }
-  }
-`;
+// Query removed - using useFetchCollegeBySlug hook
 
 const AllProperties = ({ slug }) => {
   const [attributes, setAttributes] = useState(null);
-  const [tag, setTag] = useState(null);
-
-  // Fetch tag from Strapi based on slug
-  useEffect(() => {
-    if (slug) {
-      const fetchTag = async () => {
-        try {
-          const data = await graphQLClient.request(FETCH_COLLEGE_TAG, { slug });
-          const fetchedTag = data?.collages?.data?.[0]?.attributes?.tag;
-          if (fetchedTag) {
-            setTag(fetchedTag);
-          } else {
-            console.log("Tag not found for this college.");
-          }
-        } catch (error) {
-          console.error("Error fetching tag:", error);
-        }
-      };
-      fetchTag();
-    }
-  }, [slug]);
+  const { data: collegeData, isLoading: isCollegeLoading } = useFetchCollegeBySlug(slug);
+  const tag = collegeData?.attributes?.tag;
 
   // Fetch properties based on tag
   useEffect(() => {
