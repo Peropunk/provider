@@ -8,6 +8,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function LoginPage() {
+    return (
+        <React.Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <Loader2 className="animate-spin h-8 w-8 text-purple-600" />
+            </div>
+        }>
+            <LoginForm />
+        </React.Suspense>
+    );
+}
+
+function LoginForm() {
     const [step, setStep] = useState('PHONE'); // PHONE | OTP
     const [phoneNumber, setPhoneNumber] = useState('');
     const [otp, setOtp] = useState('');

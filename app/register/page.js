@@ -8,6 +8,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function RegisterPage() {
+    return (
+        <React.Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <Loader2 className="animate-spin h-8 w-8 text-purple-600" />
+            </div>
+        }>
+            <RegisterForm />
+        </React.Suspense>
+    );
+}
+
+function RegisterForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const initialPhone = searchParams.get('phone') || '';

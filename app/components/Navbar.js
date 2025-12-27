@@ -4,9 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import Link from 'next/link';
 
+import { useAuth } from '../../hooks/useAuth';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user } = useAuth();
   const menuRef = useRef(null);
   const navRef = useRef(null);
   const gsapContext = useRef(null);
@@ -18,7 +21,7 @@ const Navbar = () => {
   // Initial Navbar Animation
   useEffect(() => {
     if (!navRef.current) return;
-    
+
     gsapContext.current = gsap.context(() => {
       gsap.from(navRef.current, {
         // Ensure it animates from completely above, considering potential full height
@@ -95,6 +98,10 @@ const Navbar = () => {
     }
   };
 
+  const handleLogin = () => {
+    window.location.href = '/login';
+  };
+
   return (
     <nav
       ref={navRef}
@@ -111,7 +118,7 @@ const Navbar = () => {
         rounded-t-xl 
         ${isScrolled
           ? 'bg-white/90 backdrop-blur-lg'
-          : 'bg-white' 
+          : 'bg-white'
         }
       `}
     >
@@ -135,21 +142,32 @@ const Navbar = () => {
 
       {/* Buttons */}
       <div className="hidden md:flex items-center gap-4">
-        <button
-          onClick={handleDownloadApp}
-          className="px-5 py-2.5 text-sm font-semibold bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-          style={{ filter: 'drop-shadow(0 2px 3px rgba(107,33,168,0.3))' }}
-        >
-          Download App
-        </button>
+        {user ? (
+          <Link href="/profile">
+            <button
+              className="px-5 py-2.5 text-sm font-semibold bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+              style={{ filter: 'drop-shadow(0 2px 3px rgba(107,33,168,0.3))' }}
+            >
+              Profile
+            </button>
+          </Link>
+        ) : (
+          <button
+            onClick={handleLogin}
+            className="px-5 py-2.5 text-sm font-semibold bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+            style={{ filter: 'drop-shadow(0 2px 3px rgba(107,33,168,0.3))' }}
+          >
+            Login
+          </button>
+        )}
       </div>
 
       {/* Hamburger for Mobile */}
       <div className="md:hidden flex items-center">
-        <button 
-          onClick={toggleMenu} 
-          aria-label="Toggle menu" 
-          aria-expanded={isOpen} 
+        <button
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+          aria-expanded={isOpen}
           className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
           <svg
@@ -181,12 +199,22 @@ const Navbar = () => {
           {/* <li><Link href="/blogs" className={navLinkClasses} onClick={handleLinkClick}>Blogs</Link></li> */}
           <li><Link href="/about-us" className={navLinkClasses} onClick={handleLinkClick}>About Us</Link></li>
           <div className="flex flex-col gap-4 w-4/5 max-w-xs pt-4 mt-4 border-t border-gray-200">
-            <button
-              onClick={handleDownloadApp}
-              className="w-full px-5 py-3 text-sm font-semibold text-purple-600 border border-purple-600 rounded-full hover:bg-purple-50 transition-colors duration-200"
-            >
-              Download App
-            </button>
+            {user ? (
+              <Link href="/profile" onClick={handleLinkClick} className="w-full">
+                <button
+                  className="w-full px-5 py-3 text-sm font-semibold text-purple-600 border border-purple-600 rounded-full hover:bg-purple-50 transition-colors duration-200"
+                >
+                  Profile
+                </button>
+              </Link>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="w-full px-5 py-3 text-sm font-semibold text-purple-600 border border-purple-600 rounded-full hover:bg-purple-50 transition-colors duration-200"
+              >
+                Login
+              </button>
+            )}
           </div>
         </ul>
       </div>
