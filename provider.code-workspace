@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../provider/provider-server-v2-deep"
+		}
+	],
+	"settings": {}
+}

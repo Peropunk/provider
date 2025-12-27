@@ -131,6 +131,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/proxy/:path*',
+        destination: 'https://api.dreamprovider.in/:path*',
+      },
+    ];
+  },
 };
 
 // Use module.exports for .js files
