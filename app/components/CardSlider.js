@@ -7,21 +7,21 @@ const features = [
     title: "Verified Hostel Listings",
     description:
       "Find your perfect student home with our curated list of verified hostels. Each listing is checked for safety, comfort, and student-friendly amenities, ensuring peace of mind.",
-    icon: "✅",
+    icon: "",
     image: "/1.png",
   },
   {
     title: "Direct Owner Contact",
     description:
       "Connect directly with hostel owners. No brokers, no hidden fees. Enjoy transparent communication, quick query resolution, and a hassle-free booking experience.",
-    icon: "📞",
+    icon: "",
     image: "/owner.png",
   },
   {
     title: "No-Cost EMI",
     description:
       "Manage your finances smartly. Pay your hostel fees and other essential expenses in easy, interest-free monthly installments. Focus on your studies, not financial stress.",
-    icon: "💸",
+    icon: "",
     image:
       "/emi.webp",
   },
@@ -29,7 +29,7 @@ const features = [
     title: "Free Stationery Delivery",
     description:
       "Get all your essential study supplies—Calculators, Pens, Files and more—delivered right to your doorstep, absolutely free delivery. Never run out of what you need to succeed.",
-    icon: "📦",
+    icon: "",
     image:
       "https://img.freepik.com/free-photo/workplace-with-set-stationary_23-2147830026.jpg?semt=ais_hybrid&w=740",
   },
@@ -37,7 +37,7 @@ const features = [
     title: "Exclusive Internships",
     description:
       "Kickstart your career with access to exclusive internship opportunities curated for students on our platform. Gain valuable industry experience and build your professional network.",
-    icon: "🎯",
+    icon: "",
     image:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80",
   },
@@ -170,7 +170,6 @@ export default function CardSlider() {
               {/* Left Text */}
               <div className="w-full md:max-w-2xl text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-3 mb-3 md:mb-4">
-                  <span className="text-3xl md:text-4xl">{feature.icon}</span>
                   <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
                     {feature.title}
                   </h1>
