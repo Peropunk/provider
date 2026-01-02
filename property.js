@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { BASE_URL } from './endpoints'
+import { BASE_URL } from './lib/endpoints'
 import { logUserToCRM } from './userSlice'
 import axios from 'axios'
 
@@ -836,11 +836,20 @@ export const updateVisitBookedStatus = createAsyncThunk(
 // Toggle property save (add to wishlist or remove)
 export const toggleSaveProperty = createAsyncThunk(
     'property/toggleSave',
-    async ({ propertyId }, { rejectWithValue, getState }) => {
+    async ({ propertyId, token: argToken, userId: argUserId }, { rejectWithValue, getState }) => {
         try {
             const state = getState()
-            const token = state.user.userData?.jwt
-            const userId = state.user.userData?.user?.id
+            const authToken = argToken || state.user?.userData?.jwt
+            const userIdFromState = state.user?.userData?.user?.id
+
+            // Prioritize userId from arguments, then state
+            const currentUserId = argUserId || userIdFromState
+
+            // If we have no token or userId at all, fail
+            if (!authToken || !currentUserId) {
+                console.warn("toggleSaveProperty: Missing auth info (token or userId)")
+                return rejectWithValue('User must be logged in to save properties')
+            }
 
             console.log(
                 'toggleSaveProperty - propertyId:',
@@ -848,10 +857,9 @@ export const toggleSaveProperty = createAsyncThunk(
                 'type:',
                 typeof propertyId
             )
-            console.log('toggleSaveProperty - userId:', userId)
-            console.log('toggleSaveProperty - token available:', !!token)
+            console.log('toggleSaveProperty - token available:', !!authToken)
 
-            if (!token || !userId) {
+            if (!authToken || !currentUserId) {
                 return rejectWithValue('User must be logged in to save properties')
             }
 
@@ -862,14 +870,14 @@ export const toggleSaveProperty = createAsyncThunk(
             }
 
             // First check if property is already saved by the user
-            const checkUrl = `${BASE_URL}api/users/${userId}?populate=saved_properties`
+            const checkUrl = `${BASE_URL}api/users/${currentUserId}?populate=saved_properties`
             console.log('toggleSaveProperty - checkUrl:', checkUrl)
 
             const checkResponse = await fetch(checkUrl, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${authToken}`,
                 },
             })
 
@@ -902,7 +910,7 @@ export const toggleSaveProperty = createAsyncThunk(
             console.log('toggleSaveProperty - isAlreadySaved:', isAlreadySaved)
 
             // Update user's saved properties
-            const updateUrl = `${BASE_URL}api/users/${userId}`
+            const updateUrl = `${BASE_URL}api/users/${currentUserId}`
             const updateData = {
                 saved_properties: isAlreadySaved
                     ? savedProperties.filter((prop) => {
@@ -918,7 +926,7 @@ export const toggleSaveProperty = createAsyncThunk(
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${authToken}`,
                 },
                 body: JSON.stringify(updateData),
             })
@@ -952,11 +960,12 @@ export const toggleSaveProperty = createAsyncThunk(
 // Fetch user's saved properties
 export const fetchSavedProperties = createAsyncThunk(
     'property/fetchSaved',
-    async (_, { rejectWithValue, getState }) => {
+    async (payload = {}, { rejectWithValue, getState }) => {
         try {
+            const { userId: argUserId, token: argToken } = payload || {};
             const state = getState()
-            const token = state.user.userData.jwt
-            const userId = state.user.userData.user.id
+            const token = argToken || state.user?.userData?.jwt
+            const userId = argUserId || state.user?.userData?.user?.id
 
             if (!token || !userId) {
                 return rejectWithValue(
@@ -965,7 +974,8 @@ export const fetchSavedProperties = createAsyncThunk(
             }
 
             // Get user's saved properties
-            const url = `${BASE_URL}api/users/${userId}?populate[saved_properties][populate][0]=genders&populate[saved_properties][populate][1]=property_pricing.price_json&populate[saved_properties][populate][2]=facilities.image&populate[saved_properties][populate][3]=images`
+            // Get user's saved properties
+            const url = `${BASE_URL}api/users/${userId}?populate[saved_properties][populate][0]=genders&populate[saved_properties][populate][1]=property_pricing.price_json&populate[saved_properties][populate][2]=facilities.image&populate[saved_properties][populate][3]=images&populate[saved_properties][populate][4]=seaters`
 
             const response = await fetch(url, {
                 method: 'GET',
@@ -980,12 +990,23 @@ export const fetchSavedProperties = createAsyncThunk(
             }
 
             const userData = await response.json()
-            // Transform the data to match the expected format
+
+            // Handle Strapi response structure flexibly
+            // userData.saved_properties might be { data: [...] } or just [...]
+            let savedProps = []
+            if (userData.saved_properties) {
+                if (Array.isArray(userData.saved_properties)) {
+                    savedProps = userData.saved_properties
+                } else if (userData.saved_properties.data && Array.isArray(userData.saved_properties.data)) {
+                    savedProps = userData.saved_properties.data
+                }
+            }
+
             return {
-                data: userData.saved_properties || [],
+                data: savedProps,
                 meta: {
                     pagination: {
-                        total: userData.saved_properties?.length || 0,
+                        total: savedProps.length,
                     },
                 },
             }
@@ -1000,14 +1021,19 @@ export const revealProperty = createAsyncThunk(
     'revealProperty',
     async (data, { rejectWithValue, getState, dispatch }) => {
         const state = getState()
-        const userId = state.user.userData.user.id
+
+        // Parse the data first
+        const parsedData = JSON.parse(data)
+        const passedToken = parsedData.token; // Check if token is inside the data package
+        const passedUserId = parsedData.data.users_permissions_user;
+
+        const userId = passedUserId || state.user?.userData?.user?.id
+        const token = passedToken || state.user?.userData?.jwt
 
         // Use the same endpoint that works in Postman
         const revealUrl = `${BASE_URL}api/reveal-properties`
 
         try {
-            // Parse the data to get property information
-            const parsedData = JSON.parse(data)
             const propertyId = parsedData.data.property
             const action = parsedData.data.action
 
@@ -1021,17 +1047,25 @@ export const revealProperty = createAsyncThunk(
                     userId,
                     action: `PROPERTY_REVEALED_${action}`,
                     propertyId,
-                    number:
-                        state.user.userData.user.username || state.user.userData.user.email,
+                    token: token, // Pass token to logUserToCRM
+                    // Fallbacks for name/number if not in state
+                    name: state.user?.userData?.user?.username || 'Web User',
+                    number: state.user?.userData?.user?.email || 'web-user',
                 })
             )
 
-            // Match the exact Postman request (no Authorization header)
+            // Match the exact Postman request (no Authorization header for reveal-properties call itself based on previous code, but typically Strapi needs it. 
+            // The previous verification code DID NOT use auth header for the reveal endpoint itself, relying on LogUserToCRM separately?
+            // Actually, looking at previous code: "Match the exact Postman request (no Authorization header)" is explicitly commented.
+            // So we just stick to that.
+
             const revealResponse = await fetch(revealUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     accept: 'application/json',
+                    // Add Authorization if token exists, just in case, heavily recommended for Strapi
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
                 },
                 body: data,
             })
@@ -1061,6 +1095,52 @@ export const revealProperty = createAsyncThunk(
             return responseData
         } catch (error) {
             console.error('Reveal property error:', error)
+            return rejectWithValue(error.message)
+        }
+    }
+)
+
+export const fetchMyScheduledVisits = createAsyncThunk(
+    'property/fetchMyScheduledVisits',
+    async (payload = {}, { rejectWithValue, getState }) => {
+        try {
+            const { userId: argUserId, token: argToken } = payload || {};
+            const state = getState()
+            const token = argToken || state.user?.userData?.jwt
+            const userId = argUserId || state.user?.userData?.user?.id
+
+            if (!token || !userId) {
+                return rejectWithValue('User must be logged in to fetch scheduled visits')
+            }
+
+            const url = new URL(`${BASE_URL}api/schedule-visits`)
+            const params = {
+                'filters[users_permissions_user][id][$eq]': userId,
+                'populate[property][populate][images][fields]': 'url',
+                'populate[property][populate][location]': '*',
+                'populate[property][populate][city]': '*',
+                'sort': 'visitDate:desc'
+            }
+
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+
+            console.log('Fetching scheduled visits:', url.toString())
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            if (!response.ok) {
+                return rejectWithValue('Failed to fetch scheduled visits')
+            }
+
+            const data = await response.json()
+            return data
+        } catch (error) {
             return rejectWithValue(error.message)
         }
     }

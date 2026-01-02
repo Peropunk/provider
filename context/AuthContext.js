@@ -11,14 +11,32 @@ export const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [token, setToken] = useState(null);
 
+    const checkAuth = async (token, user) => {
+        try {
+            const result = await getUserById(user.id, token);
+            if (result.error) {
+                throw new Error(result.error.message);
+            }
+            // If valid, maybe update user data?
+            // setUser(result); // Optional: update with fresh data
+        } catch (error) {
+            console.error("Auth check failed:", error);
+            logout();
+        }
+    };
+
     useEffect(() => {
         // Check local storage on mount
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
 
         if (storedToken && storedUser) {
+            const userObj = JSON.parse(storedUser);
             setToken(storedToken);
-            setUser(JSON.parse(storedUser));
+            setUser(userObj);
+
+            // Verify token validity
+            checkAuth(storedToken, userObj);
         }
     }, []);
 
