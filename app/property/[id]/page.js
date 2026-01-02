@@ -17,6 +17,7 @@ import {
   FaChevronDown, FaChevronUp, FaPlay, FaMap
 } from 'react-icons/fa';
 import { BASE_URL } from '../../../lib/endpoints';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const PropertyDetailPage = () => {
   const router = useRouter();
@@ -41,6 +42,38 @@ const PropertyDetailPage = () => {
   const [showThumbnails, setShowThumbnails] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPriceRevealed, setIsPriceRevealed] = useState(false);
+
+  // Schedule Visit State
+  const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
+  const [visitDate, setVisitDate] = useState('');
+  const [visitTime, setVisitTime] = useState('');
+
+  const handleScheduleVisitClick = () => {
+    setIsVisitModalOpen(!isVisitModalOpen);
+  };
+
+  const handleConfirmVisit = () => {
+    if (!visitDate || !visitTime) {
+      alert('Please select both a date and time for your visit.');
+      return;
+    }
+
+    const dateObj = new Date(visitDate);
+    const formattedDate = dateObj.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    const message = `Hello, I would like to schedule a visit for ${property?.attributes?.name} (${id}) on ${formattedDate} at ${visitTime}.`;
+    const phoneNumber = '+917303831326'; // Using the support number for scheduling
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, '_blank');
+    setIsVisitModalOpen(false);
+    setVisitDate('');
+    setVisitTime('');
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -83,6 +116,10 @@ const PropertyDetailPage = () => {
     } else {
       window.open('https://play.google.com/store/apps/details?id=provider.in', '_blank');
     }
+  };
+
+  const handleChat = (property) => {
+    window.open(` https://wa.me/+917303831326?text=Hello, I am interested in the ${property.attributes.name} - ${property.id}. Can you provide more details?`, '_blank');
   };
 
   const handleShare = () => {
@@ -411,6 +448,207 @@ const PropertyDetailPage = () => {
     );
   };
 
+  // Helper to generate dates for keys
+  const getDates = () => {
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 14; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      dates.push(date);
+    }
+    return dates;
+  };
+
+  const datesList = getDates();
+  const timeSlots = [
+    "10:00 - 11:00 AM", "11:00 - 12:00 PM", "12:00 - 01:00 PM",
+    "01:00 - 02:00 PM", "02:00 - 03:00 PM", "03:00 - 04:00 PM",
+    "04:00 - 05:00 PM", "05:00 - 06:00 PM", "06:00 - 07:00 PM",
+    "07:00 - 08:00 PM"
+  ];
+
+  const ScheduleVisitUI = ({ isMobile }) => {
+    return (
+      <AnimatePresence>
+        {isVisitModalOpen && (
+          isMobile ? (
+            // Mobile Bottom Sheet
+            <div className="fixed inset-0 z-50 flex items-end sm:hidden">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setIsVisitModalOpen(false)}
+              />
+
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="relative w-full bg-white rounded-t-3xl p-6 shadow-2xl z-50 max-h-[85vh] overflow-y-auto"
+              >
+                <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Schedule a Visit</h3>
+                <p className="text-gray-500 text-sm mb-6">Select a date and time to visit this property.</p>
+
+                <div className="space-y-6">
+                  {/* Date Selection */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                      Calendar <span className="text-xs font-normal text-gray-400">Select Date</span>
+                    </h4>
+                    <div className="flex overflow-x-auto pb-4 gap-3 scrollbar-hide -mx-6 px-6">
+                      {datesList.map((date, index) => {
+                        const dateStr = date.toISOString().split('T')[0];
+                        const isSelected = visitDate === dateStr;
+                        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                        const dayNum = date.getDate();
+                        const month = date.toLocaleDateString('en-US', { month: 'short' });
+
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => setVisitDate(dateStr)}
+                            className={`flex flex-col items-center justify-center min-w-[70px] h-[85px] rounded-2xl border transition-all ${isSelected
+                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-200 scale-105'
+                              : 'bg-white text-gray-600 border-gray-100 hover:border-indigo-200'
+                              }`}
+                          >
+                            <span className={`text-xs font-medium ${isSelected ? 'text-indigo-100' : 'text-gray-400'}`}>{dayName}</span>
+                            <span className="text-xl font-bold my-0.5">{dayNum}</span>
+                            <span className={`text-[10px] ${isSelected ? 'text-indigo-100' : 'text-gray-400'}`}>{month}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Time Selection */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                      Clock <span className="text-xs font-normal text-gray-400">Select Time</span>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {timeSlots.map((slot, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setVisitTime(slot)}
+                          className={`py-3 px-2 rounded-xl text-xs font-semibold border transition-all ${visitTime === slot
+                            ? 'bg-indigo-50 text-indigo-700 border-indigo-200 ring-2 ring-indigo-500 ring-offset-1'
+                            : 'bg-white text-gray-600 border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                            }`}
+                        >
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleConfirmVisit}
+                    disabled={!visitDate || !visitTime}
+                    className={`w-full py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2.5 transition-all active:scale-95 ${!visitDate || !visitTime
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-green-200'
+                      }`}
+                  >
+                    <FaWhatsapp size={22} />
+                    Schedule on WhatsApp
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          ) : (
+            // Desktop Expanding Card (Replaces Button)
+            <motion.div
+              layoutId="schedule-visit-card"
+              className="absolute top-0 left-0 right-0 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden flex flex-col"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-gray-50">
+                <h3 className="text-sm font-bold text-gray-800">Schedule Visit</h3>
+                <button
+                  onClick={() => setIsVisitModalOpen(false)}
+                  className="p-1.5 rounded-full hover:bg-gray-200 text-gray-500 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <div className="space-y-4">
+                  {/* Date Selection */}
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Select Date</h4>
+                    <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-hide">
+                      {datesList.map((date, index) => {
+                        const dateStr = date.toISOString().split('T')[0];
+                        const isSelected = visitDate === dateStr;
+                        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                        const dayNum = date.getDate();
+
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => setVisitDate(dateStr)}
+                            className={`flex flex-col items-center justify-center min-w-[50px] h-[60px] rounded-lg border transition-all flex-shrink-0 ${isSelected
+                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
+                              : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
+                              }`}
+                          >
+                            <span className={`text-[10px] uppercase ${isSelected ? 'text-indigo-200' : 'text-gray-400'}`}>{dayName}</span>
+                            <span className="text-sm font-bold">{dayNum}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Time Selection */}
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Select Time</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {timeSlots.map((slot, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setVisitTime(slot)}
+                          className={`py-2 px-1 rounded-lg text-[10px] font-semibold border transition-all ${visitTime === slot
+                            ? 'bg-indigo-50 text-indigo-700 border-indigo-200 ring-1 ring-indigo-500'
+                            : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
+                            }`}
+                        >
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleConfirmVisit}
+                    disabled={!visitDate || !visitTime}
+                    className={`w-full py-2.5 text-sm font-bold rounded-lg shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95 ${!visitDate || !visitTime
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-[#25D366] hover:bg-[#20bd5a] text-white'
+                      }`}
+                  >
+                    <FaWhatsapp size={16} />
+                    Confirm Schedule
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )
+        )}
+      </AnimatePresence>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-24 lg:pb-0"> {/* Padding bottom for mobile sticky button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -601,6 +839,26 @@ const PropertyDetailPage = () => {
           <div className="hidden lg:block lg:col-span-1">
             <div className="lg:sticky lg:top-24 space-y-4">
 
+
+              {/* Schedule Visit Button - Desktop only */}
+              <div className="relative h-[60px]"> {/* Fixed height container to prevent layout shift */}
+                <AnimatePresence>
+                  {!isVisitModalOpen && (
+                    <motion.button
+                      layoutId="schedule-visit-card"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={handleScheduleVisitClick}
+                      className="absolute inset-0 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg flex items-center justify-center z-10"
+                    >
+                      Schedule a Visit
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+                <ScheduleVisitUI isMobile={false} />
+              </div>
+
               {/* Pricing - Desktop */}
               <PropertyPriceReveal
                 price={attr.price}
@@ -617,7 +875,7 @@ const PropertyDetailPage = () => {
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Enquire more</h3>
                 <div className="space-y-3">
-                  <button onClick={handleDownloadApp} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhoneAlt className="mr-2" /> Call Owner</button>
+                  <button onClick={() => handleChat(property)} className="flex items-center justify-center w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"><FaPhoneAlt className="mr-2" /> Chat Now </button>
                   {attr.video_url && <a href={attr.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"><FaVideo className="mr-2" /> Watch Video Tour</a>}
 
                   <button
@@ -662,16 +920,7 @@ const PropertyDetailPage = () => {
                 </div>
               </div>
 
-              {/* Schedule Visit Button - Desktop only */}
-              <div>
-                <p className="text-sm font-semibold text-center text-gray-800 mb-2">Want to visit this hostel?</p>
-                <button
-                  onClick={handleDownloadApp}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg animate-pulse"
-                >
-                  Schedule a Visit
-                </button>
-              </div>
+
             </div>
           </div>
         </div>
@@ -680,12 +929,13 @@ const PropertyDetailPage = () => {
       {/* Schedule Visit Sticky Button - Mobile only */}
       <div className="block lg:hidden fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-40">
         <button
-          onClick={handleDownloadApp}
+          onClick={handleScheduleVisitClick}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg animate-pulse"
         >
           Schedule a Visit
         </button>
       </div>
+      <ScheduleVisitUI isMobile={true} />
       <Footer />
     </div>
   );

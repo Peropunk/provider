@@ -180,7 +180,7 @@ function LoginForm() {
                                     <div className="relative">
                                         <input
                                             id="otp"
-                                            type="text"
+                                            type="number"
                                             value={otp}
                                             onChange={(e) => setOtp(e.target.value)}
                                             className="block w-full px-4 py-3 text-center text-2xl tracking-widest border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500 transition-shadow outline-none"
