@@ -94,18 +94,18 @@ const BlogCard = ({ post, index }) => {
         >
           {/* Gradient Background */}
           <div className={`absolute inset-0 bg-gradient-to-br ${post.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-          
+
           {/* Image Container with Gradient Overlay */}
           <div className="relative w-full h-48 sm:h-56 overflow-hidden">
             <Image
               src={post.imageUrl}
               alt={post.imageAlt || post.title}
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: 'cover' }}
               className="transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             {/* Category Badge */}
             <div className="absolute top-4 left-4">
               <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-blue-600 text-sm font-bold rounded-full">
@@ -164,7 +164,7 @@ const GuidesAndResources = () => {
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
               <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />

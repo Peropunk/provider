@@ -395,8 +395,15 @@ export const postProperty = createAsyncThunk(
     async (data, { rejectWithValue, getState, dispatch }) => {
         try {
             const state = getState()
-            const token = state.user.userData.jwt
-            const userData = state.user.userData.user
+            const token = data.token || state.user?.userData?.jwt
+            const userData = data.userData || state.user?.userData?.user
+
+            // Remove auth data from payload if present
+            const { token: _t, userData: _u, ...propertyData } = data;
+
+            if (!token) {
+                return rejectWithValue("Authentication token missing")
+            }
 
             const response = await fetch(`${BASE_URL}api/properties`, {
                 method: 'POST',
@@ -404,7 +411,7 @@ export const postProperty = createAsyncThunk(
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ data: { ...data, publishedAt: null } }),
+                body: JSON.stringify({ data: { ...propertyData, publishedAt: null } }),
             })
 
             if (!response.ok) {
@@ -415,24 +422,26 @@ export const postProperty = createAsyncThunk(
             const result = await response.json()
 
             // Send WhatsApp notification
-            await sendWhatsAppNotification(data, userData)
+            if (userData) {
+                await sendWhatsAppNotification(propertyData, userData)
 
-            // Log to CRM
-            dispatch(
-                logUserToCRM({
-                    userId: userData.id,
-                    action: 'NEW_LISTING',
-                    propertyId: result.data.id,
-                    number: userData.username || userData.email,
-                    propertyData: {
-                        name: data.name,
-                        propertyType: data.property_types,
-                        ownerNumber: data.owner_number,
-                        city: data.city,
-                        location: data.location,
-                    },
-                })
-            )
+                // Log to CRM
+                dispatch(
+                    logUserToCRM({
+                        userId: userData.id,
+                        action: 'NEW_LISTING',
+                        propertyId: result.data.id,
+                        number: userData.username || userData.email,
+                        propertyData: {
+                            name: propertyData.name,
+                            propertyType: propertyData.property_types,
+                            ownerNumber: propertyData.owner_number,
+                            city: propertyData.city,
+                            location: propertyData.location,
+                        },
+                    })
+                )
+            }
 
             return result
         } catch (error) {
@@ -1179,3 +1188,82 @@ export const fetchMyScheduledVisits = createAsyncThunk(
         }
     }
 )
+
+export const uploadImage = createAsyncThunk(
+    'images/upload',
+    async ({ images, token: tokenFromArgs }, { rejectWithValue, getState }) => {
+        try {
+            const state = getState();
+            const token = tokenFromArgs || state.user?.userData?.jwt;
+
+            // In web, we typically use FormData for file uploads
+            // images should be an array of File objects or similar
+            const formData = new FormData();
+
+            // If images is an array of files
+            if (Array.isArray(images)) {
+                images.forEach((file) => {
+                    formData.append('files', file);
+                });
+            } else {
+                // Single file
+                formData.append('files', images);
+            }
+
+            const response = await fetch(`${BASE_URL}api/upload`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    // Content-Type is set automatically with FormData
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                if (response.status === 413) {
+                    return rejectWithValue("File is too large. Please upload a smaller image (under 5MB).");
+                }
+                const errorText = await response.text();
+                return rejectWithValue(errorText);
+            }
+
+            const result = await response.json();
+            return result; // Should be array of uploaded file objects with IDs
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const fetchFacilities = createAsyncThunk(
+    'property/fetchFacilities',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`${BASE_URL}api/facilities?populate=*`);
+            if (!response.ok) {
+                return rejectWithValue(await response.text());
+            }
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const fetchAllSeaterTypes = createAsyncThunk(
+    'property/fetchAllSeaterTypes',
+    async (_, { rejectWithValue }) => {
+        try {
+            // Assuming endpoint is 'seaters' based on mobile app naming conventions
+            const response = await fetch(`${BASE_URL}api/seaters?populate=*`);
+            if (!response.ok) {
+                return rejectWithValue(await response.text());
+            }
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);

@@ -28,7 +28,7 @@ const AppPromotionSection = () => {
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
               <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
@@ -54,7 +54,7 @@ const AppPromotionSection = () => {
           <div className="w-full md:w-1/2 lg:w-[45%] relative group">
             {/* Enhanced decorative background for the carousel */}
             <div className="absolute -inset-4 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 rounded-3xl blur-xl opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
-            
+
             <div className="relative p-2 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-2xl shadow-2xl">
               <Swiper
                 modules={[Autoplay, Pagination, EffectCoverflow]}
@@ -94,8 +94,8 @@ const AppPromotionSection = () => {
                       <Image
                         src={screen.src}
                         alt={screen.alt}
-                        layout="fill"
-                        objectFit="contain"
+                        fill
+                        style={{ objectFit: 'contain' }}
                         className="rounded-lg md:rounded-xl"
                         priority={screen.id === 1}
                       />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchComplaints, postComplaints, fetchMyBookings } from '../../property';
+import { fetchComplaints, postComplaints, fetchMyBookings, fetchSavedProperties } from '../../property';
 import { useAuth } from '../../hooks/useAuth';
 import { Loader, ArrowLeft, CheckCircle, AlertCircle, Home } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const RaiseComplaint = ({ onBack, onSuccess }) => {
     const [step, setStep] = useState('loading_properties');
 
     // Data
-    const [myBookings, setMyBookings] = useState([]);
+    const [userProperties, setUserProperties] = useState([]); // Unified list of properties (booked + saved)
     const [selectedProperty, setSelectedProperty] = useState(null);
     const [complaintTypes, setComplaintTypes] = useState([]);
     const [selectedType, setSelectedType] = useState(null);
@@ -28,23 +28,71 @@ const RaiseComplaint = ({ onBack, onSuccess }) => {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
 
-    // Initial load - Fetch User's Booked Properties
+    // Initial load - Fetch User's Booked AND Saved Properties
     useEffect(() => {
         const loadProperties = async () => {
             if (!user || !token) return;
             try {
                 setLoading(true);
-                const result = await dispatch(fetchMyBookings({ userId: user.id, token })).unwrap();
 
-                const bookings = result.data || [];
-                setMyBookings(bookings);
+                // Fetch both in parallel
+                const [bookingsResult, savedResult] = await Promise.allSettled([
+                    dispatch(fetchMyBookings({ userId: user.id, token })).unwrap(),
+                    dispatch(fetchSavedProperties({ userId: user.id, token })).unwrap()
+                ]);
 
-                if (bookings.length === 0) {
-                    setError("You don't have any booked properties to raise a complaint for.");
+                let allProperties = [];
+                const addedPropertyIds = new Set();
+
+                // Process Bookings (Higher priority?)
+                if (bookingsResult.status === 'fulfilled' && bookingsResult.value?.data) {
+                    bookingsResult.value.data.forEach(booking => {
+                        const propData = booking.attributes?.property?.data;
+                        if (propData && !addedPropertyIds.has(propData.id)) {
+                            allProperties.push({
+                                id: propData.id, // reliable Property ID
+                                name: propData.attributes?.name || `Property #${propData.id}`,
+                                city: propData.attributes?.city?.data?.attributes?.name,
+                                location: propData.attributes?.location?.data?.attributes?.name,
+                                source: 'Booked', // Label
+                                originalData: booking // Keep reference if needed
+                            });
+                            addedPropertyIds.add(propData.id);
+                        }
+                    });
+                }
+
+                // Process Saved Properties
+                if (savedResult.status === 'fulfilled' && savedResult.value?.data) {
+                    const savedProps = savedResult.value.data;
+                    savedProps.forEach(prop => {
+                        // Normalize saved property structure (might be flat or nested attributes)
+                        const propId = prop.id;
+                        const attributes = prop.attributes || prop; // Handle both structures
+
+                        // Check uniqueness
+                        if (propId && !addedPropertyIds.has(propId)) {
+                            allProperties.push({
+                                id: propId,
+                                name: attributes.name || `Property #${propId}`,
+                                city: attributes.city?.data?.attributes?.name || attributes.city?.name, // handle potential structure diffs
+                                location: attributes.location?.data?.attributes?.name || attributes.location?.name,
+                                source: 'Saved',
+                                originalData: prop
+                            });
+                            addedPropertyIds.add(propId);
+                        }
+                    });
+                }
+
+                setUserProperties(allProperties);
+
+                if (allProperties.length === 0) {
+                    setError("You don't have any booked or saved properties to raise a complaint for.");
                     setStep('no_properties');
-                } else if (bookings.length === 1) {
+                } else if (allProperties.length === 1) {
                     // Auto-select if only one property
-                    setSelectedProperty(bookings[0]);
+                    setSelectedProperty(allProperties[0]);
                     setStep('type_selection');
                     loadComplaintTypes(); // Start loading types immediately
                 } else {
@@ -73,8 +121,8 @@ const RaiseComplaint = ({ onBack, onSuccess }) => {
         }
     };
 
-    const handlePropertySelect = (booking) => {
-        setSelectedProperty(booking);
+    const handlePropertySelect = (property) => {
+        setSelectedProperty(property);
         setStep('type_selection');
         if (complaintTypes.length === 0) {
             loadComplaintTypes();
@@ -139,27 +187,24 @@ const RaiseComplaint = ({ onBack, onSuccess }) => {
             setSubmitting(true);
             setError(null);
 
-            // Get property ID from the selected booking
-            // Booking structure: { id, attributes: { property: { data: { id, ... } } } }
-            const propertyId = selectedProperty.attributes?.property?.data?.id;
+            // Get property ID from the selected property object
+            const propertyId = selectedProperty.id;
 
             if (!propertyId) {
-                throw new Error("Invalid property ID from booking.");
+                throw new Error("Invalid property ID.");
             }
 
             const payload = {
-                data: {
-                    users_permissions_user: user.id,
-                    complaint_type: selectedType.id,
-                    propertyId: propertyId.toString(), // Add propertyId as string
-                    status: 'Pending', // Default status
-                    issues: Object.entries(selectedIssues).map(([issueCategory, selections], index) => ({
-                        id: index,
-                        issue: issueCategory,
-                        selected: selections.join(', ')
-                    })),
-                    notes: notes
-                },
+                users_permissions_user: user.id,
+                complaint_type: selectedType.id,
+                propertyId: propertyId.toString(), // Add propertyId as string
+                status: 'Pending', // Default status
+                issues: Object.entries(selectedIssues).map(([issueCategory, selections], index) => ({
+                    id: index,
+                    issue: issueCategory,
+                    selected: selections.join(', ')
+                })),
+                notes: notes,
                 token: token
             };
 
@@ -178,7 +223,7 @@ const RaiseComplaint = ({ onBack, onSuccess }) => {
             setStep('type_selection');
         } else if (step === 'type_selection') {
             // If manual selection was possible (more than 1 property), go back to property selection
-            if (myBookings.length > 1) {
+            if (userProperties.length > 1) {
                 setStep('property_selection');
             } else {
                 onBack();
@@ -246,20 +291,24 @@ const RaiseComplaint = ({ onBack, onSuccess }) => {
             {step === 'property_selection' && (
                 <div className="space-y-4">
                     <p className="text-sm text-gray-500 mb-2">Select the property you are complaining about:</p>
-                    {myBookings.map((booking) => {
-                        const prop = booking.attributes?.property?.data?.attributes;
+                    {userProperties.map((prop) => {
                         return (
                             <button
-                                key={booking.id}
-                                onClick={() => handlePropertySelect(booking)}
+                                key={prop.id}
+                                onClick={() => handlePropertySelect(prop)}
                                 className="w-full flex items-center p-4 bg-white border border-gray-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all text-left gap-4"
                             >
-                                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
+                                <div className={`p-3 rounded-lg ${prop.source === 'Booked' ? 'bg-indigo-50 text-indigo-600' : 'bg-green-50 text-green-600'}`}>
                                     <Home size={24} />
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-gray-900">{prop?.name || `Property #${booking.id}`}</h3>
-                                    <p className="text-sm text-gray-500">{prop?.city?.data?.attributes?.name || 'Unknown City'}</p>
+                                <div className="flex-1">
+                                    <div className="flex justify-between items-start">
+                                        <h3 className="font-bold text-gray-900">{prop.name}</h3>
+                                        <span className={`text-xs px-2 py-1 rounded-full ${prop.source === 'Booked' ? 'bg-indigo-100 text-indigo-700' : 'bg-green-100 text-green-700'}`}>
+                                            {prop.source}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-gray-500">{prop.city || 'Unknown City'}</p>
                                 </div>
                             </button>
                         );

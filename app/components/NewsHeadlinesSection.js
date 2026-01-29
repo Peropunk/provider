@@ -76,8 +76,8 @@ const NewsHeadlinesSection = () => {
                 <Image
                   src={item.src}
                   alt={item.alt}
-                  layout="fill"
-                  objectFit="contain" // Changed from "cover" to "contain" to show full image
+                  fill
+                  style={{ objectFit: 'contain' }} // Changed from "cover" to "contain" to show full image
                   className="rounded" // Ensure image itself is rounded if parent has overflow-hidden
                   priority={index === 1} // Prioritize loading the central image
                 />
@@ -94,11 +94,11 @@ const NewsHeadlinesSection = () => {
         </div>
 
         <div className="text-center mt-16">
-            <button 
-                className="bg-[#5E4AE3] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#4c3cc7] transition-colors"
-            >
-                Read More News
-            </button>
+          <button
+            className="bg-[#5E4AE3] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#4c3cc7] transition-colors"
+          >
+            Read More News
+          </button>
         </div>
 
       </div>

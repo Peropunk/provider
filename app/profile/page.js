@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import {
     User, LogOut, Heart, Calendar, Trash2, AlertTriangle,
-    X, ChevronRight, Settings, Shield, MapPin, Phone, Mail, Gift, MessageSquareWarning
+    X, ChevronRight, Settings, Shield, MapPin, Phone, Mail, Gift, MessageSquareWarning, Home
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SavedProperties from './SavedProperties';
 import ScheduledVisits from './ScheduledVisits';
 import ReferAndEarn from './ReferAndEarn';
 import Complaints from './Complaints';
+import ListProperty from './ListProperty';
 
 import MaxWidthWrapper from '../../app/components/MaxWidthWrapper';
 
@@ -78,6 +79,7 @@ export default function ProfilePage() {
         { id: 'refer', label: 'Refer & Earn', icon: Gift, description: 'Invite friends & earn rewards' },
         { id: 'saved', label: 'Saved Properties', icon: Heart, description: 'View your shortlisted hostels & PGs' },
         { id: 'visits', label: 'Scheduled Visits', icon: Calendar, description: 'Track your upcoming property visits' },
+        { id: 'list-property', label: 'List Your Property', icon: Home, description: 'List your property for potential tenants' },
         { id: 'complaints', label: 'My Complaints', icon: MessageSquareWarning, description: 'Raise & track issues' },
 
         // Future items can be added here
@@ -258,6 +260,7 @@ export default function ProfilePage() {
                                     {activeTab === 'refer' && <ReferAndEarn />}
                                     {activeTab === 'saved' && <SavedProperties />}
                                     {activeTab === 'visits' && <ScheduledVisits />}
+                                    {activeTab === 'list-property' && <ListProperty />}
                                     {activeTab === 'complaints' && <Complaints />}
                                 </motion.div>
                             </div>
@@ -284,6 +287,7 @@ export default function ProfilePage() {
                                     {activeTab === 'refer' && <ReferAndEarn />}
                                     {activeTab === 'saved' && <SavedProperties />}
                                     {activeTab === 'visits' && <ScheduledVisits />}
+                                    {activeTab === 'list-property' && <ListProperty />}
                                     {activeTab === 'complaints' && <Complaints />}
                                 </motion.div>
                             </div>
