@@ -161,26 +161,24 @@ export const fetchComplaints = createAsyncThunk(
 
 export const fetchMyComplaints = createAsyncThunk(
     'fetchMyComplaints',
-    async ({ limit = 10, start = 0 }, { rejectWithValue, getState }) => {
+    async ({ limit = 10, start = 0, userId: argUserId, token: argToken }, { rejectWithValue, getState }) => {
         // Construct the query string dynamically
         const state = getState()
-        const token = state.user.userData.jwt // Get the token from the user state
-        const userId = state.user.userData.user.id
-        const url = new URL(`${BASE_URL}api/complaints`)
-        const params = {
+        const token = argToken || state.user.userData.jwt // Get the token from the user state
+        const userId = argUserId || state.user.userData.user.id
+        const url = `${BASE_URL}api/complaints`
+        const params = new URLSearchParams({
             'pagination[limit]': limit,
             'pagination[start]': start,
             sort: 'id:asc',
             populate: '*',
-        }
-            ; (params['filters[users_permissions_user][id][$eq]'] = userId),
-                // Add the params to the URL
-                Object.keys(params).forEach((key) =>
-                    url.searchParams.append(key, params[key])
-                )
-        console.log(url)
+            'filters[users_permissions_user][id][$eq]': userId
+        })
+
+        const finalUrl = `${url}?${params.toString()}`
+        console.log(finalUrl)
         // Make the request to the API
-        const response = await fetch(url, {
+        const response = await fetch(finalUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -448,17 +446,20 @@ export const postComplaints = createAsyncThunk(
     async (data, { rejectWithValue, getState }) => {
         try {
             const state = getState()
-            const token = state.user.userData.jwt // Get the token from the user state
+            const token = data.token || state.user?.userData?.jwt // Get the token from the user state or data arg
+            // Remove token from data object before sending if it was added there for transport
+            const { token: _, ...complaintData } = data;
+
             let response
-            console.log(data)
-            if (data.id) {
-                response = await fetch(`${BASE_URL}api/complaints/${data.id}`, {
+            console.log(complaintData)
+            if (complaintData.id) {
+                response = await fetch(`${BASE_URL}api/complaints/${complaintData.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`, // Add the token to the request headers
                     },
-                    body: JSON.stringify({ data: data }),
+                    body: JSON.stringify({ data: complaintData }),
                 })
             } else {
                 response = await fetch(`${BASE_URL}api/complaints`, {
@@ -467,7 +468,7 @@ export const postComplaints = createAsyncThunk(
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`, // Add the token to the request headers
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({ data: complaintData }), // Wrapped in data object to match Strapi format
                 })
             }
 
@@ -603,6 +604,39 @@ export const updateBookedStatus = createAsyncThunk(
         }
 
         return await orderResponse.json()
+    }
+)
+
+export const fetchMyBookings = createAsyncThunk(
+    'fetchMyBookings',
+    async ({ userId: argUserId, token: argToken }, { rejectWithValue, getState }) => {
+        const state = getState()
+        const token = argToken || state.user?.userData?.jwt
+        const id = argUserId || state.user?.userData?.user?.id
+
+        // Fetch properties booked by the user
+        // We filter by user ID and ensure payment status is 'paid' or 'created' (depending on business logic, assuming 'paid' for active tenants)
+        // Adjust filter as needed. For now, just fetching all bookings for the user.
+        const url = `${BASE_URL}api/property-bookeds?filters[user][id][$eq]=${id}&populate[property][populate][0]=images&populate[property][populate][1]=location&populate[property][populate][2]=city`
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            if (!response.ok) {
+                const errorText = await response.text()
+                return rejectWithValue(errorText)
+            }
+
+            return await response.json()
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
     }
 )
 

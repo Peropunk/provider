@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import {
     User, LogOut, Heart, Calendar, Trash2, AlertTriangle,
-    X, ChevronRight, Settings, Shield, MapPin, Phone, Mail, Gift
+    X, ChevronRight, Settings, Shield, MapPin, Phone, Mail, Gift, MessageSquareWarning
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SavedProperties from './SavedProperties';
 import ScheduledVisits from './ScheduledVisits';
 import ReferAndEarn from './ReferAndEarn';
+import Complaints from './Complaints';
+
 import MaxWidthWrapper from '../../app/components/MaxWidthWrapper';
 
 // Animation Variants
@@ -76,6 +78,8 @@ export default function ProfilePage() {
         { id: 'refer', label: 'Refer & Earn', icon: Gift, description: 'Invite friends & earn rewards' },
         { id: 'saved', label: 'Saved Properties', icon: Heart, description: 'View your shortlisted hostels & PGs' },
         { id: 'visits', label: 'Scheduled Visits', icon: Calendar, description: 'Track your upcoming property visits' },
+        { id: 'complaints', label: 'My Complaints', icon: MessageSquareWarning, description: 'Raise & track issues' },
+
         // Future items can be added here
         // { id: 'settings', label: 'Account Settings', icon: Settings, description: 'Manage your profile and preferences' },
     ];
@@ -84,6 +88,8 @@ export default function ProfilePage() {
     const handleBack = () => {
         setActiveTab('menu');
     };
+
+    console.log("========USER DETAILS=========", user);
 
     // Sidebar Component (Desktop)
     const Sidebar = () => (
@@ -95,11 +101,11 @@ export default function ProfilePage() {
                     <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[3px] shadow-xl mb-4 mx-auto group-hover:scale-105 transition-transform duration-300">
                         <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
                             <span className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-indigo-600 to-violet-600">
-                                {user.username?.charAt(0) || user.name?.charAt(0) || 'U'}
+                                {user.full_name?.charAt(0) || 'U'}
                             </span>
                         </div>
                     </div>
-                    <h2 className="text-2xl font-black text-gray-900 mb-1">{user.username || user.name || 'Student'}</h2>
+                    <h2 className="text-2xl font-black text-gray-900 mb-1">{user.full_name || user.name || 'Student'}</h2>
                     <div className="flex items-center justify-center gap-2 text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full mx-auto w-fit mb-4 border border-emerald-100">
                         <Shield size={14} className="fill-emerald-600/20" /> Verified User
                     </div>
@@ -107,7 +113,7 @@ export default function ProfilePage() {
                     <div className="space-y-2 w-full text-left bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
                         <div className="flex items-center text-sm text-gray-600">
                             <Phone size={14} className="mr-3 text-indigo-500 shrink-0" />
-                            <span className="truncate">{user.phone || 'No phone added'}</span>
+                            <span className="truncate">{user.username || 'No phone added'}</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
                             <Mail size={14} className="mr-3 text-indigo-500 shrink-0" />
@@ -165,12 +171,12 @@ export default function ProfilePage() {
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[2px] shadow-lg shrink-0">
                     <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-indigo-600 to-violet-600">
-                            {user.username?.charAt(0) || 'U'}
+                            {user.full_name?.charAt(0) || 'U'}
                         </span>
                     </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h2 className="text-xl font-black text-gray-900 truncate">{user.username || 'Student'}</h2>
+                    <h2 className="text-xl font-black text-gray-900 truncate">{user.full_name || 'Student'}</h2>
                     <p className="text-sm text-gray-500 truncate">{user.email || user.phone}</p>
                 </div>
                 <button onClick={handleLogout} className="p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200">
@@ -252,6 +258,7 @@ export default function ProfilePage() {
                                     {activeTab === 'refer' && <ReferAndEarn />}
                                     {activeTab === 'saved' && <SavedProperties />}
                                     {activeTab === 'visits' && <ScheduledVisits />}
+                                    {activeTab === 'complaints' && <Complaints />}
                                 </motion.div>
                             </div>
                         )
@@ -277,6 +284,7 @@ export default function ProfilePage() {
                                     {activeTab === 'refer' && <ReferAndEarn />}
                                     {activeTab === 'saved' && <SavedProperties />}
                                     {activeTab === 'visits' && <ScheduledVisits />}
+                                    {activeTab === 'complaints' && <Complaints />}
                                 </motion.div>
                             </div>
                         </div>
