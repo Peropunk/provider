@@ -40,6 +40,8 @@ const PropertyDetailPage = () => {
   const [showThumbnails, setShowThumbnails] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPriceRevealed, setIsPriceRevealed] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
 
   // Schedule Visit State
   const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
@@ -116,6 +118,22 @@ const PropertyDetailPage = () => {
     };
     checkSavedStatus();
   }, [user, id, token]);
+
+  useEffect(() => {
+    if (!property || isHovered || isFullscreen) return;
+
+    const attr = property.attributes;
+    const images = [attr.main_image?.data?.attributes?.url, ...(attr.images?.data?.map(img => img.attributes.url) || [])].filter(Boolean);
+
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [property, isHovered, isFullscreen]);
+
 
   const handleReveal = async (action, callback) => {
     if (!token) {
@@ -293,7 +311,7 @@ const PropertyDetailPage = () => {
   );
 
   return (
-    <div className="relative min-h-screen bg-gray-50 overflow-hidden pb-12">
+    <div className="relative min-h-screen bg-gray-50 pb-12">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         <div className="absolute top-[10%] left-[-10%] w-[600px] h-[600px] bg-indigo-200/30 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
         <div className="absolute bottom-[20%] right-[-5%] w-[500px] h-[500px] bg-purple-200/30 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
@@ -304,7 +322,11 @@ const PropertyDetailPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column: Gallery */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="relative group rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-gray-100">
+              <div
+                className="relative group rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-gray-100"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
                 <div className="h-[50vh] sm:h-[65vh] relative cursor-pointer" onClick={() => setShowThumbnails(!showThumbnails)}>
                   <Image src={galleryImages[currentImageIndex]} alt={attr.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" priority />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none"></div>
@@ -367,11 +389,18 @@ const PropertyDetailPage = () => {
             </div>
 
             {/* Right Column: Sticky Sidebar */}
+            {/* Right Column: Sidebar */}
             <div className="hidden lg:block lg:col-span-1 space-y-6">
-              <div className="sticky top-24 space-y-6">
+              {/* Non-Sticky Part */}
+              <div className="space-y-6">
                 <PropertyHeaderCard />
                 <PropertyPriceReveal />
-                <ScheduleVisitCard /> {/* Restored here */}
+              </div>
+
+              {/* Sticky Part */}
+              <div className="sticky top-24 space-y-6 z-1000">
+                <ScheduleVisitCard />
+
                 {/* Quick Details Card */}
                 <div className="bg-white/80 backdrop-blur-lg border border-white/60 rounded-3xl shadow-lg p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Details</h3>

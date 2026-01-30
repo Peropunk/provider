@@ -162,9 +162,6 @@ const Properties = ({
                         <div>
                             <p className="text-lg text-gray-600 mt-1">
                                 {sData ? `For "${query}"` : `In "${displayLocation}"`}
-                                <span className="text-sm font-normal text-gray-500 ml-2">
-                                    ({totalLoadedItems} {totalLoadedItems === 1 ? 'property' : 'properties'})
-                                </span>
                             </p>
                         </div>
                         <div className="flex items-center gap-4">

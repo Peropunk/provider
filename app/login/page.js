@@ -58,7 +58,7 @@ function LoginForm() {
 
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
-        if (otp.length < 4) return;
+        if (otp.length < 6) return;
         try {
             const result = await verifyOtpAndLogin(phoneNumber, otp);
             // Determine flow based on result. Usually backend returns user if exists.
