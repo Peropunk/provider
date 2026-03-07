@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GraphQLClient, gql } from "graphql-request";
 
-const client = new GraphQLClient("http://localhost:1337/graphql");
+const client = new GraphQLClient("https://api.dreamprovider.in/graphql");
 
 const GET_COLLEGES = gql`
   query GetColleges {

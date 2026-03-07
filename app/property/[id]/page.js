@@ -13,7 +13,8 @@ import {
   FaPhoneAlt, FaWhatsapp, FaHeart, FaRegHeart, FaShare, FaWifi, FaTshirt,
   FaShieldAlt, FaBus, FaDumbbell, FaParking, FaBook, FaSnowflake,
   FaChevronLeft, FaChevronRight, FaExpand,
-  FaChevronDown, FaChevronUp, FaPlay, FaMap, FaTimes
+  FaChevronDown, FaChevronUp, FaPlay, FaMap, FaTimes,
+  FaUniversity, FaSubway, FaHospital, FaShoppingBag, FaSearch
 } from 'react-icons/fa';
 import { BASE_URL } from '../../../lib/endpoints';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -41,6 +42,12 @@ const PropertyDetailPage = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPriceRevealed, setIsPriceRevealed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
+  // Nearby Locations State
+  const [nearbyLocations, setNearbyLocations] = useState([]);
+  const [nearbyLoading, setNearbyLoading] = useState(false);
+  const [showAllNearby, setShowAllNearby] = useState(false);
+  const [nearbySearchText, setNearbySearchText] = useState('');
 
 
   // Schedule Visit State
@@ -99,6 +106,63 @@ const PropertyDetailPage = () => {
     };
     fetchProperty();
   }, [id]);
+
+  // Haversine distance calculation
+  const computeHaversineDistance = (lat1, lon1, lat2, lon2) => {
+    if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 6371; // Earth's radius in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // Fetch nearby locations after property loads
+  useEffect(() => {
+    if (!property) return;
+    const cityId = property.attributes?.city?.data?.id;
+    if (!cityId) return;
+
+    const fetchNearbyLocations = async () => {
+      try {
+        setNearbyLoading(true);
+        const response = await axios.get(
+          `https://api.dreamprovider.in/api/nearby-locations?filters[city][id]=${cityId}&pagination[limit]=50&populate=*`
+        );
+        const locations = response.data?.data || [];
+
+        const propLat = property.attributes?.latlng?._latitude;
+        const propLon = property.attributes?.latlng?._longitude;
+
+        // Compute distance for each location and sort by closest
+        const withDistance = locations.map((loc) => {
+          const locLat = loc.attributes?.latlng?.latitude;
+          const locLon = loc.attributes?.latlng?.longitude;
+          const distance = computeHaversineDistance(propLat, propLon, locLat, locLon);
+          return { ...loc, distance };
+        });
+
+        withDistance.sort((a, b) => {
+          if (a.distance === null) return 1;
+          if (b.distance === null) return -1;
+          return a.distance - b.distance;
+        });
+
+        setNearbyLocations(withDistance);
+      } catch (err) {
+        console.error('Error fetching nearby locations:', err);
+      } finally {
+        setNearbyLoading(false);
+      }
+    };
+
+    fetchNearbyLocations();
+  }, [property]);
 
   useEffect(() => {
     const checkSavedStatus = async () => {
@@ -236,6 +300,128 @@ const PropertyDetailPage = () => {
       <span className="text-xs font-bold text-gray-500 group-hover/btn:text-indigo-600 transition-colors">{label}</span>
     </button>
   );
+
+  // Helper: Icon and color for nearby location type
+  const getLocationTypeConfig = (type) => {
+    switch (type) {
+      case 'college':
+        return { icon: FaUniversity, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', badge: 'bg-blue-100 text-blue-700' };
+      case 'metro':
+        return { icon: FaSubway, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100', badge: 'bg-purple-100 text-purple-700' };
+      case 'bus_stop':
+        return { icon: FaBus, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', badge: 'bg-orange-100 text-orange-700' };
+      case 'hospital':
+        return { icon: FaHospital, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-100', badge: 'bg-red-100 text-red-700' };
+      case 'market':
+        return { icon: FaShoppingBag, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', badge: 'bg-emerald-100 text-emerald-700' };
+      default:
+        return { icon: FaMapMarkerAlt, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100', badge: 'bg-indigo-100 text-indigo-700' };
+    }
+  };
+
+  const NearbyLocationsCard = () => {
+    const filtered = nearbyLocations.filter((loc) =>
+      loc.attributes?.name?.toLowerCase().includes(nearbySearchText.toLowerCase())
+    );
+    const displayed = showAllNearby ? filtered : filtered.slice(0, 6);
+    const hasMore = filtered.length > 6;
+
+    if (nearbyLoading) {
+      return (
+        <div className="bg-white/80 backdrop-blur-lg border border-white/60 rounded-3xl shadow-lg p-6 sm:p-8">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="w-1 h-6 bg-orange-500 rounded-full"></div>What&apos;s Nearby
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="animate-pulse flex items-center gap-3 p-3 rounded-xl bg-gray-50">
+                <div className="w-10 h-10 rounded-xl bg-gray-200"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-2 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (nearbyLocations.length === 0) return null;
+
+    return (
+      <div className="bg-white/80 backdrop-blur-lg border border-white/60 rounded-3xl shadow-lg p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <div className="w-1 h-6 bg-orange-500 rounded-full"></div>What&apos;s Nearby
+          </h3>
+          <div className="relative">
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
+            <input
+              type="text"
+              placeholder="Search locations..."
+              value={nearbySearchText}
+              onChange={(e) => setNearbySearchText(e.target.value)}
+              className="pl-8 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-300 w-full sm:w-56 transition-all"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {displayed.map((loc) => {
+            const config = getLocationTypeConfig(loc.attributes?.type);
+            const Icon = config.icon;
+            const typeName = loc.attributes?.type
+              ? loc.attributes.type.replace('_', ' ')
+              : 'Location';
+
+            return (
+              <div
+                key={loc.id}
+                className={`flex items-center gap-3 p-3 rounded-xl ${config.bg} border ${config.border} hover:shadow-md transition-all duration-200 group/loc`}
+              >
+                <div className={`w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center ${config.color} group-hover/loc:scale-110 transition-transform duration-200`}>
+                  <Icon size={16} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-gray-800 truncate">{loc.attributes?.name}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md uppercase ${config.badge}`}>
+                      {typeName}
+                    </span>
+                    {loc.distance !== null && (
+                      <span className="text-xs font-semibold text-gray-500">
+                        {loc.distance < 1
+                          ? `${Math.round(loc.distance * 1000)} m`
+                          : `${loc.distance.toFixed(1)} km`}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {filtered.length === 0 && (
+          <p className="text-center text-gray-400 text-sm py-6">No locations match your search.</p>
+        )}
+
+        {hasMore && (
+          <button
+            onClick={() => setShowAllNearby(!showAllNearby)}
+            className="mt-4 w-full py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-indigo-50 hover:border-indigo-200 text-sm font-bold text-gray-600 hover:text-indigo-600 transition-all flex items-center justify-center gap-2"
+          >
+            {showAllNearby ? (
+              <><FaChevronUp size={10} /> Show Less</>
+            ) : (
+              <><FaChevronDown size={10} /> Show All {filtered.length} Locations</>
+            )}
+          </button>
+        )}
+      </div>
+    );
+  };
 
   const PropertyPriceReveal = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -386,6 +572,9 @@ const PropertyDetailPage = () => {
                   })}
                 </div>
               </div>
+
+              {/* What's Nearby */}
+              <NearbyLocationsCard />
             </div>
 
             {/* Right Column: Sticky Sidebar */}
